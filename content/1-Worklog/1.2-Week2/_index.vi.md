@@ -1,72 +1,54 @@
 ---
 title: "Worklog Tuần 2"
-date: 2024-01-01
-weight: 1
+date: 2026-06-26
+weight: 2
 chapter: false
 pre: " <b> 1.2. </b> "
 ---
 
-## Chủ đề: Đóng gói Docker Container cho Backend và Đẩy Image lên Amazon ECR
+## Chủ đề: Phát triển RESTful API Backend & Xác thực JWT Authentication cho LearnSphere
 
 ### 1. Mục tiêu tuần 2
-* Nắm vững kiến thức về công nghệ Containerization với Docker, cách đóng gói ứng dụng Node.js/Express.
-* Thành thạo dịch vụ Amazon ECR (Elastic Container Registry) trên AWS để quản lý kho lưu trữ Docker Images.
-* Đóng gói thành công ứng dụng `LearnSphere_BE` thành Docker Image, kiểm thử chạy container ở môi trường Localhost và đẩy (push) thành công Image lên Amazon ECR.
+* Xây dựng cấu trúc máy chủ Node.js Express Backend chuẩn modular architecture.
+* Triển khai hệ thống xác thực người dùng JWT Authentication và phân quyền truy cập Role-Based Access Control (RBAC).
+* Phát triển toàn bộ nhóm API quản lý tài khoản (`Auth`), khóa học (`Course`), bài học (`Lesson`) và tiến độ (`Progress`).
+* Viết Unit Tests kiểm thử chất lượng mã nguồn Backend bằng Jest và Supertest.
 
 ---
 
-### 2. Nội dung học tập & Tìm hiểu (AWS & Core Tech)
+### 2. Lịch trình công việc từng ngày (Daily Activity Log)
 
-#### A. Kiến thức Đóng gói Ứng dụng với Docker (Containerization)
-* **Khái niệm cơ bản về Docker:**
-  * Khác biệt giữa Virtual Machine (VM) và Docker Container (nhẹ hơn, khởi động nhanh hơn, dùng chung OS Kernel).
-  * Phân biệt **Docker Image** (Bản thiết kế/Template) và **Docker Container** (Thực thể đang chạy).
-* **Tối ưu hóa Dockerfile cho Node.js:**
-  * Học cách chọn Base Image nhẹ (ví dụ: `node:18-alpine` hoặc `node:18-slim`).
-  * Sử dụng file `.dockerignore` để loại bỏ `node_modules`, `.env`, `.git` và file rác giúp giảm dung lượng Image.
-  * Tận dụng cơ chế **Docker Layer Caching** (sắp xếp lệnh `COPY package*.json` trước `RUN npm install` rồi mới `COPY . .`) để tăng tốc độ Re-build.
-  * Thiết lập môi trường chạy an toàn (Non-root user) và lệnh khởi chạy container (`CMD ["npm", "start"]`).
-
-#### B. Tìm hiểu Dịch vụ Amazon ECR (Elastic Container Registry)
-* **Khái niệm về Amazon ECR:**
-  * Amazon ECR là gì? Vai trò của ECR trong kiến trúc hạ tầng AWS (Kho lưu trữ Docker Image riêng tư và an toàn).
-  * Cơ chế phân quyền ECR với AWS IAM (quyền `ecr:GetAuthorizationToken`, `ecr:BatchCheckLayerAvailability`, `ecr:PutImage`, v.v.).
-* **Thao tác CLI kết nối Amazon ECR:**
-  * Sử dụng AWS CLI để lấy token xác thực và đăng nhập Docker vào ECR:
-    ```bash
-    aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.ap-southeast-1.amazonaws.com
-    ```
-  * Cách tag Image phù hợp với cấu trúc ECR URI:
-    ```bash
-    docker tag learnsphere-be:latest <aws_account_id>.dkr.ecr.ap-southeast-1.amazonaws.com/learnsphere-be:latest
-    ```
-  * Cách đẩy Image lên ECR (`docker push`) và kéo Image về (`docker pull`).
+| Ngày | Công việc thực hiện chi tiết | Đạt được / Sản phẩm |
+|---|---|---|
+| **Thứ 2 (22/06/2026)** | • Cấu hình cấu trúc thư mục `LearnSphere_BE/src/` (controllers, routes, middlewares, services, utils).<br>• Cài đặt các thư viện lõi: `express`, `mongoose`, `jsonwebtoken`, `bcryptjs`, `cors`, `dotenv`, `helmet`.<br>• Xây dựng Middleware xử lý lỗi tập trung (`error.middleware.js`) và mã hóa mật khẩu. | • Cấu trúc dự án Backend hoàn chỉnh.<br>• Bộ Middleware xử lý lỗi toàn cục. |
+| **Thứ 3 (23/06/2026)** | • Xây dựng Auth Controller & Routes (`/api/auth`): Đăng ký, Đăng nhập, Lấy thông tin cá nhân (`/me`), Refresh Token.<br>• Tích hợp thuật toán `bcryptjs` băm mật khẩu 10 salt rounds và sinh JWT Access Token ngắn hạn. | • API Authentication vận hành ổn định.<br>• Mã hóa mật khẩu bảo mật. |
+| **Thứ 4 (24/06/2026)** | • Viết Middleware phân quyền truy cập RBAC (`auth.middleware.js`): `verifyToken`, `isInstructor`, `isAdmin`.<br>• Xây dựng các APIs quản lý danh mục khóa học (`/api/courses`): Tạo khóa học, cập nhật thông tin, xóa khóa học. | • Phân quyền RBAC chính xác.<br>• Bộ APIs Quản lý Khóa học hoàn tất. |
+| **Thứ 5 (25/06/2026)** | • Phát triển các APIs quản lý bài học (`/api/lessons`): Thêm bài học mới, sắp xếp thứ tự hiển thị bài học.<br>• Xây dựng các APIs ghi nhận tiến độ học tập (`/api/progress`) và đăng ký khóa học (`/api/enrollments`). | • Bộ APIs Bài học & Tiến độ học tập.<br>• Tính năng ghi nhận % học tập. |
+| **Thứ 6 (26/06/2026)** | • Khởi tạo bộ test tự động bằng Jest & Supertest kiểm thử chuỗi APIs Authentication và Course CRUD.<br>• Đóng gói Postman Collection (`LearnSphere_BE_APIs.json`) phục vụ kiểm thử thủ công.<br>• Tham gia họp Review tuần 2 với Mentor. | • Bộ Unit Tests Jest chạy sạch 100%.<br>• Postman Collection sẵn sàng demo. |
 
 ---
 
-### 3. Công việc triển khai thực tế (Work Tasks)
+### 3. Nội dung học tập & Tìm hiểu (AWS & Core Tech)
 
-* **Xây dựng cấu hình Docker cho Backend (`LearnSphere_BE`):**
-  * Viết file `Dockerfile` trong thư mục `LearnSphere_BE`:
-    * Khởi tạo môi trường Node.js.
-    * Cài đặt các thư viện cần thiết (bao gồm cả các phụ thuộc cho OCR/Tesseract nếu có).
-    * Mở cổng port 5000.
-  * Viết file `.dockerignore` để tối ưu hóa quá trình build.
+#### A. Kiến thức Đám mây AWS (AWS Cloud Fundamentals)
+* **AWS IAM Roles & Service Access:**
+  * Phân biệt giữa Long-term Static Credentials (Access Keys) và Short-term Dynamic Credentials.
+  * Nghiên cứu cơ chế IAM Roles dành cho các dịch vụ compute (như EC2).
+* **AWS Security Best Practices:**
+  * Không lưu cứng (hard-code) Access Keys hay Secrets trong mã nguồn Git.
+  * Quản lý biến môi trường an toàn thông qua `.env` và dịch vụ AWS Systems Manager Parameter Store / Secrets Manager.
 
-* **Kiểm thử Containerization ở Localhost:**
-  * Chạy lệnh build image local: `docker build -t learnsphere-be:v1.0 .`
-  * Chạy container thử nghiệm: `docker run -d -p 5000:5000 --env-file .env learnsphere-be:v1.0`
-  * Sử dụng Postman / Browser kiểm tra các route cơ bản (`http://localhost:5000/api/health`) và khả năng kết nối tới MongoDB Atlas.
-
-* **Khởi tạo Amazon ECR Repository & Đẩy Image:**
-  * Truy cập AWS Management Console -> Dịch vụ Amazon ECR.
-  * Tạo một Private Repository mới đặt tên là `learnsphere-be` tại Region `ap-southeast-1`.
-  * Thực hiện chuỗi lệnh AWS CLI trên máy cá nhân để đăng nhập, tag và push Docker Image `learnsphere-be:v1.0` (hoặc tag `latest`) lên Amazon ECR.
+#### B. Phát triển Backend Node.js / Express
+* **Xác thực JWT & Phân quyền RBAC:**
+  * Cơ chế sinh Token, mã hóa Payload và kiểm tra chữ ký Digital Signature của JWT.
+  * Thiết kế Middleware phân quyền kiểm tra vai trò người dùng (Student, Instructor, Admin).
+* **Kiểm thử tự động (Unit & Integration Testing):**
+  * Sử dụng framework **Jest** và **Supertest** để mô phỏng HTTP requests và kiểm tra kết quả JSON Response.
 
 ---
 
 ### 4. Kết quả đạt được (Deliverables)
-* File `Dockerfile` và `.dockerignore` chuẩn hóa cho `LearnSphere_BE`.
-* Container Backend chạy thành công ở môi trường Localhost, kết nối ổn định với MongoDB Atlas.
-* Repository `learnsphere-be` được tạo thành công trên Amazon ECR (`ap-southeast-1`).
-* Docker Image đầu tiên của dự án được đẩy thành công lên Amazon ECR và sẵn sàng cho việc pull về máy chủ EC2 ở Tuần 3.
+* Mã nguồn Backend Node.js/Express hoàn chỉnh cho các Module: Auth, Course, Lesson, Progress.
+* Bộ Middleware mã hóa mật khẩu, xác thực JWT Token và phân quyền RBAC an toàn.
+* Tệp Postman Collection hỗ trợ kiểm thử APIs.
+* Bộ Unit Tests Jest đạt tỉ lệ bao phủ mã nguồn (Code Coverage) > 85%.

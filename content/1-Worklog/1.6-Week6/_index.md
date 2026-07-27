@@ -1,73 +1,43 @@
 ---
-title: "Week 6 Worklog"
-date: 2024-01-01
-weight: 1
+title: "Worklog Week 6"
+date: 2026-07-24
+weight: 6
 chapter: false
 pre: " <b> 1.6. </b> "
 ---
 
-## Topic: Developing 24/7 AI Tutor Learning Assistant and Automated Quiz Generation Tool
+## Topic: IAM OIDC Configuration, Amazon S3 Buckets & CloudFront CDN Setup
 
 ### 1. Week 6 Objectives
-* Build a personalized 24/7 AI Tutor Chatbot feature allowing students to ask questions and receive accurate answers based on the context of lesson documents extracted in Week 5.
-* Develop an AI-powered Automated Quiz Generator supporting diverse question types (Multiple Choice, True/False, Fill in the Blank, Essay) complete with correct answers and detailed explanations.
-* Construct a Question Builder interface on React Frontend enabling Instructors to preview, edit, or append AI-generated questions.
-* Ensure standardized JSON data responses from OpenAI API and track AI conversation history in MongoDB Atlas.
+* Establish **GitHub Actions OIDC Identity Provider** on AWS IAM, eliminating static access key leak risks.
+* Provision IAM Role `LearnSphereGitHubDeployRole` with repository-scoped Trust Policy (`repo:username/repository:ref:refs/heads/main`).
+* Provision **Amazon S3 Frontend Bucket** (`learnsphere-fe-575620421319`) and **S3 Media Bucket** (`learnsphere-media-575620421319`) with 100% Block Public Access.
+* Deploy **Amazon CloudFront CDN Distribution** (`EQRDOBSCG5MC8`) securing S3 Frontend via **Origin Access Control (OAC)** and reverse-proxying API `/api/*` requests to EC2.
 
 ---
 
-### 2. Learning Content & Research (AWS & Core Tech)
+### 2. Daily Activity Log
 
-#### A. Context-Aware AI Tutor Architecture
-* **Simplified RAG Technique (Simple Retrieval-Augmented Generation):**
-  * Understand AI Tutor inner workings: When a student submits a question within a lesson, the Backend retrieves the extracted text string (`ai_indexed_content`) of that lesson from MongoDB Atlas to append into the System Prompt as Context.
-  * System Prompt Engineering for behavior control: Constrain AI to answer strictly within the lesson's knowledge scope, respond politely in Vietnamese/English, explain clearly, and decline unrelated queries.
-* **Chat History Management:**
-  * Conversation storage structure in `AIMessage.model.js` (including `user_id`, `lesson_id`, `role`, `content`, `tokens_used`, `timestamp`).
-  * Context Window History technique sending the N most recent dialogue turns so the AI understands follow-up questions from students.
-
-#### B. AI Quiz Generator Engine
-* **Enforced Structured JSON Outputs:**
-  * Utilize OpenAI API's `response_format: { type: "json_object" }` feature to mandate Model responses in exact expected JSON structures without extra explanatory text.
-  * Configure JSON Schema structure for quizzes:
-    * `title`: Quiz title.
-    * `questions`: Array containing questions.
-    * `question_type`: Question type (`multiple_choice`, `true_false`, `fill_in_blank`, `essay`).
-    * `question_text`: Question statement.
-    * `options`: Choices (for multiple choice questions).
-    * `correct_answer`: Correct answer key.
-    * `explanation`: Detailed explanation of why the answer is correct.
-* **KaTeX Rendering for Math/Science Formulas:**
-  * Explore `katex` and `@types/katex` libraries on React Frontend.
-  * Prompt instructions forcing OpenAI to return mathematical formulas in standard LaTeX format (e.g., `\( E = mc^2 \)` or `\[ \int_0^\infty x^2 dx \]`) for elegant rendering on Frontend.
+| Day | Detailed Tasks Executed | Key Deliverables / Outcomes |
+|---|---|---|
+| **Monday (Jul 20, 2026)** | • Opened AWS IAM Console $\rightarrow$ **Identity providers** $\rightarrow$ Added OIDC Provider `token.actions.githubusercontent.com` (Audience `sts.amazonaws.com`).<br>• Fetched GitHub OIDC security thumbprint.<br>• Provisioned IAM Role `LearnSphereGitHubDeployRole` with repository-bound Trust Policy. | • Configured OIDC Identity Provider.<br>• Secure IAM Role for GitHub Actions. |
+| **Tuesday (Jul 21, 2026)** | • Provisioned S3 Frontend Bucket `learnsphere-fe-575620421319` in Singapore (`ap-southeast-1`).<br>• Provisioned S3 Media Bucket `learnsphere-media-575620421319` with Server-Side Encryption (SSE-S3).<br>• Configured S3 CORS JSON rules supporting direct browser uploads. | • Provisioned 2 S3 Buckets.<br>• 100% Block Public Access & CORS. |
+| **Wednesday (Jul 22, 2026)** | • Opened **Amazon CloudFront** $\rightarrow$ Created new Distribution `EQRDOBSCG5MC8`.<br>• Configured Origin 1 pointing to S3 Frontend Bucket with new **Origin Access Control (OAC)**.<br>• Applied S3 Bucket Policy granting exclusive read access (`s3:GetObject`) to CloudFront OAC. | • CloudFront Distribution created.<br>• OAC configuration for Private S3. |
+| **Thursday (Jul 23, 2026)** | • Configured Origin 2 pointing to EC2 Backend DNS/IP (Port 5000).<br>• Added priority Cache Behavior for `/api/*` path with `CachingDisabled` and header forwarding.<br>• Authored **CloudFront Function** attached to Viewer Request rewrite URI sub-paths to `/index.html` for SPA client-side routing. | • Finalized CloudFront CDN routing.<br>• Resolved CORS & SPA 404 reloads. |
+| **Friday (Jul 24, 2026)** | • Tested static frontend asset distribution via CloudFront HTTPS domain `d2onzy56n3iw1w.cloudfront.net`.<br>• Verified API `/api/health` queries forwarded seamlessly to EC2.<br>• Attended Week 6 review with Mentor. | • Smooth CDN distribution workflow.<br>• Passed Week 6 review. |
 
 ---
 
-### 3. Implementation Tasks (Work Tasks)
+### 3. Core Tech & Learning Topics
 
-* **Develop AI Tutor Assistant Module (`ai-assistant.service.js`):**
-  * Write API `POST /api/ai/chat`:
-    * **STEP 1:** Receive `lesson_id` and query `message` from student.
-    * **STEP 2:** Query MongoDB for lesson `ai_indexed_content` and 5 most recent messages from `AIMessage` collection.
-    * **STEP 3:** Build System Prompt incorporating lesson context and dispatch request to OpenAI API (`gpt-4o-mini`).
-    * **STEP 4:** Save User message and AI response to MongoDB, return result to Frontend.
-  * Build `AIAssistantPage.tsx` / Chat Drawer UI on Frontend with typing effect, KaTeX formula rendering, and real-time chat window.
-
-* **Develop Automated Quiz Generation Engine (`quiz-generator.service.js`):**
-  * Write API `POST /api/quizzes/generate-ai`:
-    * Receive parameters from Instructor: `lesson_id`, `num_questions`, `difficulty` (Easy/Medium/Hard), `question_types`.
-    * Feed lesson text and parameters into custom-designed System Prompt for OpenAI API.
-    * Receive JSON string from OpenAI, perform JSON Data Validation, and save Quiz into `Quiz.model.js` as Draft.
-
-* **Develop Question Builder Interface (`QuestionBuilderPage.tsx`):**
-  * Build quiz design screen for Instructors:
-    * "Generate Quiz with AI" button triggering modal to select question count and difficulty.
-    * Question list rendered as interactive Cards allowing Instructors to directly edit question text, add/remove options, alter correct answers, or manually append questions.
-    * "Publish Quiz" button to officially release quiz for student taking.
+#### A. AWS Cloud Security & CDN Architecture
+* **AWS IAM OIDC Identity Provider:** Zero Static Credentials security pattern using short-lived AWS STS tokens.
+* **Amazon CloudFront & Origin Access Control (OAC):** Securing private S3 origins via modern OAC signatures.
+* **CloudFront Edge Functions:** Edge-based URI manipulation handling React SPA client-side routing.
 
 ---
 
 ### 4. Deliverables
-* AI Tutor Assistant feature running stably, providing accurate context-aware responses based on lesson materials, rendered smoothly on Frontend Chat UI.
-* Quiz Generation Engine powered by OpenAI API generating high-quality quizzes in valid JSON structures, supporting KaTeX LaTeX math formula rendering.
-* Completed `QuestionBuilderPage.tsx` helping Instructors save 80% of homework composition time by combining AI capabilities with human customization.
+* IAM OIDC Provider & Role `LearnSphereGitHubDeployRole`.
+* 2 Private S3 Buckets.
+* CloudFront Distribution `EQRDOBSCG5MC8` with OAC, API Forwarding, and SPA Function.

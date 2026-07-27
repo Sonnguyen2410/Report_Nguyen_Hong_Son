@@ -1,71 +1,44 @@
 ---
-title: "Week 7 Worklog"
-date: 2024-01-01
-weight: 1
+title: "Worklog Week 7"
+date: 2026-07-31
+weight: 7
 chapter: false
 pre: " <b> 1.7. </b> "
 ---
 
-## Topic: Building Online Quiz Interface, Automated Grading, and Lesson Progress Tracking
+## Topic: CI/CD Pipeline Automation with GitHub Actions & SSM RunCommand Rollback
 
 ### 1. Week 7 Objectives
-* Build a comprehensive online Quiz Runner UI for students featuring a real-time countdown timer, temporary answer state persistence, and auto-submission upon timeout.
-* Develop a Backend Auto-Grading Engine accurately processing diverse question formats (Multiple Choice, True/False, Fill in the Blank, AI-assisted Essay grading).
-* Establish a Learning Progress Tracking system recording lesson completion percentages, storing attempt histories (`QuizAttempt`), and updating course completion status.
-* Complete student management pages: Progress overview dashboard (`DashboardPage.tsx`) and detailed quiz result review pages.
+* Declare GitHub Repository Secrets (`AWS_GITHUB_ROLE_ARN`, `EC2_INSTANCE_ID`, `VITE_API_BASE_URL`, `S3_FE_BUCKET`, `CLOUDFRONT_FE_DISTRIBUTION_ID`).
+* Build `.github/workflows/deploy.yml` automation workflow containing 2 jobs: `deploy-backend` and `deploy-frontend`.
+* Automate EC2 Backend deployments via **AWS Systems Manager (SSM) RunCommand** without Port 22 SSH.
+* Implement `candidate` container health checks, Zero-Downtime Swapping, and **Auto-Rollback** to `rollback` containers upon failure.
+* Automate React Frontend builds, S3 sync, and CloudFront Cache Invalidation `/*`.
 
 ---
 
-### 2. Learning Content & Research (AWS & Core Tech)
+### 2. Daily Activity Log
 
-#### A. Quiz State Management & Time Synchronization on React Frontend
-* **Complex Quiz State Management Techniques:**
-  * Manage student answer map `userAnswers: Record<string, any>` to ensure seamless navigation between questions without losing selected data.
-  * Persist temporary State to `sessionStorage` or `localStorage` to safeguard against accidental page refreshes (F5).
-* **Time Synchronization & Auto-Submission (Quiz Timer):**
-  * Utilize React `useEffect` combined with `setInterval` to construct real-time countdown timers (e.g., 15 minutes, 45 minutes).
-  * Auto-submission event handling: When `timeLeft === 0`, disable all input controls, display "Time Up" notification, and trigger server submission function.
-
-#### B. Grading Algorithms & Learning Progress Tracking
-* **Multi-Format Auto-Grading Engine (Auto-Grading Logic):**
-  * **Multiple Choice (`multiple_choice`) & True/False (`true_false`):** Perform exact string/ID comparison between student choices and `correct_answer`.
-  * **Fill in the Blank (`fill_in_blank`):** Strip whitespace and convert to lowercase (`trim().toLowerCase()`) for string matching.
-  * **Essay (`essay`):** Integrate OpenAI API for automated grading by evaluating student answers against key concepts/sample answers, returning scores (0–10) with detailed feedback.
-* **Learning Progress Data Structure (MongoDB Models):**
-  * `QuizAttempt.model.js`: Store `user_id`, `quiz_id`, `score`, `passed` (Pass/Fail based on passing score), `answers` (detailed response breakdown), and `duration_seconds` (completion time).
-  * `LessonProgress.model.js`: Mark lessons as `completed: true` upon video completion or passing required quizzes.
-  * Update overall course completion percentage in `Enrollment.model.js` (`progress_percentage = (completed_lessons / total_lessons) * 100`).
+| Day | Detailed Tasks Executed | Key Deliverables / Outcomes |
+|---|---|---|
+| **Monday (Jul 27, 2026)** | • Opened GitHub Repository $\rightarrow$ **Settings** $\rightarrow$ **Secrets and variables** $\rightarrow$ **Actions**.<br>• Declared 5 critical CI/CD deployment secrets.<br>• Enforced Zero Static Credentials security guidelines. | • 5 CI/CD Secrets configured.<br>• Zero Static Credentials security. |
+| **Tuesday (Jul 28, 2026)** | • Authored `.github/workflows/deploy.yml` configuring `deploy-backend` job.<br>• Added `aws-actions/configure-aws-credentials@v4` step using OIDC authentication.<br>• Built Docker Image packaging step tagging SHA Git Commit hashes and pushing to ECR. | • `deploy.yml` Backend Job.<br>• Automated Docker build & ECR push. |
+| **Wednesday (Jul 29, 2026)** | • Authored Bash deployment script via `aws ssm send-command`.<br>• Configured temporary port 5001 `candidate` container execution with a 24-iteration `/health/ready` retry loop.<br>• Built Zero-Downtime container renaming and Auto-Rollback logic upon health check failures. | • SSM RunCommand Deployment script.<br>• Zero-Downtime & Auto-Rollback logic. |
+| **Thursday (Jul 30, 2026)** | • Configured `deploy-frontend` job running upon successful backend deployment.<br>• Built React static assets (`npm run build`), synced `dist` directory to S3 Frontend Bucket (`aws s3 sync --delete`).<br>• Added CloudFront cache invalidation (`aws cloudfront create-invalidation --paths "/*"`). | • Completed `deploy-frontend` Job.<br>• Automated S3 Sync & CDN Invalidation. |
+| **Friday (Jul 31, 2026)** | • Triggered end-to-end CI/CD pipeline via `git push origin main`.<br>• Resolved initial OIDC IAM Trust Policy string mismatch (`repo:username/repository:ref:refs/heads/main`).<br>• Verified 100% successful execution for both deployment jobs and attended Week 7 review. | • 100% passing GitHub Actions pipeline.<br>• Resolved OIDC permission issues. |
 
 ---
 
-### 3. Implementation Tasks (Work Tasks)
+### 3. Core Tech & Learning Topics
 
-* **Develop Backend Grading & Result Logging API (`quiz-execution.service.js`):**
-  * Write API `POST /api/quizzes/:id/submit`:
-    * **STEP 1:** Receive student `answers` array and `start_time`.
-    * **STEP 2:** Query quiz details from MongoDB Atlas (including `correct_answer` keys).
-    * **STEP 3:** Calculate overall score: directly add points for Multiple Choice/True-False/Fill-in-blank; (If essays exist) invoke `ai-provider.service.js` for OpenAI scoring and feedback generation.
-    * **STEP 4:** Create new record in `QuizAttempt.model.js`.
-    * **STEP 5:** If score $\ge$ `passing_score` (e.g., 70%), automatically call `enrollment.service.js` to update lesson status to completed and recalculate overall course progress percentage.
-  * Write API `GET /api/quizzes/:id/attempts` allowing students to review past quiz attempts along with detailed answers and explanations.
-
-* **Build Interactive Quiz Taking Interface (`QuizPage.tsx`):**
-  * Design professional quiz-taking interface:
-    * **Header Bar:** Displays Quiz title, Submit button, and Countdown Timer Badge.
-    * **Left Sidebar:** Question Grid allowing quick navigation to individual questions, color-coding answered vs unanswered items.
-    * **Main Canvas:** Renders question content (supporting KaTeX math formulas), Radio button / Checkbox options, or text input fields.
-    * **Quiz Result Modal (`QuizResultModal`):** Instantly displays total score, PASS / FAIL status, completion time, and per-question detailed correctness breakdown with explanations.
-
-* **Develop Learning Progress Dashboard (`DashboardPage.tsx`):**
-  * Build Student Dashboard screen:
-    * List enrolled courses with visual Progress Bars (%).
-    * Summary statistics: completed lessons count, passed quizzes count, and average score.
-    * Recent notification feed (`Notification.model.js`) for new assignments or discussion replies.
+#### A. AWS Infrastructure & DevOps
+* **AWS Systems Manager (SSM) RunCommand:** Remote SSH-less shell script execution on EC2.
+* **GitHub Actions CI/CD:** OIDC short-lived credential authentication and multi-job workflow orchestration.
+* **Zero-Downtime & Health Check Rollback:** Testing candidate containers on temporary ports before production traffic cutover.
 
 ---
 
 ### 4. Deliverables
-* `QuizPage.tsx` interface operates smoothly with accurate countdown timers, auto-locking submission on timeout, and F5-proof state persistence.
-* Backend Auto-Grading Engine processes 100% accurate automated grading across all question types, logging full attempt trails in `QuizAttempt`.
-* Lesson progress tracking system (`LessonProgress` & `Enrollment`) updates instantly upon successful quiz submission.
-* `DashboardPage.tsx` enables students to track personal learning roadmaps and review detailed past quiz performance.
+* Complete `.github/workflows/deploy.yml` pipeline workflow.
+* SSM RunCommand script with Health Check and Auto-Rollback capability.
+* Automated CloudFront CDN cache invalidation workflow.

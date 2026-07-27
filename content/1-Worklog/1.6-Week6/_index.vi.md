@@ -1,73 +1,47 @@
 ---
 title: "Worklog Tuần 6"
-date: 2024-01-01
-weight: 1
+date: 2026-07-24
+weight: 6
 chapter: false
 pre: " <b> 1.6. </b> "
 ---
 
-## Chủ đề: Phát triển Trợ lý học tập AI Tutor 24/7 và công cụ tạo bài kiểm tra Quiz tự động
+## Chủ đề: Cấu hình Phân quyền IAM OIDC, Amazon S3 Buckets & CloudFront CDN
 
 ### 1. Mục tiêu tuần 6
-* Xây dựng tính năng Trợ lý học tập cá nhân hóa AI Tutor (Chatbot 24/7) cho phép học viên đặt câu hỏi và nhận câu trả lời chính xác dựa trên ngữ cảnh tài liệu bài học đã được trích xuất ở Tuần 5.
-* Phát triển công cụ Tự động sinh bài kiểm tra Quiz bằng AI (AI Quiz Generator) hỗ trợ tạo đa dạng loại câu hỏi (Trắc nghiệm, Đúng/Sai, Điền từ, Tự luận) kèm đáp án và giải thích chi tiết.
-* Xây dựng giao diện công cụ thiết kế câu hỏi Question Builder trên React Frontend cho phép Giảng viên xem trước, chỉnh sửa hoặc bổ sung câu hỏi do AI tạo ra.
-* Đảm bảo chuẩn hóa phản hồi dữ liệu dạng JSON từ OpenAI API và lưu vết lịch sử trò chuyện AI trong MongoDB Atlas.
+* Thiết lập kết nối xác thực **GitHub Actions OIDC Identity Provider** trên AWS IAM, loại bỏ rủi ro lộ static access keys.
+* Tạo IAM Role `LearnSphereGitHubDeployRole` đính kèm Trust Policy giới hạn chính xác Repository GitHub `repo:username/repository:ref:refs/heads/main`.
+* Khởi tạo **Amazon S3 Frontend Bucket** (`learnsphere-fe-575620421319`) và **S3 Media Bucket** (`learnsphere-media-575620421319`) ở chế độ Block Public Access 100%.
+* Triển khai **Amazon CloudFront CDN Distribution** (`EQRDOBSCG5MC8`) bảo mật S3 Frontend qua **Origin Access Control (OAC)** và chuyển tiếp API `/api/*` về máy chủ EC2.
 
 ---
 
-### 2. Nội dung học tập & Tìm hiểu (AWS & Core Tech)
+### 2. Lịch trình công việc từng ngày (Daily Activity Log)
 
-#### A. Kiến trúc Trợ lý AI Tutor theo Ngữ cảnh (Context-Aware AI Assistant)
-* **Kỹ thuật RAG đơn giản hóa (Simple Retrieval-Augmented Generation):**
-  * Hiểu cách hoạt động của AI Tutor: Khi học viên gửi thắc mắc trong một bài học, Backend sẽ lấy chuỗi văn bản đã trích xuất (`ai_indexed_content`) của bài học đó trong MongoDB Atlas để ghép vào System Prompt làm ngữ cảnh (Context).
-  * Thiết lập Prompt kiểm soát hành vi (System Prompt Engineering): Ép buộc AI chỉ trả lời các câu hỏi nằm trong phạm vi kiến thức của bài học, trả lời lịch sự bằng tiếng Việt, giải thích dễ hiểu và từ chối các câu hỏi không liên quan đến bài học.
-* **Quản lý Lịch sử Trò chuyện (Chat History Management):**
-  * Cấu trúc lưu trữ hội thoại trong `AIMessage.model.js` (gồm `user_id`, `lesson_id`, `role`, `content`, `tokens_used`, `timestamp`).
-  * Kỹ thuật gửi kèm N câu thoại gần nhất (Context Window History) để AI hiểu được ngữ cảnh các câu hỏi nối tiếp của học viên.
-
-#### B. Công cụ Sinh Bài kiểm tra Quiz Tự động (AI Quiz Generator Engine)
-* **Bắt buộc định dạng JSON chuẩn (Structured JSON Outputs):**
-  * Sử dụng tính năng `response_format: { type: "json_object" }` của OpenAI API để yêu cầu Model trả về đúng cấu trúc JSON mong muốn mà không bị dính văn bản giải thích thừa.
-  * Cấu hình cấu trúc JSON Schema cho bài kiểm tra:
-    * `title`: Tiêu đề bài Quiz.
-    * `questions`: Mảng chứa các câu hỏi.
-    * `question_type`: Loại câu hỏi (`multiple_choice`, `true_false`, `fill_in_blank`, `essay`).
-    * `question_text`: Nội dung câu hỏi.
-    * `options`: Các lựa chọn (đối với trắc nghiệm).
-    * `correct_answer`: Đáp án đúng.
-    * `explanation`: Giải thích chi tiết tại sao đáp án đó đúng.
-* **Kỹ thuật KaTeX Render Công thức Toán/Khoa học:**
-  * Tìm hiểu thư viện `katex` và `@types/katex` trên React Frontend.
-  * Hướng dẫn Prompt ép OpenAI trả về các công thức toán học dưới dạng chuẩn LaTeX (ví dụ `\( E = mc^2 \)` hoặc `\[ \int_0^\infty x^2 dx \]`) để Frontend hiển thị đẹp mắt.
+| Ngày | Công việc thực hiện chi tiết | Đạt được / Sản phẩm |
+|---|---|---|
+| **Thứ 2 (20/07/2026)** | • Mở AWS IAM Console $\rightarrow$ **Identity providers** $\rightarrow$ Thêm OIDC Provider `token.actions.githubusercontent.com` với Audience `sts.amazonaws.com`.<br>• Lấy vân tay bảo mật Thumbprint của GitHub tự động.<br>• Tạo IAM Role `LearnSphereGitHubDeployRole` với Trust Policy gắn thẻ `sub` ràng buộc repository. | • OIDC Identity Provider cấu hình xong.<br>• IAM Role cho GitHub Actions bảo mật. |
+| **Thứ 3 (21/07/2026)** | • Khởi tạo S3 Frontend Bucket `learnsphere-fe-575620421319` tại Singapore (`ap-southeast-1`).<br>• Khởi tạo S3 Media Bucket `learnsphere-media-575620421319`, bật tính năng mã hóa Server-side Encryption (SSE-S3).<br>• Thiết lập quy tắc CORS JSON trên Media Bucket hỗ trợ upload từ trình duyệt. | • 2 S3 Buckets được tạo thành công.<br>• Bật Block Public Access 100% & CORS. |
+| **Thứ 4 (22/07/2026)** | • Mở dịch vụ **Amazon CloudFront** $\rightarrow$ Khởi tạo Distribution mới `EQRDOBSCG5MC8`.<br>• Cấu hình Origin 1 trỏ tới S3 Frontend Bucket, tạo mới **Origin Access Control (OAC)**.<br>• Thêm S3 Bucket Policy chỉ cho phép duy nhất CloudFront OAC được đọc đối tượng (`s3:GetObject`). | • CloudFront Distribution được khởi tạo.<br>• Cấu hình OAC bảo mật S3 Private. |
+| **Thứ 5 (23/07/2026)** | • Cấu hình Origin 2 trỏ tới DNS/IP của máy chủ EC2 Backend (Port 5000).<br>• Tạo Cache Behavior ưu tiên cho đường dẫn `/api/*` với chế độ `CachingDisabled` và chuyển tiếp toàn bộ Headers.<br>• Viết **CloudFront Function** đính kèm vào Viewer Request tự động sửa đổi URI đường dẫn phụ về `/index.html` xử lý SPA Client-side Routing. | • Routing CloudFront CDN hoàn thiện.<br>• Giải quyết triệt để lỗi CORS & 404 SPA. |
+| **Thứ 6 (24/07/2026)** | • Kiểm thử khả năng phân phối mã nguồn tĩnh Frontend từ CloudFront HTTPS domain `d2onzy56n3iw1w.cloudfront.net`.<br>• Xác nhận các cuộc gọi API `/api/health` qua CloudFront chuyển tiếp mượt mà về EC2.<br>• Tham gia họp Review tuần 6 với Mentor. | • Toàn bộ luồng CDN Phân phối mượt mà.<br>• Báo cáo tiến độ tuần 6 thành công. |
 
 ---
 
-### 3. Công việc triển khai thực tế (Work Tasks)
+### 3. Nội dung học tập & Tìm hiểu (AWS & Core Tech)
 
-* **Phát triển Module Trợ lý AI Tutor (`ai-assistant.service.js`):**
-  * Viết API `POST /api/ai/chat`:
-    * **BƯỚC 1:** Tiếp nhận `lesson_id` và câu hỏi `message` từ học viên.
-    * **BƯỚC 2:** Truy vấn MongoDB lấy dữ liệu `ai_indexed_content` của bài học và 5 tin nhắn gần nhất từ `AIMessage` collection.
-    * **BƯỚC 3:** Xây dựng System Prompt ép ngữ cảnh bài học và gửi request tới OpenAI API (`gpt-4o-mini`).
-    * **BƯỚC 4:** Lưu tin nhắn của User và phản hồi của AI vào MongoDB, trả kết quả về cho Frontend.
-  * Dựng giao diện `AIAssistantPage.tsx` / Chat Drawer trên Frontend với hiệu ứng gõ phím, hiển thị công thức KaTeX và khung chat thời gian thực.
-
-* **Phát triển Engine Sinh Quiz Tự động (`quiz-generator.service.js`):**
-  * Viết API `POST /api/quizzes/generate-ai`:
-    * Tiếp nhận các thông số từ Giảng viên: `lesson_id`, `num_questions` (số lượng câu hỏi), `difficulty` (Dễ/Trung bình/Khó), `question_types` (các dạng câu hỏi muốn tạo).
-    * Đưa văn bản bài học và thông số vào System Prompt thiết kế sẵn cho OpenAI API.
-    * Tiếp nhận chuỗi JSON từ OpenAI, kiểm tra tính hợp lệ của dữ liệu (JSON Validation) và lưu bài Quiz vào `Quiz.model.js` với trạng thái nháp (Draft).
-
-* **Phát triển Giao diện Question Builder (`QuestionBuilderPage.tsx`):**
-  * Dựng màn hình thiết kế bài kiểm tra dành cho Giảng viên:
-    * Nút bấm "Tạo câu hỏi tự động bằng AI" kích hoạt modal chọn số lượng và độ khó.
-    * Danh sách câu hỏi hiển thị dạng Cards tương tác cho phép Giảng viên trực tiếp chỉnh sửa nội dung câu hỏi, thêm/bớt đáp án, thay đổi đáp án đúng hoặc bổ sung thêm câu hỏi thủ công.
-    * Nút "Xuất bản bài Quiz" (Publish) để chính thức cho phép sinh viên vào làm bài.
+#### A. Kiến thức Đám mây AWS (AWS Cloud Fundamentals)
+* **AWS IAM OIDC Identity Provider:**
+  * Giải pháp bảo mật **Zero Static Credentials**: GitHub Actions lấy thông tin xác thực ngắn hạn từ AWS STS qua giao thức OpenID Connect.
+* **Amazon CloudFront & Origin Access Control (OAC):**
+  * Thay thế cơ chế cũ OAI bằng OAC tiên tiến hỗ trợ mã hóa HTTP/HTTPS chuẩn AWS.
+  * Phân phối toàn bộ ứng dụng qua một tên miền HTTPS duy nhất, loại bỏ lỗi Mixed Content và CORS.
+* **CloudFront Edge Functions:**
+  * Lập trình kịch bản nhẹ chạy trên điểm mạng biên (Edge Location) để điều hướng đường dẫn ứng dụng trang đơn React.
 
 ---
 
 ### 4. Kết quả đạt được (Deliverables)
-* Tính năng Trợ lý AI Tutor chạy ổn định, trả lời câu hỏi chính xác theo đúng ngữ cảnh tài liệu bài học, hiển thị mượt mà trên giao diện Chat của Frontend.
-* Engine sinh Quiz bằng OpenAI API tạo ra các bài kiểm tra chất lượng cao, đúng cấu trúc JSON, hỗ trợ hiển thị công thức toán học LaTeX bằng KaTeX.
-* Trang `QuestionBuilderPage.tsx` hoàn thiện giúp Giảng viên tiết kiệm 80% thời gian biên soạn bài tập, kết hợp linh hoạt giữa trí tuệ nhân tạo và sự tùy chỉnh của con người.
+* IAM OIDC Provider & Role `LearnSphereGitHubDeployRole` sẵn sàng cho CI/CD.
+* 2 S3 Buckets private bảo mật 100%.
+* CloudFront Distribution `EQRDOBSCG5MC8` tích hợp OAC, API Forwarding và CloudFront SPA Function.

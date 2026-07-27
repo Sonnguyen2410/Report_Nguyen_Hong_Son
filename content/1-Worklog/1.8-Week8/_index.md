@@ -1,70 +1,46 @@
 ---
-title: "Week 8 Worklog"
-date: 2024-01-01
-weight: 1
+title: "Worklog Week 8"
+date: 2026-08-07
+weight: 8
 chapter: false
 pre: " <b> 1.8. </b> "
 ---
 
-## Topic: Configuring System Monitoring with AWS CloudWatch Logs/Alarms and Developing Admin System Monitoring Dashboard
+## Topic: CloudWatch/SNS Monitoring, Production Verification, Resource Clean-up & Final Report
 
 ### 1. Week 8 Objectives
-* Master configuring and managing AWS CloudWatch monitoring systems (Logs & Alarms) to track operation logs and Amazon EC2 server performance.
-* Construct an Admin System Monitoring dashboard (`SystemMonitoringPage.tsx`) displaying real-time HTTP Request Metrics, memory usage, total user count, and traffic volume.
-* Perform comprehensive End-to-End (E2E) Testing of the complete application workflow: registration, course creation, S3 file upload, AI quiz generation, exam taking, and auto-grading.
-* Conduct Security Audits, optimize AWS operational budgets, complete project documentation, and package the official internship final report.
+* Create **Amazon SNS Topic** (`LearnSphere-Alerts`) and confirm administrator Email Subscriptions.
+* Provision 2 **CloudWatch Alarms** (`LearnSphere-EC2-HighCPU` & `LearnSphere-EC2-StatusCheckFailed`) monitoring EC2 resources.
+* Aggregate Docker container application logs into **Amazon CloudWatch Logs** (`/learnsphere/backend`).
+* Execute End-to-End production application verification on official domain **`https://www.learnsphere.id.vn/`**.
+* Master AWS Resource Clean-up procedures following **Reverse Dependency Order** and produce Clean-up Checklist.
+* Finalize internship report (Hugo Site), audit formatting consistency, and attend FCAJ program graduation ceremony.
 
 ---
 
-### 2. Learning Content & Research (AWS & Core Tech)
+### 2. Daily Activity Log
 
-#### A. Cloud Infrastructure Monitoring with AWS CloudWatch
-* **AWS CloudWatch Logs:**
-  * Learn how to ship application logs from Docker Containers on EC2 server to CloudWatch Log Groups.
-  * Use `@aws-sdk/client-cloudwatch-logs` library or Docker Log Driver (`awslogs`) for automated log synchronization.
-  * Search and filter logs using Log Insights to rapidly detect system errors (e.g., 500 status codes, DB connection failures, OpenAI API timeouts).
-* **AWS CloudWatch Metrics & Alarms (Incident Alerting):**
-  * Monitor EC2 infrastructure metrics: CPU Utilization, Network In/Out, Disk Read/Write.
-  * Set up CloudWatch Alarms: Configure alert threshold when EC2 CPU exceeds 85% continuously for 5 minutes.
-  * Integrate Amazon SNS (Simple Notification Service) to automatically dispatch instant email incident alerts to Administrators.
-
-#### B. Security Audit & Cost Optimization
-* **Infrastructure Security Audit:**
-  * Review AWS Security Groups: Ensure only necessary ports are exposed (22, 80, 443, 5000) and lock down public DB management ports.
-  * Ensure S3 Bucket Privacy: Audit Block Public Access configuration on S3 and verify 100% of sensitive files utilize short-lived Presigned URLs.
-  * Audit GitHub Secrets: Confirm no API Keys (OpenAI, AWS Access Keys, MongoDB URI) are hardcoded in source code.
-* **Operational Cost Optimization (AWS Cost Explorer):**
-  * Analyze actual cost breakdowns on AWS Billing Dashboard.
-  * Ensure EC2, S3, and CloudFront resources remain within AWS Free Tier limits or optimal budget estimates ($8.30 – $14.80/month).
+| Day | Detailed Tasks Executed | Key Deliverables / Outcomes |
+|---|---|---|
+| **Monday (Aug 03, 2026)** | • Opened AWS Console $\rightarrow$ **Amazon SNS** $\rightarrow$ Created new Topic `LearnSphere-Alerts`.<br>• Created Email Subscription pointing to administrator email address (`son.nguyenhong2410@hcmut.edu.vn`).<br>• Verified email inbox and clicked **Confirm subscription**. | • Functional SNS Topic `LearnSphere-Alerts`.<br>• Confirmed Email Subscription. |
+| **Tuesday (Aug 04, 2026)** | • Opened **CloudWatch Console** $\rightarrow$ Created Alarm 1 `LearnSphere-EC2-HighCPU` (triggers if CPU > 80% for 10 min).<br>• Created Alarm 2 `LearnSphere-EC2-StatusCheckFailed` (triggers if EC2 hardware/network fails for 60s).<br>• Configured Docker AWS Logs Driver pushing container logs to CloudWatch Log Group `/learnsphere/backend`. | • 2 CloudWatch Alarms in OK status.<br>• Centralized Log Group `/learnsphere/backend`. |
+| **Wednesday (Aug 05, 2026)** | • Navigated to official domain **`https://www.learnsphere.id.vn/`** for End-to-End product verification.<br>• Tested workflows: Auth Login/Register, Course Creation, Media upload via Presigned PUT URLs, Video streaming via Presigned GET URLs, Quiz Runner, and AI Tutor Chat. | • Product operating live on AWS.<br>• 100% stable feature performance. |
+| **Thursday (Aug 06, 2026)** | • Studied AWS Cloud Resource Clean-up methodologies (*Reverse Dependency Order*).<br>• Executed teardown steps: Disable CloudFront, Empty & Delete S3 Buckets, Terminate EC2, Delete ECR Repo, Delete CloudWatch/SNS & IAM Roles.<br>• Compiled Clean-up Checklist Table. | • Standardized Clean-up process.<br>• Verified Clean-up Checklist Table. |
+| **Friday (Aug 07, 2026)** | • Audited and finalized Hugo Relearn Theme internship report codebase.<br>• Verified narrative consistency between Vietnamese and English versions.<br>• Attended **AWS First Cloud AI Journey (FCAJ)** internship graduation ceremony with Admins and Mentors. | • 100% complete Internship Report.<br>• Successfully graduated FCAJ program. |
 
 ---
 
-### 3. Implementation Tasks (Work Tasks)
+### 3. Core Tech & Learning Topics
 
-* **Develop Backend System Metrics Logging Module (`stats.service.js`):**
-  * Write Express Middleware `metrics.middleware.js`: Automatically measure Response Time (ms), Status Codes (2xx, 4xx, 5xx), and Endpoint URLs for every HTTP Request, storing data into `RequestMetric.model.js` on MongoDB Atlas.
-  * Write Admin-only APIs:
-    * `GET /api/stats/overview`: Overview statistics for total Students, Instructors, Courses, Lessons, and Quizzes created.
-    * `GET /api/stats/system-metrics`: Return hourly request traffic charts, average response latency, and system error rates.
-
-* **Build Admin System Monitoring Dashboard (`SystemMonitoringPage.tsx`):**
-  * Construct professional Admin Dashboard UI:
-    * **Overview Metric Cards:** Total Users, Active Courses, Total Quiz Attempts, Total S3 Storage Usage.
-    * **HTTP Traffic Charts (Line Chart / Bar Chart):** Display successful requests (200 OK) vs failed requests (4xx/5xx).
-    * **System Logs Table:** Display recent system events and CloudWatch error logs.
-  * **User Management Page (`AdminUsersPage.tsx`):** Allow Admins to view user accounts, lock/unlock users, or alter role authorizations.
-
-* **End-to-End (E2E) Testing & Final Report Packaging:**
-  * Execute full-flow E2E testing scenarios on live CloudFront/EC2 environment:
-    * **SCENARIO 1:** Instructor registers account → Creates new course → Uploads video & PDF materials to AWS S3 via Presigned URL → Triggers AI document extraction → Uses Question Builder to generate quizzes via OpenAI API.
-    * **SCENARIO 2:** Student logs in → Searches course → Views video lesson → Asks AI Tutor questions → Takes online Quiz → Receives auto-graded score and updates course progress to 100%.
-  * Update `README.md` with comprehensive instructions for running local project and executing AWS CI/CD pipeline.
-  * Package clean codebase and complete official 8-week Internship Report.
+#### A. AWS Operations & Monitoring
+* **Amazon CloudWatch Logs & Alarms:** Centralized Docker container logging and automated metric threshold alerting.
+* **Amazon SNS:** Email notification publisher/subscriber pattern for infrastructure incident alerts.
+* **AWS Resource Lifecycle Management:** Resource teardown best practices avoiding unexpected AWS cloud charges.
 
 ---
 
 ### 4. Deliverables
-* AWS CloudWatch Logs & Alarms fully configured, automatically sending email alerts when EC2 server experiences high load.
-* `SystemMonitoringPage.tsx` and `AdminUsersPage.tsx` running smoothly, enabling Admins to easily monitor system health and manage users.
-* LearnSphere application achieves 100% successful E2E test execution on actual AWS infrastructure (S3, CloudFront, EC2, ECR, GitHub Actions, MongoDB Atlas, OpenAI API).
-* Complete `README.md` guide, presentation slides, and official 8-week Internship Report ready for project defense and acceptance.
+* Operational CloudWatch & SNS automated monitoring channel.
+* Production LearnSphere application running on `https://www.learnsphere.id.vn/`.
+* AWS Resource Clean-up procedures and acceptance checklist.
+* Completed 100% Internship Report ready for final submission.
