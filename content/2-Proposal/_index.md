@@ -5,111 +5,201 @@ weight: 2
 chapter: false
 pre: " <b> 2. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
 
-In this section, you need to summarize the contents of the workshop that you **plan** to conduct.
-
-# IoT Weather Platform for Lab Research
-## A Unified AWS Serverless Solution for Real-Time Weather Monitoring
+# LearnSphere - Smart AI-Powered E-Learning Platform
+## Intelligent Online Learning Platform Integrated with AI
 
 ### 1. Executive Summary
-The IoT Weather Platform is designed for the ITea Lab team in Ho Chi Minh City to enhance weather data collection and analysis. It supports up to 5 weather stations, with potential scalability to 10-15, utilizing Raspberry Pi edge devices with ESP32 sensors to transmit data via MQTT. The platform leverages AWS Serverless services to deliver real-time monitoring, predictive analytics, and cost efficiency, with access restricted to 5 lab members via Amazon Cognito.
+LearnSphere is a next-generation online learning platform (E-Learning) designed to enhance teaching and learning efficiency in modern educational environments. The platform combines a full-stack web application (React/Vite & Express/MongoDB) with AWS cloud infrastructure (EC2, CloudFront, S3, ECR, AWS Systems Manager, CloudWatch, SNS), CI/CD automation via GitHub Actions, and high-speed Artificial Intelligence powered by the Groq API (LLM Inference Engine). The system supports flexible role-based access control for 3 user groups (Student, Instructor, Admin), integrating key features such as a 24/7 AI Learning Assistant, automated document extraction (PDF/Word/OCR scanned images) to generate smart quizzes, secure multimedia asset storage via S3 Media Bucket, and real-time system metrics monitoring via AWS CloudWatch combined with automated email alerts to Admin via Amazon SNS.
+
+---
 
 ### 2. Problem Statement
-### What’s the Problem?
-Current weather stations require manual data collection, becoming unmanageable with multiple units. There is no centralized system for real-time data or analytics, and third-party platforms are costly and overly complex.
 
-### The Solution
-The platform uses AWS IoT Core to ingest MQTT data, AWS Lambda and API Gateway for processing, Amazon S3 for storage (including a data lake), and AWS Glue Crawlers and ETL jobs to extract, transform, and load data from the S3 data lake to another S3 bucket for analysis. AWS Amplify with Next.js provides the web interface, and Amazon Cognito ensures secure access. Similar to Thingsboard and CoreIoT, users can register new devices and manage connections, though this platform operates on a smaller scale and is designed for private use. Key features include real-time dashboards, trend analysis, and low operational costs.
+#### Current Issues
+Traditional E-Learning systems lack personalization and instant support capabilities for students outside of class hours. Instructors spend excessive manual time reading materials, summarizing, and drafting quiz questions for students. Furthermore, lecture documents in PDF format, Word files (.docx), or scanned image documents (OCR) are not automated for lesson data conversion. Operationally, application deployment lacks automation (no CI/CD), and storing large video files directly on servers causes system overload and complicates log management.
 
-### Benefits and Return on Investment
-The solution establishes a foundational resource for lab members to develop a larger IoT platform, serving as a study resource, and provides a data foundation for AI enthusiasts for model training or analysis. It reduces manual reporting for each station via a centralized platform, simplifying management and maintenance, and improves data reliability. Monthly costs are $0.66 USD per the AWS Pricing Calculator, with a 12-month total of $7.92 USD. All IoT equipment costs are covered by the existing weather station setup, eliminating additional development expenses. The break-even period of 6-12 months is achieved through significant time savings from reduced manual work.
+#### Solution
+LearnSphere implements an optimized AWS production infrastructure architecture (`ap-southeast-1`): Frontend (React/Vite) is statically built, stored on Amazon S3 (`S3 Frontend`), and distributed via Amazon CloudFront CDN. Backend (Express.js) is containerized with Docker, managed on Amazon ECR, and automatically deployed to an Amazon EC2 Instance inside a VPC Public Subnet (via Internet Gateway) using GitHub Actions CI/CD combined with AWS Systems Manager (SSM) and IAM. The database utilizes MongoDB Atlas, while multimedia files and lesson documents are stored on Amazon S3 (`S3 Media`). Smart features integrated with the Groq API LLM Inference combined with text processing libraries (`pdf-parse`, `mammoth`, `tesseract.js` OCR) automate lesson summarization, power the 24/7 AI Tutor, and generate diverse Quiz question banks. The system is closely monitored via AWS CloudWatch (Logs & Alarms), automatically triggering Amazon SNS (`LearnSphere-Alerts`) to dispatch immediate notifications to Admin Gmail upon incident detection.
+
+#### Benefits & Return on Investment (ROI)
+- **Time Optimization:** Automates up to 80% of quiz/assignment creation time for instructors.
+- **24/7 Learning Support:** Provides a personalized AI learning assistant 24/7 for students.
+- **Operating Cost Optimization:** Docker containerization combined with CloudFront and EC2 `t2.micro`/`t3.micro` optimizes operating budgets, with estimated infrastructure costs around $8.30 – $14.80 USD/month (~$99.60 – $177.60 USD for 12 months).
+- **Accelerated Deployment:** CI/CD pipeline reduces product deployment time by 90%.
+- **Fast Payback:** Clear payback and effectiveness achieved within 1–3 months by saving hundreds of manual labor hours and improving educational quality.
+
+---
 
 ### 3. Solution Architecture
-The platform employs a serverless AWS architecture to manage data from 5 Raspberry Pi-based stations, scalable to 15. Data is ingested via AWS IoT Core, stored in an S3 data lake, and processed by AWS Glue Crawlers and ETL jobs to transform and load it into another S3 bucket for analysis. Lambda and API Gateway handle additional processing, while Amplify with Next.js hosts the dashboard, secured by Cognito. The architecture is detailed below:
+The platform adopts an AWS Cloud Production-ready architecture in region `ap-southeast-1` combined with Docker containerization and CI/CD automation via GitHub Actions. The React frontend interface is distributed via Amazon CloudFront CDN backed by S3 Frontend. The Express.js backend operates on an Amazon EC2 Instance inside a VPC Public Subnet via Internet Gateway, interacting directly with MongoDB Atlas, S3 Media Bucket, Groq API (LLM Inference), and CloudWatch / SNS monitoring systems.
 
-![IoT Weather Station Architecture](/images/2-Proposal/edge_architecture.jpeg)
+![LearnSphere AWS Architecture](/images/LEARNSHPHERE.drawio.png)
 
-![IoT Weather Platform Architecture](/images/2-Proposal/platform_architecture.jpeg)
+{{< mermaid >}}
+graph TD
+    subgraph Users_Dev ["Users & Deployment"]
+        User["👤 USER (Student / Instructor)"]
+        GitHub["🐙 GitHub (CI/CD Pipeline)"]
+    end
 
-### AWS Services Used
-- **AWS IoT Core**: Ingests MQTT data from 5 stations, scalable to 15.
-- **AWS Lambda**: Processes data and triggers Glue jobs (two functions).
-- **Amazon API Gateway**: Facilitates web app communication.
-- **Amazon S3**: Stores raw data in a data lake and processed outputs (two buckets).
-- **AWS Glue**: Crawlers catalog data, and ETL jobs transform and load it.
-- **AWS Amplify**: Hosts the Next.js web interface.
-- **Amazon Cognito**: Secures access for lab users.
+    subgraph AWS_Cloud ["AWS Cloud Infrastructure (ap-southeast-1)"]
+        IAM["🔐 IAM (Identity & Access Control)"]
+        ECR["📦 Amazon ECR (Container Registry)"]
+        SSM["⚙️ AWS Systems Manager"]
 
-### Component Design
-- **Edge Devices**: Raspberry Pi collects and filters sensor data, sending it to IoT Core.
-- **Data Ingestion**: AWS IoT Core receives MQTT messages from the edge devices.
-- **Data Storage**: Raw data is stored in an S3 data lake; processed data is stored in another S3 bucket.
-- **Data Processing**: AWS Glue Crawlers catalog the data, and ETL jobs transform it for analysis.
-- **Web Interface**: AWS Amplify hosts a Next.js app for real-time dashboards and analytics.
-- **User Management**: Amazon Cognito manages user access, allowing up to 5 active accounts.
+        subgraph Edge_Storage ["Edge & Storage Services"]
+            CloudFront["⚡ Amazon CloudFront (CDN)"]
+            S3_FE["🪣 S3 Frontend Bucket"]
+            S3_Media["🪣 S3 Media Bucket"]
+        end
+
+        subgraph VPC ["AWS VPC (Availability Zone)"]
+            subgraph PublicSubnet ["Public Subnet"]
+                IGW["🌐 Internet Gateway"]
+                EC2["🖥️ Amazon EC2 Instance (Docker Backend)"]
+            end
+        end
+
+        subgraph Monitoring_Alerts ["Monitoring & Alerts"]
+            CloudWatch["📊 AWS CloudWatch (Logs + Alarms)"]
+            SNS["🔔 Amazon SNS (LearnSphere-Alerts)"]
+        end
+    end
+
+    subgraph External ["External Services"]
+        MongoDB["🍃 MongoDB Atlas (Cloud DB)"]
+        Groq["🚀 Groq API (LLM Inference Engine)"]
+        Gmail["✉️ Gmail ADMIN"]
+    end
+
+    %% User Flow
+    User -->|Web Browsing| CloudFront
+    CloudFront -->|Fetch Static Assets| S3_FE
+    CloudFront -->|Send API Request| IGW
+    IGW --> EC2
+    User <-->|Upload / Download Media| S3_Media
+
+    %% GitHub CI/CD Flow
+    GitHub -->|Auth & IAM Permissions| IAM
+    GitHub -->|Push Docker Image| ECR
+    GitHub -->|Control & Deploy EC2| SSM
+    GitHub -->|Invalidate Cache| CloudFront
+    GitHub -->|Deploy Static Assets| S3_FE
+
+    %% EC2 Core Services
+    EC2 <-->|Manage Media Files| S3_Media
+    EC2 <-->|Database Query| MongoDB
+    EC2 <-->|AI Tutor & Quiz Gen| Groq
+    EC2 -->|Push System Logs| CloudWatch
+
+    %% System Monitoring & Notification Loop
+    CloudWatch -->|Trigger Alarm| SNS
+    SNS -->|Send Alert Email| Gmail
+{{< /mermaid >}}
+
+#### AWS Services & Technologies Used
+- **Amazon EC2 Instance:** Hosts Backend Express.js application (running inside Docker Container) in Public Subnet of VPC (Region `ap-southeast-1`) connected via Internet Gateway.
+- **Amazon CloudFront & S3 Frontend Bucket:** Distributes and stores static Frontend application (React + Vite + Tailwind CSS), accelerating response speed globally.
+- **S3 Media Bucket:** Securely stores lecture videos, images, and learning materials (PDF/Word), serving direct user downloads/uploads and EC2 media management.
+- **Amazon ECR (Elastic Container Registry) & AWS Systems Manager (SSM):** Official Docker Image repository and remote automated deployment agent for safe execution on EC2 Instance.
+- **AWS IAM (Identity and Access Management):** Manages access control and secure authentication for GitHub Actions CI/CD workflows to AWS resources.
+- **AWS CloudWatch (Logs & Alarms) & Amazon SNS (`LearnSphere-Alerts`):** Collects system logs, monitors EC2 metrics, and automatically triggers email notifications to **Gmail ADMIN**.
+- **GitHub Actions:** Automates end-to-end CI/CD workflow (Build & push Docker image to ECR, deploy S3 Frontend, invalidate CloudFront cache, and command EC2 via Systems Manager).
+- **Groq API Engine:** Powers high-speed AI features (Chatbot AI Tutor, lesson analysis, automated Quiz generation).
+- **MongoDB Atlas:** Managed Cloud MongoDB Database storing users, courses, lessons, and quiz attempt history.
+
+#### Component Design
+- **User Management & Authorization:** JWT Authentication with 3 roles (Student, Instructor, Admin) and password recovery OTP.
+- **Course & Lesson Management:** Course creation (Draft/Published), video/document upload to S3 Media, lesson ordering.
+- **Document Processing & AI Engine:** Text extraction from PDF/Word/OCR scanned images (Vietnamese Tesseract OCR), sent to Groq API for auto-summarization and quiz generation.
+- **Quiz Execution & Automated Grading:** Interactive Quiz system (Multiple choice, True/False, Fill-in-the-blank, Essay) with auto-grading and history tracking.
+- **CI/CD Pipeline, SSM & SNS Monitoring:** GitHub Actions automatically tests, pushes to ECR, and deploys via Systems Manager to EC2; CloudWatch & SNS monitor system 24/7 and send immediate alerts to Gmail Admin.
+
+
+---
 
 ### 4. Technical Implementation
-**Implementation Phases**
-This project has two parts—setting up weather edge stations and building the weather platform—each following 4 phases:
-- Build Theory and Draw Architecture: Research Raspberry Pi setup with ESP32 sensors and design the AWS serverless architecture (1 month pre-internship)
-- Calculate Price and Check Practicality: Use AWS Pricing Calculator to estimate costs and adjust if needed (Month 1).
-- Fix Architecture for Cost or Solution Fit: Tweak the design (e.g., optimize Lambda with Next.js) to stay cost-effective and usable (Month 2).
-- Develop, Test, and Deploy: Code the Raspberry Pi setup, AWS services with CDK/SDK, and Next.js app, then test and release to production (Months 2-3).
 
-**Technical Requirements**
-- Weather Edge Station: Sensors (temperature, humidity, rainfall, wind speed), a microcontroller (ESP32), and a Raspberry Pi as the edge device. Raspberry Pi runs Raspbian, handles Docker for filtering, and sends 1 MB/day per station via MQTT over Wi-Fi.
-- Weather Platform: Practical knowledge of AWS Amplify (hosting Next.js), Lambda (minimal use due to Next.js), AWS Glue (ETL), S3 (two buckets), IoT Core (gateway and rules), and Cognito (5 users). Use AWS CDK/SDK to code interactions (e.g., IoT Core rules to S3). Next.js reduces Lambda workload for the fullstack web app.
+#### Implementation Phases
+The project consists of 2 parts — building AWS Infrastructure / CI/CD Pipeline and developing the AI-integrated Full-stack Web application — executed across 4 phases within 2 internship months:
 
-### 5. Timeline & Milestones
-**Project Timeline**
-- Pre-Internship (Month 0): 1 month for planning and old station review.
-- Internship (Months 1-3): 3 months.
-    - Month 1: Study AWS and upgrade hardware.
-    - Month 2: Design and adjust architecture.
-    - Month 3: Implement, test, and launch.
-- Post-Launch: Up to 1 year for research.
+1. **Research & Architecture Design:** System requirements analysis, Database Schema Design (11 Models), API Design, and AWS VPC architecture diagram (Month 1 / Weeks 1–2).
+2. **AWS Infrastructure & CI/CD Setup:** Initialize S3 Buckets, Amazon ECR, EC2 Instance, CloudFront, and write GitHub Actions workflow to automatically build Docker image (Month 1 / Weeks 2–3).
+3. **Core Services Development & OpenAI Integration:** Build Backend API (Auth, Course, Lesson, S3 Presigned URL), connect OpenAI API, OCR/PDF parsing module, and build React/Vite UI (Month 1 / Week 4 - Month 2 / Week 6).
+4. **Testing, CloudWatch Monitoring & Deployment:** Configure CloudWatch Logs & Alarms, End-to-End system testing on EC2, performance optimization, and documentation packaging (Month 2 / Weeks 7–8).
+
+#### Technical Requirements
+- **Backend & Infrastructure:** Node.js 18+, Express 5, Mongoose 9, Docker, `@aws-sdk/client-s3`, `@aws-sdk/client-cloudwatch-logs`, OpenAI SDK, `tesseract.js` (`vie`), `mammoth`, `pdf-parse`. `.env` configuration for S3 Buckets (`ap-southeast-1`), ECR URI, and OpenAI API Key.
+- **Frontend & CI/CD:** React 18, TypeScript, Vite, Tailwind CSS, KaTeX. GitHub Actions workflow configured with AWS Secrets (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`).
+
+---
+
+### 5. Roadmap & Key Milestones
+
+```text
+[Month 0 / Pre-Internship] ──► [Month 1 / Weeks 1-4] ──► [Month 2 / Weeks 5-8] ──► [Post-Deployment]
+  Planning & Design             AWS Infra & Core API     OpenAI, CI/CD & Test      1-Year Operation
+```
+
+- **Pre-Internship (Month 0):** 1 month planning, requirements documentation, and preliminary AWS architecture design.
+- **Internship (Months 1–2):**
+  - **Month 1:**
+    - *Weeks 1–2:* Complete Database Schema design, API Design, and EC2/S3/CloudFront VPC diagram.
+    - *Weeks 3–4:* Initialize AWS infrastructure (ECR, EC2, CloudFront), configure GitHub Actions CI/CD, and write basic Backend APIs.
+  - **Month 2:**
+    - *Weeks 5–6:* Integrate OpenAI API, PDF/Docx/OCR document extraction, AI Assistant, and Auto Quiz Generation on React Frontend.
+    - *Weeks 7–8:* Configure AWS CloudWatch Logs & Alarms, End-to-End system testing on EC2, performance optimization, and finalize report.
+- **Post-Deployment:** Maintain system on AWS, collect user feedback, and expand features over 1 year.
+
+---
 
 ### 6. Budget Estimation
-You can find the budget estimation on the [AWS Pricing Calculator](https://calculator.aws/#/estimate?id=621f38b12a1ef026842ba2ddfe46ff936ed4ab01).  
-Or you can download the [Budget Estimation File](../attachments/budget_estimation.pdf).
 
-### Infrastructure Costs
-- AWS Services:
-    - AWS Lambda: $0.00/month (1,000 requests, 512 MB storage).
-    - S3 Standard: $0.15/month (6 GB, 2,100 requests, 1 GB scanned).
-    - Data Transfer: $0.02/month (1 GB inbound, 1 GB outbound).
-    - AWS Amplify: $0.35/month (256 MB, 500 ms requests).
-    - Amazon API Gateway: $0.01/month (2,000 requests).
-    - AWS Glue ETL Jobs: $0.02/month (2 DPUs).
-    - AWS Glue Crawlers: $0.07/month (1 crawler).
-    - MQTT (IoT Core): $0.08/month (5 devices, 45,000 messages).
+Estimated cloud computing service costs available on AWS Pricing Calculator.
 
-Total: $0.7/month, $8.40/12 months
+#### Infrastructure Costs
 
-- Hardware: $265 one-time (Raspberry Pi 5 and sensors).
+| Cloud / AI Service | Specification Details | Cost / Month (USD) |
+| --- | --- | --- |
+| **Amazon EC2 (t2.micro / t3.micro)** | Free Tier or ~0.0116 USD/hour | 4.50 - 8.50 USD |
+| **Amazon CloudFront & S3 Static (`learnsphere-fe-static`)** | Frontend hosting and CDN data transfer | 0.50 USD |
+| **Amazon S3 Standard (`ai-learning-platform-vhd`)** | 10 GB media/document storage | 0.30 USD |
+| **Amazon ECR & CloudWatch** | Docker image storage and log collection | 0.50 USD |
+| **OpenAI API** | ~300,000 input/output tokens for AI Tutor & Quiz Gen | 2.50 - 5.00 USD |
+| **MongoDB Atlas (Shared Cluster)** | Free Tier M0 | 0.00 USD |
+| **Total Monthly Cost** | | **8.30 – 14.80 USD/month** |
+| **Total Annual Cost (12 Months)** | | **99.60 – 177.60 USD/year** |
+
+#### Hardware / Software Costs
+- **Hardware & Software Cost:** $0 USD (Utilizing existing hardware and open-source tools).
+
+---
 
 ### 7. Risk Assessment
+
 #### Risk Matrix
-- Network Outages: Medium impact, medium probability.
-- Sensor Failures: High impact, low probability.
-- Cost Overruns: Medium impact, low probability.
+
+| Identified Risk | Impact Level | Likelihood |
+| --- | --- | --- |
+| EC2 Instance Downtime | High | Low |
+| OpenAI API Token Budget Overrun | High | Low |
+| OCR extraction errors on blurry scan documents | Medium | Medium |
+| GitHub Actions CI/CD Pipeline Failure | Medium | Low |
 
 #### Mitigation Strategies
-- Network: Local storage on Raspberry Pi with Docker.
-- Sensors: Regular checks and spares.
-- Cost: AWS budget alerts and optimization.
+- **EC2 Management:** Configure Docker auto-restart policy (`restart: always`), create CloudWatch Alarm when CPU/RAM exceeds 85%.
+- **OpenAI Budget:** Configure Max Tokens limit, apply Rate Limiting on API requests, and cache common AI responses.
+- **OCR Documents:** Preprocess text, display warning to users if uploaded file is too blurry.
+- **CI/CD & Security:** Test Docker build locally before pushing, enforce AWS IAM least privilege, and store keys in GitHub Secrets.
 
 #### Contingency Plans
-- Revert to manual methods if AWS fails.
-- Use CloudFormation for cost-related rollbacks.
+- Automatically recover container or restart EC2 via CloudWatch Actions if instance crashes.
+- Provide `QuestionBuilder` tool for instructors to manually craft/edit questions when uploaded files cannot be extracted by AI.
+
+---
 
 ### 8. Expected Outcomes
-#### Technical Improvements: 
-Real-time data and analytics replace manual processes.  
-Scalable to 10-15 stations.
-#### Long-term Value
-1-year data foundation for AI research.  
-Reusable for future projects.
+
+- **Technical Improvements:** Successfully built a Docker/AWS Cloud standard E-Learning system, automatically deployed via GitHub Actions CI/CD, automated learning material workflows using OpenAI API, and monitored via CloudWatch.
+- **Long-term Value:** AWS EC2 + Docker infrastructure ready to scale (Auto Scaling Group / ECS / EKS) for thousands of students, serving as a foundation for future EdTech research and products.

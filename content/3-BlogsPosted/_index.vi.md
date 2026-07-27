@@ -6,14 +6,9 @@ chapter: false
 pre: " <b> 3. </b> "
 ---
 
-{{% notice warning %}}  
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
-Tại đây sẽ là phần liệt kê, giới thiệu các blogs mà các bạn đã đăng trên [AWS Study Group](https://www.facebook.com/groups/awsstudygroupfcj). Ví dụ:
-
-###  [Blog 1 - SESSION POLICIES TRONG AMAZON EKS POD IDENTITY](3.1-Blog1/)
-Blog này giới thiệu Amazon EKS Pod Identity vừa bổ sung tính năng session policies, cho phép bạn thu hẹp quyền IAM một cách linh hoạt và chính xác cho từng pod mà không cần tạo thêm nhiều IAM roles riêng biệt. Đây là bước tiến quan trọng giúp áp dụng nguyên tắc least privilege hiệu quả hơn trong môi trường Kubernetes quy mô lớn.
+###  [Blog 1 - [AWS Architecture] Phân Tích Kiến Trúc Hệ Thống Platform Học Tập Tích Hợp AI (LearnSphere)](3.1-Blog1/)
+Bài viết phân tích chi tiết sơ đồ kiến trúc hệ thống backend & frontend cho dự án LearnSphere / AI Learning Platform. Mô hình kết hợp giữa Serverless Static Hosting (S3 + CloudFront), Containerized Backend trên EC2, pipeline CI/CD tự động (GitHub Actions + ECR) và các dịch vụ tích hợp external (OpenAI API + MongoDB Atlas).  
+🔗 **Facebook Permalink:** [AWS Study Group Post](https://www.facebook.com/groups/awsstudygroupfcj/permalink/2222081271890166/)
 
 ###  [Blog 2 - ...](3.2-Blog2/)
 Blog này giới thiệu Amazon EKS Pod Identity vừa bổ sung tính năng session policies, cho phép bạn thu hẹp quyền IAM một cách linh hoạt và chính xác cho từng pod mà không cần tạo thêm nhiều IAM roles riêng biệt. Đây là bước tiến quan trọng giúp áp dụng nguyên tắc least privilege hiệu quả hơn trong môi trường Kubernetes quy mô lớn.

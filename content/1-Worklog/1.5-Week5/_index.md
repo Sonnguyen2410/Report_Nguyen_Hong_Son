@@ -5,53 +5,84 @@ weight: 1
 chapter: false
 pre: " <b> 1.5. </b> "
 ---
-{{% notice warning %}} 
-⚠️ **Note:** The following information is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
 
+## Topic: OpenAI API Integration, Building PDF/Word Document Extraction Module, and Vietnamese OCR
 
-### Week 5 Objectives:
+### 1. Week 5 Objectives
+* Successfully integrate OpenAI API (using official SDK) into Node.js Backend to power Artificial Intelligence features.
+* Build a multi-format document processing pipeline: Read and extract plain text from PDF files, Word files (`.docx`), and scanned image documents using Vietnamese-supported Optical Character Recognition (OCR) technology.
+* Establish an AI Document Indexing system storing lesson document indexes into MongoDB Atlas database to serve as the foundational context for the AI Tutor in Week 6.
+* Ensure security and optimize OpenAI API call costs (Rate Limiting, Timeout Handling & Prompt Structuring).
 
-* Connect and get acquainted with members of First Cloud AI Journey.
-* Understand basic AWS services, how to use the console & CLI.
+---
 
-### Tasks to be carried out this week:
-| Day | Task                                                                                                                                                                                                   | Start Date | Completion Date | Reference Material                        |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------------- | ----------------------------------------- |
-| 2   | - Get acquainted with FCAJ members <br> - Read and take note of internship unit rules and regulations                                                                                                   | 08/11/2025 | 08/11/2025      |
-| 3   | - Learn about AWS and its types of services <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                              | 08/12/2025 | 08/12/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Create AWS Free Tier account <br> - Learn about AWS Console & AWS CLI <br> - **Practice:** <br>&emsp; + Create AWS account <br>&emsp; + Install & configure AWS CLI <br> &emsp; + How to use AWS CLI | 08/13/2025 | 08/13/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Learn basic EC2: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - SSH connection methods to EC2 <br> - Learn about Elastic IP   <br>                            | 08/14/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Practice:** <br>&emsp; + Launch an EC2 instance <br>&emsp; + Connect via SSH <br>&emsp; + Attach an EBS volume                                                                                     | 08/15/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
+### 2. Learning Content & Research (AWS & Core Tech)
 
+#### A. OpenAI API Integration & Prompt Engineering Techniques
+* **Overview of OpenAI API SDK:**
+  * Learn how to initialize OpenAI Client in Node.js using the `openai` library.
+  * Choose optimal Model for E-Learning use case: Use `gpt-4o` / `gpt-4o-mini` for fast processing speed, high Vietnamese language comprehension, and cost effectiveness.
+  * Understand Model configuration parameters: `temperature` (creativity level), `max_tokens` (response length limit), `top_p`, and `response_format` (enforcing strict `json_object` format).
+* **Security & API Cost Management:**
+  * Ensure OpenAI API Key is securely stored in `OPENAI_API_KEY` environment variable on EC2 server and never exposed to the React client.
+  * Build **Timeout Handling Mechanism:** Configure max wait time (120-second Timeout) preventing network delays or large files from hanging requests.
+  * Set up Text Chunking/Truncation mechanism to avoid exceeding the Model's Context Window limits and minimize Token costs.
 
-### Week 5 Achievements:
+#### B. Text Extraction Technologies & OCR
+* **Static Text File Extraction (PDF & Word):**
+  * Use `pdf-parse` library: Read binary data stream (Buffer) of PDF files and extract full text string.
+  * Use `mammoth` library: Read Word (`.docx`) files, convert Word XML structure into clean plain text without junk characters.
+* **Optical Character Recognition (OCR) with Tesseract.js (Vietnamese):**
+  * OCR Concept: Technique of recognizing handwriting or printed text within digital images into editable text data.
+  * Use `tesseract.js` library: Configure recognition with Vietnamese (`vie`) and English (`eng`) language datasets.
+  * Multi-thread processing with Tesseract Worker to prevent Event Loop blocking on Node.js server when processing large image files.
 
-* Understood what AWS is and mastered the basic service groups: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
+---
 
-* Successfully created and configured an AWS Free Tier account.
+### 3. Implementation Tasks (Work Tasks)
 
-* Became familiar with the AWS Management Console and learned how to find, access, and use services via the web interface.
+* **Install Packages & Configure Backend Environment (`LearnSphere_BE`):**
+  * Install file processing and AI dependencies:
+    ```bash
+    npm install openai pdf-parse mammoth tesseract.js @tesseract.js-data/vie
+    ```
+  * Configure environment variables `OPENAI_API_KEY` and `AI_PROVIDER_TIMEOUT_MS=120000` in `.env`.
 
-* Installed and configured AWS CLI on the computer, including:
-  * Access Key
-  * Secret Key
-  * Default Region
-  * ...
+* **Build Document Data Extraction Pipeline (`file-parser.service.js`):**
+  * Develop file format detection module based on MIME Type or file extension:
+    * `application/pdf` format: Call `pdf-parse` module to retrieve `data.text`.
+    * `application/vnd.openxmlformats-officedocument.wordprocessingml.document` (`.docx`): Call `mammoth.extractRawText({ buffer })`.
+    * Image formats (`image/png`, `image/jpeg`): Create Tesseract Worker with `vie+eng` languages, execute `worker.recognize(buffer)` to extract text from scanned images.
+  * Build Text Sanitization function: Remove extra whitespaces, unreadable special characters, and normalize Vietnamese Unicode encoding.
 
-* Used AWS CLI to perform basic operations such as:
+* **Build AI Provider Service (`ai-provider.service.js`) & Indexing API:**
+  * Write encapsulated OpenAI API calling module:
+    ```javascript
+    import OpenAI from "openai";
 
-  * Check account & configuration information
-  * Retrieve the list of regions
-  * View EC2 service
-  * Create and manage key pairs
-  * Check information about running services
-  * ...
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-* Acquired the ability to connect between the web interface and CLI to manage AWS resources in parallel.
-* ...
+    export const invokeOpenAI = async ({ systemPrompt, userPrompt, jsonMode = false }) => {
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt }
+        ],
+        response_format: jsonMode ? { type: "json_object" } : undefined,
+        temperature: 0.3,
+      });
+      return response.choices[0].message.content;
+    };
+    ```
+  * Write API `POST /api/lessons/:id/index-ai`: Instructors upload lecture files (PDF/Word/Image), system automatically runs text extraction pipeline and saves text string to `ai_indexed_content` field in `Lesson.model.js` on MongoDB Atlas.
+
+* **Update Backend Dockerfile for Tesseract.js:**
+  * Update Backend `Dockerfile` to install required Linux system dependencies for Tesseract OCR (`pango`, `cairo`, `libpng`) ensuring smooth Docker build execution on Amazon ECR without errors.
+
+---
+
+### 4. Deliverables
+* `file-parser.service.js` module reads and accurately extracts 100% text content from lecture PDFs, Word `.docx` files, and scanned Vietnamese document images.
+* `ai-provider.service.js` module successfully connects to OpenAI API with `gpt-4o-mini` model, handling rapid responses and safe timeout errors.
+* Successfully unlocked AI Indexing feature: Instructors simply upload lesson documents, system automatically parses and stores text data into MongoDB Atlas as input context for AI Tutor Assistant and Automated Quiz Generator in Week 6.

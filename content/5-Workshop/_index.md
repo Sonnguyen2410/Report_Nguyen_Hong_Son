@@ -1,31 +1,31 @@
 ---
 title: "Workshop"
-date: 2024-01-01
+date: 2026-07-27
 weight: 5
 chapter: false
 pre: " <b> 5. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}}
 
-# Secure Hybrid Access to S3 using VPC Endpoints
+# Main Technical Project: Production-Grade LearnSphere System Deployment and Operation on AWS Infrastructure
 
 #### Overview
 
-**AWS PrivateLink** provides private connectivity to AWS services from VPCs and your on-premises networks, without exposing your traffic to the Public Internet.
+**LearnSphere** is a modern online learning platform (E-Learning Platform) designed following a Monorepo architecture (React/Vite SPA Frontend and Node.js/Express REST API Backend), integrated with **MongoDB Atlas** database and advanced AI features.
 
-In this lab, you will learn how to create, configure, and test VPC endpoints that enable your workloads to reach AWS services without traversing the Public Internet.
+In this workshop, we will deploy the complete LearnSphere application to **AWS cloud infrastructure (Singapore Region - ap-southeast-1)** adhering to top industry technical standards in production operations:
 
-You will create two types of endpoints to access Amazon S3: a Gateway VPC endpoint, and an Interface VPC endpoint. These two types of VPC endpoints offer different benefits depending on if you are accessing Amazon S3 from the cloud or your on-premises location
-+ **Gateway** - Create a gateway endpoint to send traffic to Amazon S3 or DynamoDB using private IP addresses.You route traffic from your VPC to the gateway endpoint using route tables.
-+ **Interface** - Create an interface endpoint to send traffic to endpoint services that use a Network Load Balancer to distribute traffic. Traffic destined for the endpoint service is resolved using DNS.
+* **Zero Static Credentials**: Automate authentication between GitHub Actions and AWS STS via **OpenID Connect (OIDC)**; assign **IAM Instance Profile (IMDSv2)** to EC2 to completely eliminate static Access Keys from source code or environment variables.
+* **Network Security & Remote Management**: Completely block inbound SSH (Port 22) access from the Internet; control and execute scripts on EC2 100% securely via **AWS Systems Manager (SSM) Session Manager**.
+* **CDN Distribution Optimization (Single Domain)**: Distribute static Frontend assets from S3 Private via **CloudFront Origin Access Control (OAC)** and proxy `/api/*` requests to EC2 port 5000, eliminating CORS and Mixed Content issues.
+* **CI/CD Pipeline & Auto-Rollback**: Fully automate Multi-stage Docker packaging, ECR push, Candidate Container testing (port 5001) with an automatic Zero-Downtime Rollback mechanism.
+* **Proactive Monitoring**: Automatically collect application logs into **CloudWatch Logs** and dispatch immediate notifications to administrator email via **CloudWatch Alarms** and **Amazon SNS**.
 
-#### Content
+---
 
-1. [Workshop overview](5.1-Workshop-overview)
-2. [Prerequiste](5.2-Prerequiste/)
-3. [Access S3 from VPC](5.3-S3-vpc/)
-4. [Access S3 from On-premises](5.4-S3-onprem/)
-5. [VPC Endpoint Policies (Bonus)](5.5-Policy/)
-6. [Clean up](5.6-Cleanup/)
+#### Table of Contents
+
+1. [5.1. Overview](5.1-Overview/)
+2. [5.2. Prerequisites](5.2-Prerequisite/)
+3. [5.3. Architecture Description](5.3-Architecture/)
+4. [5.4. Hands-on Steps](5.4-Hands-on/)
+5. [5.5. Clean-up](5.5-Cleanup/)

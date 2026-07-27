@@ -6,120 +6,82 @@ chapter: false
 pre: " <b> 4.2. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
-# Bài thu hoạch “GenAI-powered App-DB Modernization workshop”
+# Bài thu hoạch “Meetup 13/06/2026”
 
 ### Mục Đích Của Sự Kiện
-
-- Chia sẻ best practices trong thiết kế ứng dụng hiện đại
-- Giới thiệu phương pháp DDD và event-driven architecture
-- Hướng dẫn lựa chọn compute services phù hợp
-- Giới thiệu công cụ AI hỗ trợ development lifecycle
+- Chia sẻ kinh nghiệm thực tế về công việc Data Analytics Engineering và văn hóa làm việc tại các tập đoàn đa quốc gia (MNCs).
+- Định hướng tư duy phát triển nghề nghiệp, kỹ năng mềm và mô hình trưởng thành cho sinh viên/fresher.
+- Giải mã vai trò thực sự của DevOps Engineer trong thực tế doanh nghiệp và các nền tảng kỹ thuật cốt lõi cần trang bị.
+- Giới thiệu lộ trình phát triển bản thân và cơ hội kết nối cộng đồng qua chương trình AWS Student Builder Group & AWS Community Builder.
+- Tìm hiểu về kiến trúc và cách triển khai dịch vụ rút gọn URL có khả năng mở rộng (Scalable URL Shortener) trên AWS.
 
 ### Danh Sách Diễn Giả
-
-- **Jignesh Shah** - Director, Open Source Databases
-- **Erica Liu** - Sr. GTM Specialist, AppMod
-- **Fabrianne Effendi** - Assc. Specialist SA, Serverless Amazon Web Services
+- **Mr. Đạt Phạm** - Data Analytics Engineer
+- **Mr. Cường Nguyễn** - Process Engineer
+- **Mr. Trương Hữu Trong** - DevOps Engineer @ Endava Vietnam
+- **Danh Hoàng Hiếu Nghị** - AI Engineer, AWS Community Builder, AWS Student Builder Group Leader
 
 ### Nội Dung Nổi Bật
 
-#### Đưa ra các ảnh hưởng tiêu cực của kiến trúc ứng dụng cũ
+#### 1. Thực tế công việc của Data Analytics Engineer & Văn hóa tại Tập đoàn đa quốc gia (MNCs)
+- **Thực tế công việc:** Công việc của Data Analytics Engineer gắn liền với quy trình vận hành kinh doanh thực tế (như theo dõi chỉ số GMV, Fulfillment, Last Mile Cost, Fill Rate tại các doanh nghiệp như Kamereo, Colgate-Palmolive).
+- **4 Kỹ năng cốt lõi:** Tư duy phản biện (Critical Thinking), Kỹ năng giao tiếp (Communication), Kể chuyện với dữ liệu (Data Storytelling), và Giải quyết vấn đề (Problem Solving).
+- **Mô hình phát triển 5 giai đoạn:** Định hướng lộ trình sự nghiệp từ Follower (Thực thi) $\rightarrow$ Learner (Học chủ động) $\rightarrow$ Problem Solver (Giải quyết bài toán) $\rightarrow$ System Thinker (Tư duy hệ thống) $\rightarrow$ Super Star (Dẫn dắt chiến lược).
+- **Giải mã văn hóa MNC:** Tìm hiểu quy trình tuyển dụng chuẩn 4 bước (Sàng lọc ATS $\rightarrow$ Test năng lực $\rightarrow$ Phỏng vấn chuyên môn STAR model $\rightarrow$ Cultural Fit). Tìm hiểu các mô hình văn hóa tích cực như No-Blame Post-Mortem (Tech MNC) và Caring & Inclusive (FMCG MNC).
 
-- Thời gian release sản phẩm lâu → Mất doanh thu/bỏ lỡ cơ hội
-- Hoạt động kém hiệu quả → Mất năng suất, tốn kém chi phí
-- Không tuân thủ các quy định về bảo mật → Mất an ninh, uy tín
+#### 2. Thực tế công việc của DevOps Engineer – Beyond the Hype
+- **Góc nhìn thực tế về DevOps:** DevOps không chỉ đơn thuần là viết CI/CD pipelines hay quản lý Kubernetes/Docker, mà là cầu nối giúp hệ thống vận hành ổn định, tự động hóa quy trình và tối ưu hóa sự phối hợp giữa Dev và Ops.
+- **Ưu tiên lộ trình học tập:** Trang bị vững các kiến thức nền tảng (Fundamentals) như Linux, Networking basics, ngôn ngữ lập trình (Python, Golang), Git, CI/CD và Containerization trước khi chạy theo các công cụ phức tạp.
+- **Bài học xương máu:** Tự động hóa các công việc lặp đi lặp lại; học cách hỏi "Tại sao" (Why) trước khi hỏi "Làm như thế nào" (How); sử dụng AI như công cụ đòn bẩy nâng cao hiệu suất chứ không để thay thế tư duy phản biện.
 
-#### Chuyển đổi sang kiến trúc ứng dụng mới - Microservice Architecture
+#### 3. Từ First Cloud AI Journey đến AWS Partner & AWS Student Builder Group
+- **Hành trình phát triển sự nghiệp:** Việc trúng tuyển công việc đầu tiên chỉ là bước khởi đầu trong hành trình dài (từ Software/DevOps Engineer lên Solutions Architect hay Head of SA).
+- **Cơ hội từ cộng đồng AWS:** Giới thiệu các chương trình AWS Student Builder Group Program và AWS Community Builder giúp sinh viên mở rộng mạng lưới kết nối (Networking), nâng cao kỹ năng thực chiến và tiếp cận hệ sinh thái AWS Partners.
 
-Chuyển đổi thành hệ thống modular – từng chức năng là một **dịch vụ độc lập** giao tiếp với nhau qua **sự kiện** với 3 trụ cột cốt lõi:
-
-- **Queue Management**: Xử lý tác vụ bất đồng bộ
-- **Caching Strategy:** Tối ưu performance
-- **Message Handling:** Giao tiếp linh hoạt giữa services
-
-#### Domain-Driven Design (DDD)
-
-- **Phương pháp 4 bước**: Xác định domain events → sắp xếp timeline → identify actors → xác định bounded contexts
-- **Case study bookstore**: Minh họa cách áp dụng DDD thực tế
-- **Context mapping**: 7 patterns tích hợp bounded contexts
-
-#### Event-Driven Architecture
-
-- **3 patterns tích hợp**: Publish/Subscribe, Point-to-point, Streaming
-- **Lợi ích**: Loose coupling, scalability, resilience
-- **So sánh sync vs async**: Hiểu rõ trade-offs (sự đánh đổi)
-
-#### Compute Evolution
-
-- **Shared Responsibility Model**: Từ EC2 → ECS → Fargate → Lambda
-- **Serverless benefits**: No server management, auto-scaling, pay-for-value
-- **Functions vs Containers**: Criteria lựa chọn phù hợp
-
-#### Amazon Q Developer
-
-- **SDLC automation**: Từ planning đến maintenance
-- **Code transformation**: Java upgrade, .NET modernization
-- **AWS Transform agents**: VMware, Mainframe, .NET migration
+#### 4. Thiết kế dịch vụ Scalable URL Shortener trên AWS
+- **Bài toán hệ thống:** Phân tích mô hình kiến trúc xử lý rút gọn URL có khả năng chịu tải và mở rộng quy mô cao (Scalability) sử dụng các dịch vụ đám mây của AWS.
 
 ### Những Gì Học Được
 
-#### Tư Duy Thiết Kế
+#### Tư Duy Định Hướng Sự Nghiệp & Kỹ Năng Mềm
+- **Tư duy System Thinker:** Nhìn nhận bài toán trong bức tranh toàn cảnh (kết nối giữa các phòng ban, rủi ro vận hành, tác động tài chính) thay vì chỉ tập trung hoàn thành công việc được giao.
+- **Ứng xử với sự cố (Post-Mortem culture):** Học cách tập trung tìm nguyên nhân gốc rễ (Root cause) để cải tiến hệ thống thay vì đổ lỗi cho cá nhân.
+- **Kỹ năng giao tiếp trong kỹ thuật:** Truyền đạt kết quả phân tích số liệu/mã nguồn một cách trực quan, dễ hiểu đối với các bên liên quan (Stakeholders).
 
-- **Business-first approach**: Luôn bắt đầu từ business domain, không phải technology
-- **Ubiquitous language**: Importance của common vocabulary giữa business và tech teams
-- **Bounded contexts**: Cách identify và manage complexity trong large systems
-
-#### Kiến Trúc Kỹ Thuật
-
-- **Event storming technique**: Phương pháp thực tế để mô hình hóa quy trình kinh doanh
-- Sử dụng **Event-driven communication** thay vì synchronous calls
-- **Integration patterns**: Hiểu khi nào dùng sync, async, pub/sub, streaming
-- **Compute spectrum**: Criteria chọn từ VM → containers → serverless
-
-#### Chiến Lược Hiện Đại Hóa
-
-- **Phased approach**: Không rush, phải có roadmap rõ ràng
-- **7Rs framework**: Nhiều con đường khác nhau tùy thuộc vào đặc điểm của mỗi ứng dụng
-- **ROI measurement**: Cost reduction + business agility
+#### Tư Duy Kỹ Thuật & Vận Hành
+- **Nền tảng quan trọng hơn công cụ:** Công cụ (Tools) có thể thay đổi theo thời gian nhưng các nguyên lý nền tảng về Linux, Mạng (Networking) và Lập trình luôn duy trì giá trị cốt lõi.
+- **Tư duy tự động hóa:** Nhận diện và tự động hóa các tác vụ thủ công lặp đi lặp lại để dành thời gian cho các bài toán mang lại giá trị cao hơn.
 
 ### Ứng Dụng Vào Công Việc
-
-- **Áp dụng DDD** cho project hiện tại: Event storming sessions với business team
-- **Refactor microservices**: Sử dụng bounded contexts để identify service boundaries
-- **Implement event-driven patterns**: Thay thế một số sync calls bằng async messaging
-- **Serverless adoption**: Pilot AWS Lambda cho một số use cases phù hợp
-- **Try Amazon Q Developer**: Integrate vào development workflow để boost productivity
+- **Xây dựng lộ trình học tập cá nhân:** Củng cố lại các kiến thức nền tảng về Linux, Networking cơ bản và lập trình tự động hóa (Python/Shell script).
+- **Tối ưu hóa báo cáo & dữ liệu:** Áp dụng tư duy Data Storytelling và Critical Thinking khi trình bày kết quả dự án hoặc báo cáo thực tập.
+- **Thực hành viết CV & Phỏng vấn:** Cấu trúc các dự án đã làm theo mô hình STAR (Situation - Task - Action - Result) để chuẩn bị cho các đợt tuyển dụng MNCs.
+- **Tích cực tham gia cộng đồng:** Đăng ký tham gia hệ sinh thái AWS Student Builder Group/AWS Community để học hỏi kinh nghiệm từ các đàn anh đi trước và cập nhật kiến thức mới.
 
 ### Trải nghiệm trong event
+Tham gia workshop **"GenAI-powered App-DB Modernization"** vào ngày 13/08/2025 tại Tầng 26, tòa nhà Bitexco là một trải nghiệm rất thực tế và truyền cảm hứng, mang lại góc nhìn đa chiều từ công nghệ đến kỹ năng định hướng sự nghiệp. Một số trải nghiệm nổi bật:
 
-Tham gia workshop **“GenAI-powered App-DB Modernization”** là một trải nghiệm rất bổ ích, giúp tôi có cái nhìn toàn diện về cách hiện đại hóa ứng dụng và cơ sở dữ liệu bằng các phương pháp và công cụ hiện đại. Một số trải nghiệm nổi bật:
+#### Học hỏi từ các diễn giả thực chiến
+- Lắng nghe những chia sẻ rất thật về câu chuyện làm nghề Data Analytics Engineer và DevOps Engineer tại các tập đoàn lớn, giúp tôi tháo gỡ nhiều thắc mắc về khoảng cách giữa lý thuyết ở nhà trường và thực tế doanh nghiệp.
+- Học hỏi được tư duy phát triển bản thân theo các cấp độ (từ Follower đến System Thinker).
 
-#### Học hỏi từ các diễn giả có chuyên môn cao
-- Các diễn giả đến từ AWS và các tổ chức công nghệ lớn đã chia sẻ **best practices** trong thiết kế ứng dụng hiện đại.
-- Qua các case study thực tế, tôi hiểu rõ hơn cách áp dụng **Domain-Driven Design (DDD)** và **Event-Driven Architecture** vào các project lớn.
+#### Trải nghiệm nội dung phong phú
+- Báo cáo đi sâu vào các câu chuyện thực tế về vận hành chuỗi cung ứng, dữ liệu nhà máy và cách giải quyết bài toán kinh doanh bằng số liệu.
+- Các slide minh họa sinh động về vai trò "phía sau hậu trường" của DevOps cũng như bức tranh tổng quan về hệ sinh thái công cụ hiện đại.
 
-#### Trải nghiệm kỹ thuật thực tế
-- Tham gia các phiên trình bày về **event storming** giúp tôi hình dung cách **mô hình hóa quy trình kinh doanh** thành các domain events.
-- Học cách **phân tách microservices** và xác định **bounded contexts** để quản lý sự phức tạp của hệ thống lớn.
-- Hiểu rõ trade-offs giữa **synchronous và asynchronous communication** cũng như các pattern tích hợp như **pub/sub, point-to-point, streaming**.
-
-#### Ứng dụng công cụ hiện đại
-- Trực tiếp tìm hiểu về **Amazon Q Developer**, công cụ AI hỗ trợ SDLC từ lập kế hoạch đến maintenance.
-- Học cách **tự động hóa code transformation** và pilot serverless với **AWS Lambda**, từ đó nâng cao năng suất phát triển.
-
-#### Kết nối và trao đổi
-- Workshop tạo cơ hội trao đổi trực tiếp với các chuyên gia, đồng nghiệp và team business, giúp **nâng cao ngôn ngữ chung (ubiquitous language)** giữa business và tech.
-- Qua các ví dụ thực tế, tôi nhận ra tầm quan trọng của **business-first approach**, luôn bắt đầu từ nhu cầu kinh doanh thay vì chỉ tập trung vào công nghệ.
+#### Kết nối & Mở rộng định hướng
+- Hiểu rõ hơn về cách thức hoạt động của các cộng đồng sinh viên công nghệ như AWS Student Builder Group, giúp bản thân chủ động hơn trong việc tìm kiếm cơ hội học tập và networking.
 
 #### Bài học rút ra
-- Việc áp dụng DDD và event-driven patterns giúp giảm **coupling**, tăng **scalability** và **resilience** cho hệ thống.
-- Chiến lược hiện đại hóa cần **phased approach** và đo lường **ROI**, không nên vội vàng chuyển đổi toàn bộ hệ thống.
-- Các công cụ AI như Amazon Q Developer có thể **boost productivity** nếu được tích hợp vào workflow phát triển hiện tại.
+- Luôn giữ thái độ tò mò, chủ động học hỏi (Learner mindset) và đặt câu hỏi "Tại sao" trước khi bắt tay vào làm.
+- Chuẩn bị hành trang toàn diện bao gồm cả kiến thức chuyên môn chắc chắn, kỹ năng mềm và tư duy hòa nhập văn hóa doanh nghiệp.
 
 #### Một số hình ảnh khi tham gia sự kiện
-* Thêm các hình ảnh của các bạn tại đây
-> Tổng thể, sự kiện không chỉ cung cấp kiến thức kỹ thuật mà còn giúp tôi thay đổi cách tư duy về thiết kế ứng dụng, hiện đại hóa hệ thống và phối hợp hiệu quả hơn giữa các team.
+
+![Hình ảnh tham gia sự kiện 2.1](/images/event2.1.JPG)
+
+![Hình ảnh tham gia sự kiện 2.2](/images/event2.2.JPG)
+
+![Hình ảnh tham gia sự kiện 2.3](/images/event2.3.png)
+
+> Tổng thể, sự kiện không chỉ đem lại kiến thức chuyên môn thực tế về Data, DevOps, Cloud mà còn định hướng tư duy đúng đắn giúp tôi tự tin chuẩn bị hành trang cho sự nghiệp tương lai.

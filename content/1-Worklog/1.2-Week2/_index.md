@@ -5,53 +5,68 @@ weight: 1
 chapter: false
 pre: " <b> 1.2. </b> "
 ---
-{{% notice warning %}} 
-⚠️ **Note:** The following information is for reference purposes only. Please **do not copy verbatim** for your own report, including this warning.
-{{% /notice %}}
 
+## Topic: Packaging Docker Container for Backend and Pushing Image to Amazon ECR
 
-### Week 2 Objectives:
+### 1. Week 2 Objectives
+* Master foundational knowledge of Containerization technology with Docker and how to package Node.js/Express applications.
+* Gain proficiency in AWS Amazon ECR (Elastic Container Registry) to manage Docker Image repositories.
+* Successfully package the `LearnSphere_BE` application into a Docker Image, test container execution in Localhost environment, and successfully push the Image to Amazon ECR.
 
-* Connect and get acquainted with members of First Cloud AI Journey.
-* Understand basic AWS services, how to use the console & CLI.
+---
 
-### Tasks to be carried out this week:
-| Day | Task                                                                                                                                                                                                   | Start Date | Completion Date | Reference Material                        |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------- | --------------- | ----------------------------------------- |
-| 2   | - Get acquainted with FCAJ members <br> - Read and take note of internship unit rules and regulations                                                                                                   | 08/11/2025 | 08/11/2025      |
-| 3   | - Learn about AWS and its types of services <br>&emsp; + Compute <br>&emsp; + Storage <br>&emsp; + Networking <br>&emsp; + Database <br>&emsp; + ... <br>                                              | 08/12/2025 | 08/12/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 4   | - Create AWS Free Tier account <br> - Learn about AWS Console & AWS CLI <br> - **Practice:** <br>&emsp; + Create AWS account <br>&emsp; + Install & configure AWS CLI <br> &emsp; + How to use AWS CLI | 08/13/2025 | 08/13/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 5   | - Learn basic EC2: <br>&emsp; + Instance types <br>&emsp; + AMI <br>&emsp; + EBS <br>&emsp; + ... <br> - SSH connection methods to EC2 <br> - Learn about Elastic IP   <br>                            | 08/14/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
-| 6   | - **Practice:** <br>&emsp; + Launch an EC2 instance <br>&emsp; + Connect via SSH <br>&emsp; + Attach an EBS volume                                                                                     | 08/15/2025 | 08/15/2025      | <https://cloudjourney.awsstudygroup.com/> |
+### 2. Learning Content & Research (AWS & Core Tech)
 
+#### A. Application Packaging with Docker (Containerization)
+* **Basic Docker Concepts:**
+  * Differences between Virtual Machines (VM) and Docker Containers (lightweight, faster startup, shared OS Kernel).
+  * Distinguish between **Docker Image** (Blueprint/Template) and **Docker Container** (Running instance).
+* **Dockerfile Optimization for Node.js:**
+  * Learn to choose lightweight Base Images (e.g., `node:18-alpine` or `node:18-slim`).
+  * Use `.dockerignore` to exclude `node_modules`, `.env`, `.git`, and junk files to reduce Image size.
+  * Leverage **Docker Layer Caching** (place `COPY package*.json` before `RUN npm install` then `COPY . .`) to accelerate re-builds.
+  * Set up secure execution environment (Non-root user) and container launch command (`CMD ["npm", "start"]`).
 
-### Week 2 Achievements:
+#### B. Amazon ECR (Elastic Container Registry) Service
+* **Amazon ECR Concepts:**
+  * What is Amazon ECR? The role of ECR in AWS infrastructure architecture (Private and secure Docker Image registry).
+  * ECR authorization mechanism with AWS IAM (permissions `ecr:GetAuthorizationToken`, `ecr:BatchCheckLayerAvailability`, `ecr:PutImage`, etc.).
+* **CLI Operations Connecting to Amazon ECR:**
+  * Use AWS CLI to retrieve authentication token and log Docker into ECR:
+    ```bash
+    aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin <aws_account_id>.dkr.ecr.ap-southeast-1.amazonaws.com
+    ```
+  * How to tag Images matching the ECR URI structure:
+    ```bash
+    docker tag learnsphere-be:latest <aws_account_id>.dkr.ecr.ap-southeast-1.amazonaws.com/learnsphere-be:latest
+    ```
+  * How to push Images to ECR (`docker push`) and pull Images (`docker pull`).
 
-* Understood what AWS is and mastered the basic service groups: 
-  * Compute
-  * Storage
-  * Networking 
-  * Database
-  * ...
+---
 
-* Successfully created and configured an AWS Free Tier account.
+### 3. Implementation Tasks (Work Tasks)
 
-* Became familiar with the AWS Management Console and learned how to find, access, and use services via the web interface.
+* **Build Docker Configuration for Backend (`LearnSphere_BE`):**
+  * Write `Dockerfile` inside `LearnSphere_BE` directory:
+    * Initialize Node.js environment.
+    * Install required packages (including OCR/Tesseract dependencies if applicable).
+    * Expose port 5000.
+  * Write `.dockerignore` file to optimize the build process.
 
-* Installed and configured AWS CLI on the computer, including:
-  * Access Key
-  * Secret Key
-  * Default Region
-  * ...
+* **Localhost Containerization Testing:**
+  * Run local image build command: `docker build -t learnsphere-be:v1.0 .`
+  * Run test container: `docker run -d -p 5000:5000 --env-file .env learnsphere-be:v1.0`
+  * Use Postman / Browser to verify basic routes (`http://localhost:5000/api/health`) and connectivity to MongoDB Atlas.
 
-* Used AWS CLI to perform basic operations such as:
+* **Initialize Amazon ECR Repository & Push Image:**
+  * Access AWS Management Console -> Amazon ECR Service.
+  * Create a new Private Repository named `learnsphere-be` in Region `ap-southeast-1`.
+  * Execute a sequence of AWS CLI commands on local machine to authenticate, tag, and push Docker Image `learnsphere-be:v1.0` (or tag `latest`) to Amazon ECR.
 
-  * Check account & configuration information
-  * Retrieve the list of regions
-  * View EC2 service
-  * Create and manage key pairs
-  * Check information about running services
-  * ...
+---
 
-* Acquired the ability to connect between the web interface and CLI to manage AWS resources in parallel.
-* ...
+### 4. Deliverables
+* Standardized `Dockerfile` and `.dockerignore` for `LearnSphere_BE`.
+* Backend container running successfully in Localhost environment with stable MongoDB Atlas connection.
+* Repository `learnsphere-be` successfully created on Amazon ECR (`ap-southeast-1`).
+* First project Docker Image successfully pushed to Amazon ECR and ready to be pulled to EC2 server in Week 3.
