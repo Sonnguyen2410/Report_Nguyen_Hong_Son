@@ -1,40 +1,40 @@
 ---
 title: "Tự đánh giá"
-date: 2024-01-01
+date: 2026-07-27
 weight: 6
 chapter: false
 pre: " <b> 6. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
+Trong suốt thời gian thực tập từ ngày 01/06/2026 đến ngày 27/07/2026, tôi đã có cơ hội học hỏi, rèn luyện và áp dụng kiến thức chuyên môn đã học tại trường vào môi trường thực tế.
 
-Trong suốt thời gian thực tập tại **[Tên công ty/tổ chức]** từ **[ngày bắt đầu]** đến **[ngày kết thúc]**, tôi đã có cơ hội học hỏi, rèn luyện và áp dụng kiến thức đã được trang bị tại trường vào môi trường làm việc thực tế.  
-Tôi đã tham gia **[mô tả ngắn gọn dự án hoặc công việc chính]**, qua đó cải thiện kỹ năng **[liệt kê kỹ năng: lập trình, phân tích, viết báo cáo, giao tiếp…]**.  
+Tôi đã trực tiếp tham gia **Dự án Triển khai và Vận hành Hệ thống LearnSphere trên Hạ tầng Cloud AWS**, thực hiện các công việc chính như: đóng gói container Docker Multi-stage, cấu hình phân quyền bảo mật IAM/OIDC, khởi tạo hệ thống phân phối CloudFront CDN/S3, xây dựng pipeline CI/CD tự động và thiết lập hệ thống giám sát với CloudWatch/SNS. Qua đó, tôi đã hoàn thiện tốt các kỹ năng chuyên môn về Điện toán đám mây (AWS), quy trình DevOps và xây dựng tài liệu kỹ thuật.
 
-Về tác phong, tôi luôn cố gắng hoàn thành tốt nhiệm vụ, tuân thủ nội quy, và tích cực trao đổi với đồng nghiệp để nâng cao hiệu quả công việc.
+Về tác phong làm việc, tôi luôn nỗ lực hoàn thành tốt nhiệm vụ được giao đúng hạn, giữ thái độ làm việc chuyên nghiệp và tích cực trao đổi với đồng nghiệp để nâng cao hiệu quả công việc.
 
-Để phản ánh một cách khách quan quá trình thực tập, tôi xin tự đánh giá bản thân dựa trên các tiêu chí dưới đây:
+Dưới đây là bảng tự đánh giá chi tiết quá trình thực tập của bản thân:
 
+### Bảng Tự Đánh Giá Chi Tiết
 
-| STT | Tiêu chí                            | Mô tả                                                                                            | Tốt | Khá | Trung bình |
-| --- | ----------------------------------- | ------------------------------------------------------------------------------------------------ | --- | --- | ---------- |
-| 1   | **Kiến thức và kỹ năng chuyên môn** | Hiểu biết về ngành, áp dụng kiến thức vào thực tế, kỹ năng sử dụng công cụ, chất lượng công việc | ✅   | ☐   | ☐          |
-| 2   | **Khả năng học hỏi**                | Tiếp thu kiến thức mới, học hỏi nhanh                                                            | ☐   | ✅   | ☐          |
-| 3   | **Chủ động**                        | Tự tìm hiểu, nhận nhiệm vụ mà không chờ chỉ dẫn                                                  | ✅   | ☐   | ☐          |
-| 4   | **Tinh thần trách nhiệm**           | Hoàn thành công việc đúng hạn, đảm bảo chất lượng                                                | ✅   | ☐   | ☐          |
-| 5   | **Kỷ luật**                         | Tuân thủ giờ giấc, nội quy, quy trình làm việc                                                   | ☐   | ☐   | ✅          |
-| 6   | **Tính cầu tiến**                   | Sẵn sàng nhận feedback và cải thiện bản thân                                                     | ☐   | ✅   | ☐          |
-| 7   | **Giao tiếp**                       | Trình bày ý tưởng, báo cáo công việc rõ ràng                                                     | ☐   | ✅   | ☐          |
-| 8   | **Hợp tác nhóm**                    | Làm việc hiệu quả với đồng nghiệp, tham gia nhóm                                                 | ✅   | ☐   | ☐          |
-| 9   | **Ứng xử chuyên nghiệp**            | Tôn trọng đồng nghiệp, đối tác, môi trường làm việc                                              | ✅   | ☐   | ☐          |
-| 10  | **Tư duy giải quyết vấn đề**        | Nhận diện vấn đề, đề xuất giải pháp, sáng tạo                                                    | ☐   | ✅   | ☐          |
-| 11  | **Đóng góp vào dự án/tổ chức**      | Hiệu quả công việc, sáng kiến cải tiến, ghi nhận từ team                                         | ✅   | ☐   | ☐          |
-| 12  | **Tổng thể**                        | Đánh giá chung về toàn bộ quá trình thực tập                                                     | ✅   | ☐   | ☐          |
+| STT | Tiêu chí | Mô tả | Tốt | Khá | Trung bình |
+|---|---|---|:---:|:---:|:---:|
+| 1 | **Kiến thức và kỹ năng chuyên môn** | Nắm vững kiến thức Cloud/DevOps, áp dụng tốt công cụ AWS/Docker/CI-CD, sản phẩm đạt chất lượng | ✅ | ☐ | ☐ |
+| 2 | **Khả năng học hỏi** | Tiếp thu kiến thức công nghệ mới nhanh và chủ động (OIDC, CloudFront OAC, SSM) | ☐ | ✅ | ☐ |
+| 3 | **Chủ động** | Chủ động nghiên cứu giải pháp bảo mật Zero Static Credentials, tự nhận nhiệm vụ thực hành | ✅ | ☐ | ☐ |
+| 4 | **Tinh thần trách nhiệm** | Hoàn thành tốt công việc đúng hạn, đảm bảo tiến độ và chất lượng dự án | ✅ | ☐ | ☐ |
+| 5 | **Kỷ luật** | Tuân thủ giờ giấc làm việc và nội quy quy trình của công ty | ☐ | ☐ | ✅ |
+| 6 | **Tính cầu tiến** | Sẵn sàng nhận feedback từ Mentor và liên tục cải thiện bản thân | ☐ | ✅ | ☐ |
+| 7 | **Giao tiếp** | Trình bày giải pháp kỹ thuật và báo cáo công việc rõ ràng | ☐ | ✅ | ☐ |
+| 8 | **Hợp tác nhóm** | Làm việc hiệu quả với các thành viên trong team Backend, Frontend và DevOps | ✅ | ☐ | ☐ |
+| 9 | **Ứng xử chuyên nghiệp** | Tôn trọng đồng nghiệp, duy trì thái độ chuẩn mực trong môi trường làm việc | ✅ | ☐ | ☐ |
+| 10 | **Tư duy giải quyết vấn đề** | Bước đầu nhận diện sự cố hạ tầng và đề xuất hướng xử lý Rollback an toàn | ☐ | ✅ | ☐ |
+| 11 | **Đóng góp vào dự án** | Đưa hệ thống LearnSphere lên AWS thành công, hoàn thành bộ hướng dẫn thực hành 11 bước | ✅ | ☐ | ☐ |
+| 12 | **Tổng thể** | Đánh giá chung về toàn bộ thái độ, năng lực và kết quả trong đợt thực tập | ✅ | ☐ | ☐ |
 
-### Cần cải thiện
+---
 
-* Nâng cao tính kỹ luật, chấp hành nghiêm chỉnh nội quy của công ty hoặc bất kỳ trong một tổ chức nào
-* Cải thiện trong cách tư duy giải quyết vấn đề
-* Học cách giao tiếp tốt hơn trong giao tiếp hằng ngày và trong công việc, xử lý tình huống
+### Cần Cải Thiện Trong Tương Lai
+
+- **Nâng cao tính kỷ luật:** Rèn luyện tinh thần tự giác cao hơn, chấp hành nghiêm chỉnh nội quy giờ giấc và quy trình làm việc của tổ chức.
+- **Cải thiện tư duy giải quyết vấn đề:** Đào sâu hơn về tư duy phân tích hệ thống để tìm nguyên nhân gốc rễ và đề xuất giải pháp tối ưu hơn khi gặp sự cố kỹ thuật phức tạp.
+- **Nâng cao kỹ năng giao tiếp:** Học cách giao tiếp tự tin và chủ động hơn trong công việc hàng ngày, rèn luyện kỹ năng xử lý tình huống linh hoạt trong môi trường làm việc nhóm.

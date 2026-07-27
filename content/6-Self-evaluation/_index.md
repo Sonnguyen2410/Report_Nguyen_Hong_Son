@@ -1,39 +1,40 @@
 ---
 title: "Self-Assessment"
-date: 2024-01-01
+date: 2026-07-27
 weight: 6
 chapter: false
 pre: " <b> 6. </b> "
 ---
 
-{{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy it verbatim** into your report, including this warning.
-{{% /notice %}}
+Throughout my internship period from June 1, 2026 to July 27, 2026, I had the invaluable opportunity to learn, practice, and apply academic knowledge acquired at university into a real-world enterprise engineering environment.
 
-During my internship at **[Company/Organization Name]** from **[start date]** to **[end date]**, I had the opportunity to learn, practice, and apply the knowledge acquired in school to a real-world working environment.  
-I participated in **[briefly describe the main project or task]**, through which I improved my skills in **[list skills: programming, analysis, reporting, communication, etc.]**.  
+I directly participated in the **LearnSphere AWS Cloud Deployment and Operations Project**, executing key technical tasks such as: Multi-stage Docker container packaging, IAM/OIDC security permission setup, CloudFront CDN and S3 static media distribution architecture, automated CI/CD pipeline construction, and CloudWatch/SNS system monitoring configuration. Through these contributions, I significantly enhanced my technical proficiency in Cloud Computing (AWS), DevOps methodologies, and engineering documentation.
 
-In terms of work ethic, I always strived to complete tasks well, complied with workplace regulations, and actively engaged with colleagues to improve work efficiency.
+Regarding work ethic, I consistently strived to complete assigned responsibilities on time, maintained a professional attitude, and actively collaborated with team members to boost operational efficiency.
 
-To objectively reflect on my internship period, I would like to evaluate myself based on the following criteria:
+Below is my detailed self-evaluation table reflecting on my performance throughout the internship:
 
-| No. | Criteria                            | Description                                                                                      | Good | Fair | Average |
-| --- | ----------------------------------- | ------------------------------------------------------------------------------------------------ | ---- | ---- | ------- |
-| 1   | **Professional knowledge & skills** | Understanding of the field, applying knowledge in practice, proficiency with tools, work quality | ✅    | ☐    | ☐       |
-| 2   | **Ability to learn**                | Ability to absorb new knowledge and learn quickly                                                | ☐    | ✅    | ☐       |
-| 3   | **Proactiveness**                   | Taking initiative, seeking out tasks without waiting for instructions                            | ✅    | ☐    | ☐       |
-| 4   | **Sense of responsibility**         | Completing tasks on time and ensuring quality                                                    | ✅    | ☐    | ☐       |
-| 5   | **Discipline**                      | Adhering to schedules, rules, and work processes                                                 | ☐    | ☐    | ✅       |
-| 6   | **Progressive mindset**             | Willingness to receive feedback and improve oneself                                              | ☐    | ✅    | ☐       |
-| 7   | **Communication**                   | Presenting ideas and reporting work clearly                                                      | ☐    | ✅    | ☐       |
-| 8   | **Teamwork**                        | Working effectively with colleagues and participating in teams                                   | ✅    | ☐    | ☐       |
-| 9   | **Professional conduct**            | Respecting colleagues, partners, and the work environment                                        | ✅    | ☐    | ☐       |
-| 10  | **Problem-solving skills**          | Identifying problems, proposing solutions, and showing creativity                                | ☐    | ✅    | ☐       |
-| 11  | **Contribution to project/team**    | Work effectiveness, innovative ideas, recognition from the team                                  | ✅    | ☐    | ☐       |
-| 12  | **Overall**                         | General evaluation of the entire internship period                                               | ✅    | ☐    | ☐       |
+### Detailed Self-Assessment Table
 
-### Needs Improvement
+| No. | Criteria | Description | Good | Fair | Average |
+|---|---|---|:---:|:---:|:---:|
+| 1 | **Professional Knowledge & Skills** | Solid understanding of Cloud/DevOps concepts, proficient use of AWS/Docker/CI-CD tools, high product quality | ✅ | ☐ | ☐ |
+| 2 | **Ability to Learn** | Rapid and proactive adoption of modern technologies (OIDC, CloudFront OAC, SSM) | ☐ | ✅ | ☐ |
+| 3 | **Proactiveness** | Independently researched Zero Static Credentials security solutions and volunteered for hands-on tasks | ✅ | ☐ | ☐ |
+| 4 | **Sense of Responsibility** | Timely completion of deliverables, ensuring project milestones and quality requirements | ✅ | ☐ | ☐ |
+| 5 | **Discipline** | Compliance with organizational working hours and operational workflows | ☐ | ☐ | ✅ |
+| 6 | **Progressive Mindset** | Open to feedback from Mentors and continuously striving for self-improvement | ☐ | ✅ | ☐ |
+| 7 | **Communication** | Clear presentation of technical solutions and status reports | ☐ | ✅ | ☐ |
+| 8 | **Team Collaboration** | Worked seamlessly with Backend, Frontend, and DevOps team members | ✅ | ☐ | ☐ |
+| 9 | **Professional Conduct** | Respected colleagues and maintained exemplary workplace behavior | ✅ | ☐ | ☐ |
+| 10 | **Problem-Solving Thinking** | Identified infrastructure issues early and proposed automated Rollback procedures | ☐ | ✅ | ☐ |
+| 11 | **Project Contribution** | Successfully deployed LearnSphere onto AWS and authored the 11-step hands-on guide | ✅ | ☐ | ☐ |
+| 12 | **Overall Evaluation** | Comprehensive assessment of overall attitude, skills, and internship outcomes | ✅ | ☐ | ☐ |
 
-* Strengthen discipline and strictly comply with the rules and regulations of the company or any organization  
-* Improve problem-solving thinking  
-* Enhance communication skills in both daily interactions and professional contexts, including handling situations effectively
+---
+
+### Areas for Future Improvement
+
+- **Enhance Personal Discipline:** Cultivate higher self-discipline, strictly adhering to working hours and organizational procedures.
+- **Improve Problem-Solving Thinking:** Deepen root-cause system analysis to formulate more optimal resolutions during complex technical incidents.
+- **Elevate Communication Skills:** Build confidence and proactiveness in daily technical discussions and hone flexible conflict resolution in team environments.
