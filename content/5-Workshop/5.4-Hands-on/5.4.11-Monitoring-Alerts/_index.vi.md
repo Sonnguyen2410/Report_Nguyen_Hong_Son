@@ -14,7 +14,7 @@ Toàn bộ các tài nguyên trong bước này được khởi tạo đồng b�
 
 ### 11.1. Tạo Amazon SNS Topic Cảnh báo
 
-1. Mở **AWS Management Console** ? dịch vụ **Amazon SNS** ? **Topics** ? chọn **Create topic**.
+1. Mở **AWS Management Console** -> dịch vụ **Amazon SNS** -> **Topics** -> chọn **Create topic**.
 2. **Type:** `Standard`.
 3. **Name:** `LearnSphere-Alerts`.
 4. Bấm **Create topic**.
@@ -27,7 +27,7 @@ Toàn bộ các tài nguyên trong bước này được khởi tạo đồng b�
    - **Protocol:** `Email`.
    - **Endpoint:** Nhập địa chỉ email người quản trị (ví dụ `son.nguyenhong2410@hcmut.edu.vn`).
 2. Bấm **Create subscription**.
-3. Mở Hộp thư Email cá nhân ? Mở thư thông báo từ **AWS Notifications** ? Bấm nút **Confirm subscription**.
+3. Mở Hộp thư Email cá nhân -> Mở thư thông báo từ **AWS Notifications** -> Bấm nút **Confirm subscription**.
 4. Kiểm tra trang điều khiển SNS đảm bảo trạng thái Subscription hiển thị mã ARN hợp lệ và không còn ở trạng thái `Pending confirmation`.
 
 ![Kênh SNS gửi cảnh báo vận hành LearnSphere qua email](/images/5-Workshop/5.4/5.4.11.2.png)
@@ -37,8 +37,8 @@ Toàn bộ các tài nguyên trong bước này được khởi tạo đồng b�
 
 ### 11.3. Tạo CloudWatch Alarm 1 — EC2 CPUUtilization > 80% trong 10 phút
 
-1. Mở **CloudWatch Console** ? **Alarms** ? **All alarms** ? chọn **Create alarm**.
-2. **Select metric:** Chọn `EC2` ? `Per-Instance Metrics` ? chọn metric `CPUUtilization` của EC2 Instance ID `i-008c48e6c120b2978`.
+1. Mở **CloudWatch Console** -> **Alarms** -> **All alarms** -> chọn **Create alarm**.
+2. **Select metric:** Chọn `EC2` -> `Per-Instance Metrics` -> chọn metric `CPUUtilization` của EC2 Instance ID `i-008c48e6c120b2978`.
 3. Cấu hình điều khiển:
    - **Statistic:** `Average`
    - **Period:** `5 minutes`
@@ -56,7 +56,7 @@ Toàn bộ các tài nguyên trong bước này được khởi tạo đồng b�
 
 ### 11.4. Tạo CloudWatch Alarm 2 — EC2 StatusCheckFailed >= 1 trong 60 giây
 
-1. Chọn **Create alarm** ? Select metric `StatusCheckFailed` của EC2 Instance ID `i-008c48e6c120b2978`.
+1. Chọn **Create alarm** -> Select metric `StatusCheckFailed` của EC2 Instance ID `i-008c48e6c120b2978`.
 2. Cấu hình điều khiển:
    - **Statistic:** `Maximum`
    - **Period:** `1 minute`
@@ -74,4 +74,4 @@ Toàn bộ các tài nguyên trong bước này được khởi tạo đồng b�
 
 ### 11.5. Kiểm tra Kết quả Giám sát & Vận hành
 
-Mở **CloudWatch** ? **Alarms** ? **All alarms**, xác nhận cả 2 Alarm `LearnSphere-EC2-HighCPU` và `LearnSphere-EC2-StatusCheckFailed` đang ở trạng thái **OK**. Hệ thống sẵn sàng tự động phát thông báo qua email bất cứ khi nào hạ tầng xảy ra sự cố.
+Mở **CloudWatch** -> **Alarms** -> **All alarms**, xác nhận cả 2 Alarm `LearnSphere-EC2-HighCPU` và `LearnSphere-EC2-StatusCheckFailed` đang ở trạng thái **OK**. Hệ thống sẵn sàng tự động phát thông báo qua email bất cứ khi nào hạ tầng xảy ra sự cố.

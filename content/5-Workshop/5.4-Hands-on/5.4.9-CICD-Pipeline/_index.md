@@ -12,7 +12,7 @@ In this step, practitioners declare Repository Secrets on GitHub and build the a
 
 ### 9.1. Declare GitHub Actions Secrets
 
-Open GitHub Repository ? **Settings** ? **Secrets and variables** ? **Actions** ? click **New repository secret**:
+Open GitHub Repository -> **Settings** -> **Secrets and variables** -> **Actions** -> click **New repository secret**:
 
 | Secret | Value / Content |
 |---|---|

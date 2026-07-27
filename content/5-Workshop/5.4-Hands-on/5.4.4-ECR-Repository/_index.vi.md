@@ -12,7 +12,7 @@ Trong bước này, người thực hiện sẽ khởi tạo kho chứa **Amazon
 
 ### 4.1. Khởi tạo Private ECR Repository
 
-1. Mở **AWS Management Console** ? dịch vụ **Amazon ECR** ? chọn **Private repositories**.
+1. Mở **AWS Management Console** -> dịch vụ **Amazon ECR** -> chọn **Private repositories**.
 2. Bấm nút **Create repository**.
 3. **Visibility settings:** Chọn **Private**.
 4. **Repository name:** Đặt tên kho lưu trữ:
@@ -33,11 +33,11 @@ learnsphere-be
 
 Để tối ưu hóa chi phí lưu trữ kho ảnh Docker trên ECR, chúng ta thiết lập quy tắc tự động xóa các image cũ:
 
-1. Mở Repository `learnsphere-be` ? chọn mục **Lifecycle policies** bên menu trái ? chọn **Create rule**.
+1. Mở Repository `learnsphere-be` -> chọn mục **Lifecycle policies** bên menu trái -> chọn **Create rule**.
 2. **Rule priority:** `1`.
 3. **Description:** `Giữ lại 10 Docker Image mới nhất`.
 4. **Image status:** `Tagged`.
-5. **Match criteria:** Select `Image count more than` ? Count: `10`.
+5. **Match criteria:** Select `Image count more than` -> Count: `10`.
 6. Bấm **Save** để áp dụng.
 
 ---

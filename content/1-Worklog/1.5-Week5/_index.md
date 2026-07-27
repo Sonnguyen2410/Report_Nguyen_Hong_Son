@@ -69,7 +69,7 @@ pre: " <b> 1.5. </b> "
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt }
         ],
-        response_format: jsonMode ? { type: "json_object" } : undefined,
+        response_format: jsonMode -> { type: "json_object" } : undefined,
         temperature: 0.3,
       });
       return response.choices[0].message.content;

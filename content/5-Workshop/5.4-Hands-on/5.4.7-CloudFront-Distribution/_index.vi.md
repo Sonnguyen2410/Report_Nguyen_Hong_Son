@@ -14,9 +14,9 @@ Trong bước này, người thực hiện sẽ khởi tạo **Amazon CloudFront
 
 #### 7A.1. Tạo CloudFront Distribution
 
-1. Mở **AWS Management Console** ? dịch vụ **Amazon CloudFront** ? chọn **Create distribution**.
+1. Mở **AWS Management Console** -> dịch vụ **Amazon CloudFront** -> chọn **Create distribution**.
 2. **Origin Domain (S3 FE):** Chọn Bucket `learnsphere-fe-575620421319.s3.ap-southeast-1.amazonaws.com`.
-3. **Origin Access:** Select **Origin access control settings (recommended)** ? Create control setting (Bật Sign requests).
+3. **Origin Access:** Select **Origin access control settings (recommended)** -> Create control setting (Bật Sign requests).
 4. **Default Cache Behavior (`/*`):**
    - **Default root object:** `index.html`
    - **Viewer Protocol Policy:** `Redirect HTTP to HTTPS`
@@ -26,7 +26,7 @@ Trong bước này, người thực hiện sẽ khởi tạo **Amazon CloudFront
 
 #### 7A.2. Cập nhật Bucket Policy cho S3 Frontend
 
-Sau khi Distribution khởi tạo thành công, sao chép Bucket Policy và cập nhật tại S3 Bucket `learnsphere-fe-575620421319` (Tab **Permissions** ? **Bucket Policy**):
+Sau khi Distribution khởi tạo thành công, sao chép Bucket Policy và cập nhật tại S3 Bucket `learnsphere-fe-575620421319` (Tab **Permissions** -> **Bucket Policy**):
 
 ```json
 {
@@ -60,7 +60,7 @@ Sau khi Distribution khởi tạo thành công, sao chép Bucket Policy và cậ
 
 #### 7B.1. Thêm EC2 Backend Origin
 
-1. Mở CloudFront Distribution `EQRDOBSCG5MC8` ? tab **Origins** ? chọn **Create origin**.
+1. Mở CloudFront Distribution `EQRDOBSCG5MC8` -> tab **Origins** -> chọn **Create origin**.
 2. **Origin Domain:** Nhập IPv4 Public DNS của EC2 Instance (ví dụ `ec2-xx-xx-xx-xx.ap-southeast-1.compute.amazonaws.com`).
 3. **Protocol Policy:** `HTTP Only`, Port `5000`.
 
@@ -69,7 +69,7 @@ Sau khi Distribution khởi tạo thành công, sao chép Bucket Policy và cậ
 
 #### 7B.2. Tạo Behavior `/api/*`
 
-1. Chuyển sang tab **Behaviors** ? chọn **Create behavior**:
+1. Chuyển sang tab **Behaviors** -> chọn **Create behavior**:
    - **Path pattern:** `/api/*`
    - **Target Origin:** Chọn EC2 Backend Origin vừa tạo.
    - **Viewer Protocol Policy:** `Redirect HTTP to HTTPS`

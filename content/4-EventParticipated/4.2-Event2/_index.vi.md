@@ -26,8 +26,8 @@ pre: " <b> 4.2. </b> "
 #### 1. Thực tế công việc của Data Analytics Engineer & Văn hóa tại Tập đoàn đa quốc gia (MNCs)
 - **Thực tế công việc:** Công việc của Data Analytics Engineer gắn liền với quy trình vận hành kinh doanh thực tế (như theo dõi chỉ số GMV, Fulfillment, Last Mile Cost, Fill Rate tại các doanh nghiệp như Kamereo, Colgate-Palmolive).
 - **4 Kỹ năng cốt lõi:** Tư duy phản biện (Critical Thinking), Kỹ năng giao tiếp (Communication), Kể chuyện với dữ liệu (Data Storytelling), và Giải quyết vấn đề (Problem Solving).
-- **Mô hình phát triển 5 giai đoạn:** Định hướng lộ trình sự nghiệp từ Follower (Thực thi) ? Learner (Học chủ động) ? Problem Solver (Giải quyết bài toán) ? System Thinker (Tư duy hệ thống) ? Super Star (Dẫn dắt chiến lược).
-- **Giải mã văn hóa MNC:** Tìm hiểu quy trình tuyển dụng chuẩn 4 bước (Sàng lọc ATS ? Test năng lực ? Phỏng vấn chuyên môn STAR model ? Cultural Fit). Tìm hiểu các mô hình văn hóa tích cực như No-Blame Post-Mortem (Tech MNC) và Caring & Inclusive (FMCG MNC).
+- **Mô hình phát triển 5 giai đoạn:** Định hướng lộ trình sự nghiệp từ Follower (Thực thi) -> Learner (Học chủ động) -> Problem Solver (Giải quyết bài toán) -> System Thinker (Tư duy hệ thống) -> Super Star (Dẫn dắt chiến lược).
+- **Giải mã văn hóa MNC:** Tìm hiểu quy trình tuyển dụng chuẩn 4 bước (Sàng lọc ATS -> Test năng lực -> Phỏng vấn chuyên môn STAR model -> Cultural Fit). Tìm hiểu các mô hình văn hóa tích cực như No-Blame Post-Mortem (Tech MNC) và Caring & Inclusive (FMCG MNC).
 
 #### 2. Thực tế công việc của DevOps Engineer – Beyond the Hype
 - **Góc nhìn thực tế về DevOps:** DevOps không chỉ đơn thuần là viết CI/CD pipelines hay quản lý Kubernetes/Docker, mà là cầu nối giúp hệ thống vận hành ổn định, tự động hóa quy trình và tối ưu hóa sự phối hợp giữa Dev và Ops.

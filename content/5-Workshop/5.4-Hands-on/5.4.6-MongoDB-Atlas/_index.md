@@ -15,7 +15,7 @@ The LearnSphere system continues to use **MongoDB Atlas** as its Production data
 
 ### 6.1. Create Production Database User
 
-1. Log into **MongoDB Atlas Console** ? select **Database Access** from the left menu.
+1. Log into **MongoDB Atlas Console** -> select **Database Access** from the left menu.
 2. Click **Add New Database User**.
 3. **Authentication Method:** Select **Password**.
 4. **Username:** `learnsphere_prod`.
@@ -27,7 +27,7 @@ The LearnSphere system continues to use **MongoDB Atlas** as its Production data
 
 ### 6.2. Configure Network Access IP Access List
 
-1. Select **Network Access** ? click **Add IP Address**.
+1. Select **Network Access** -> click **Add IP Address**.
 2. Enter the **IPv4 Public IP** of the EC2 Backend instance (`i-008c48e6c120b2978`).
 3. Click **Confirm** to save IP Access List rules.
 
@@ -38,7 +38,7 @@ The LearnSphere system continues to use **MongoDB Atlas** as its Production data
 
 ### 6.3. Retrieve SRV Connection String & Health Check Integration
 
-1. Navigate to **Database** ? click **Connect** on your Cluster.
+1. Navigate to **Database** -> click **Connect** on your Cluster.
 2. Select **Drivers** (Node.js).
 3. Copy the standard SRV Connection String format:
 

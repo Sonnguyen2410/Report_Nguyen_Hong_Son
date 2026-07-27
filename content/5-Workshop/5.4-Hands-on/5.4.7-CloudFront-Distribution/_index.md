@@ -14,9 +14,9 @@ In this step, practitioners create an **Amazon CloudFront Distribution** serving
 
 #### 7A.1. Create CloudFront Distribution
 
-1. Open **AWS Management Console** ? navigate to **Amazon CloudFront** ? click **Create distribution**.
+1. Open **AWS Management Console** -> navigate to **Amazon CloudFront** -> click **Create distribution**.
 2. **Origin Domain (S3 FE):** Select `learnsphere-fe-575620421319.s3.ap-southeast-1.amazonaws.com`.
-3. **Origin Access:** Select **Origin access control settings (recommended)** ? Create control setting (Sign requests enabled).
+3. **Origin Access:** Select **Origin access control settings (recommended)** -> Create control setting (Sign requests enabled).
 4. **Default Cache Behavior (`/*`):**
    - **Default root object:** `index.html`
    - **Viewer Protocol Policy:** `Redirect HTTP to HTTPS`
@@ -26,7 +26,7 @@ In this step, practitioners create an **Amazon CloudFront Distribution** serving
 
 #### 7A.2. Update S3 Frontend Bucket Policy
 
-After Distribution creation, copy the generated OAC Bucket Policy banner and update it in S3 Bucket `learnsphere-fe-575620421319` (**Permissions** tab ? **Bucket policy**):
+After Distribution creation, copy the generated OAC Bucket Policy banner and update it in S3 Bucket `learnsphere-fe-575620421319` (**Permissions** tab -> **Bucket policy**):
 
 ```json
 {
@@ -60,7 +60,7 @@ After Distribution creation, copy the generated OAC Bucket Policy banner and upd
 
 #### 7B.1. Add EC2 Backend Origin
 
-1. Open CloudFront Distribution `EQRDOBSCG5MC8` ? **Origins** tab ? click **Create origin**.
+1. Open CloudFront Distribution `EQRDOBSCG5MC8` -> **Origins** tab -> click **Create origin**.
 2. **Origin Domain:** EC2 IPv4 Public DNS (e.g., `ec2-xx-xx-xx-xx.ap-southeast-1.compute.amazonaws.com`).
 3. **Protocol Policy:** `HTTP Only`, Port `5000`.
 
@@ -69,7 +69,7 @@ After Distribution creation, copy the generated OAC Bucket Policy banner and upd
 
 #### 7B.2. Create Behavior `/api/*`
 
-1. Select **Behaviors** tab ? click **Create behavior**:
+1. Select **Behaviors** tab -> click **Create behavior**:
    - **Path pattern:** `/api/*`
    - **Target Origin:** Select EC2 Backend Origin.
    - **Viewer Protocol Policy:** `Redirect HTTP to HTTPS`

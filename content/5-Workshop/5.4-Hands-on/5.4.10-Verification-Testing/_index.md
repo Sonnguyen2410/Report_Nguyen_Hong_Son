@@ -58,7 +58,7 @@ curl -fsS http://127.0.0.1:5000/health/ready
 
 ### 10.3. Inspect Centralized CloudWatch Logs
 
-Open **Amazon CloudWatch** ? **Log groups** ? select `/learnsphere/backend`.
+Open **Amazon CloudWatch** -> **Log groups** -> select `/learnsphere/backend`.
 
 Confirm:
 - Node.js server initialized successfully on port 5000.
@@ -82,9 +82,9 @@ https://www.learnsphere.id.vn/
 
 #### Execute End-to-End Feature Verification Tests:
 1. **Registration & Authentication:** Create a new user account and verify JWT Token generation.
-2. **Course Management:** Log in as a Tutor ? Create a new course.
+2. **Course Management:** Log in as a Tutor -> Create a new course.
 3. **Presigned URL Media Upload:** Upload lecture videos, thumbnails, and PDFs. Confirm browser fetches Presigned PUT URLs and uploads directly to S3 Media Bucket without CORS issues.
-4. **Learning & Video Streaming:** Log in as a Student ? Open a lesson ? Confirm video streams seamlessly via short-lived Presigned GET URLs.
+4. **Learning & Video Streaming:** Log in as a Student -> Open a lesson -> Confirm video streams seamlessly via short-lived Presigned GET URLs.
 5. **Quiz Exams & AI Assistant:** Complete quiz examinations and test AI Assistant interactions.
 
 ![LearnSphere application operating on AWS Production environment](/images/5-Workshop/5.4/5.4.10.4.png)

@@ -15,7 +15,7 @@ Hệ thống LearnSphere tiếp tục sử dụng **MongoDB Atlas** làm hệ qu
 
 ### 6.1. Khởi tạo Production Database User
 
-1. Đăng nhập trang quản trị **MongoDB Atlas** ? chọn mục **Database Access** bên menu trái.
+1. Đăng nhập trang quản trị **MongoDB Atlas** -> chọn mục **Database Access** bên menu trái.
 2. Chọn **Add New Database User**.
 3. **Authentication Method:** Select **Password**.
 4. **Username:** `learnsphere_prod`.
@@ -27,7 +27,7 @@ Hệ thống LearnSphere tiếp tục sử dụng **MongoDB Atlas** làm hệ qu
 
 ### 6.2. Cấu hình Mạng & IP Access List cho EC2
 
-1. Chọn mục **Network Access** bên menu trái ? chọn **Add IP Address**.
+1. Chọn mục **Network Access** bên menu trái -> chọn **Add IP Address**.
 2. Nhập địa chỉ **IPv4 Public IP** của máy chủ EC2 `i-008c48e6c120b2978`.
 3. Bấm **Confirm** để lưu quy tắc Network Access List.
 
@@ -38,7 +38,7 @@ Hệ thống LearnSphere tiếp tục sử dụng **MongoDB Atlas** làm hệ qu
 
 ### 6.3. Lấy chuỗi SRV Connection String & Kiểm tra Health Check
 
-1. Chọn mục **Database** ? tại Cluster Production bấm nút **Connect**.
+1. Chọn mục **Database** -> tại Cluster Production bấm nút **Connect**.
 2. Chọn **Drivers** (Node.js).
 3. Sao chép chuỗi SRV Connection String:
 

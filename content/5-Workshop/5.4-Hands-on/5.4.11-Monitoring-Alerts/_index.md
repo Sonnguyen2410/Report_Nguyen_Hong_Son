@@ -14,7 +14,7 @@ All monitoring resources in this step are provisioned in the **Singapore (`ap-so
 
 ### 11.1. Create Amazon SNS Alert Topic
 
-1. Open **AWS Management Console** ? **Amazon SNS** service ? **Topics** ? click **Create topic**.
+1. Open **AWS Management Console** -> **Amazon SNS** service -> **Topics** -> click **Create topic**.
 2. **Type:** `Standard`.
 3. **Name:** `LearnSphere-Alerts`.
 4. Click **Create topic**.
@@ -27,7 +27,7 @@ All monitoring resources in this step are provisioned in the **Singapore (`ap-so
    - **Protocol:** `Email`.
    - **Endpoint:** Enter administrator email address (e.g., `son.nguyenhong2410@hcmut.edu.vn`).
 2. Click **Create subscription**.
-3. Open your email inbox ? Open email from **AWS Notifications** ? Click **Confirm subscription**.
+3. Open your email inbox -> Open email from **AWS Notifications** -> Click **Confirm subscription**.
 4. Confirm in SNS Console that the Subscription displays a valid ARN and is no longer `Pending confirmation`.
 
 ![SNS Topic channel dispatching LearnSphere operations alerts via email](/images/5-Workshop/5.4/5.4.11.2.png)
@@ -37,8 +37,8 @@ All monitoring resources in this step are provisioned in the **Singapore (`ap-so
 
 ### 11.3. Create CloudWatch Alarm 1 — EC2 CPUUtilization > 80% for 10 Minutes
 
-1. Open **CloudWatch Console** ? **Alarms** ? **All alarms** ? click **Create alarm**.
-2. **Select metric:** Select `EC2` ? `Per-Instance Metrics` ? select `CPUUtilization` for EC2 Instance ID `i-008c48e6c120b2978`.
+1. Open **CloudWatch Console** -> **Alarms** -> **All alarms** -> click **Create alarm**.
+2. **Select metric:** Select `EC2` -> `Per-Instance Metrics` -> select `CPUUtilization` for EC2 Instance ID `i-008c48e6c120b2978`.
 3. Configure parameters:
    - **Statistic:** `Average`
    - **Period:** `5 minutes`
@@ -56,7 +56,7 @@ All monitoring resources in this step are provisioned in the **Singapore (`ap-so
 
 ### 11.4. Create CloudWatch Alarm 2 — EC2 StatusCheckFailed >= 1 in 60 Seconds
 
-1. Click **Create alarm** ? Select `StatusCheckFailed` metric for EC2 Instance ID `i-008c48e6c120b2978`.
+1. Click **Create alarm** -> Select `StatusCheckFailed` metric for EC2 Instance ID `i-008c48e6c120b2978`.
 2. Configure parameters:
    - **Statistic:** `Maximum`
    - **Period:** `1 minute`
@@ -74,4 +74,4 @@ All monitoring resources in this step are provisioned in the **Singapore (`ap-so
 
 ### 11.5. Verify Monitoring Operational Status
 
-Navigate to **CloudWatch** ? **Alarms** ? **All alarms**, confirm both `LearnSphere-EC2-HighCPU` and `LearnSphere-EC2-StatusCheckFailed` display status **OK**. The monitoring infrastructure is ready to dispatch email alerts whenever system anomalies occur.
+Navigate to **CloudWatch** -> **Alarms** -> **All alarms**, confirm both `LearnSphere-EC2-HighCPU` and `LearnSphere-EC2-StatusCheckFailed` display status **OK**. The monitoring infrastructure is ready to dispatch email alerts whenever system anomalies occur.

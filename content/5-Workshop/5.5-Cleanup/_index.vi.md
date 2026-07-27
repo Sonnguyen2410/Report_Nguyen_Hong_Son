@@ -24,7 +24,7 @@ Thứ tự dọn dẹp phải tuân thủ nghiêm ngặt theo **chiều ngược
 
 CloudFront Distribution cần được vô hiệu hóa trước khi có thể xóa hoàn toàn:
 
-1. Truy cập **AWS Management Console** ? Tìm và chọn dịch vụ **CloudFront**.
+1. Truy cập **AWS Management Console** -> Tìm và chọn dịch vụ **CloudFront**.
 2. Tại danh sách Distributions, chọn Distribution đại diện cho ứng dụng LearnSphere (Distribution ID: `EQRDOBSCG5MC8`).
 3. Chọn nút **Disable** và xác nhận. Cần chờ khoảng 3 - 5 phút để trạng thái của Distribution chuyển từ `Enabled` sang `Disabled` (hoàn tất triển khai cấu hình vô hiệu hóa trên toàn cầu).
 4. Sau khi trạng thái đã chuyển sang `Disabled`, chọn Distribution đó một lần nữa và nhấn nút **Delete** để xóa hoàn toàn.
@@ -39,47 +39,47 @@ S3 Bucket chỉ có thể xóa sau khi đã dọn dẹp sạch toàn bộ các �
    - Nhấn nút **Empty**, nhập từ khóa `permanently delete` để xác nhận xóa toàn bộ video, hình ảnh và tệp tài liệu lưu trữ.
    - Sau khi bucket đã trống, quay lại danh sách Buckets, chọn bucket này và nhấn **Delete**.
 3. **Dọn dẹp Frontend Bucket (`learnsphere-fe-575620421319`):**
-   - Thực hiện tương tự: Chọn bucket `learnsphere-fe-575620421319` ? Nhấn **Empty** để xóa các tệp tĩnh React ? Nhấn **Delete** để xóa bucket.
+   - Thực hiện tương tự: Chọn bucket `learnsphere-fe-575620421319` -> Nhấn **Empty** để xóa các tệp tĩnh React -> Nhấn **Delete** để xóa bucket.
 
 #### Bước 3: Hủy máy chủ ảo Amazon EC2
 
 Hủy máy chủ EC2 sẽ tự động giải phóng địa chỉ IP công cộng và ổ đĩa lưu trữ EBS đính kèm:
 
-1. Truy cập dịch vụ **Amazon EC2** ? Chọn mục **Instances**.
+1. Truy cập dịch vụ **Amazon EC2** -> Chọn mục **Instances**.
 2. Chọn máy chủ EC2 của ứng dụng LearnSphere (Instance ID: `i-008c48e6c120b2978`).
-3. Chọn menu **Instance state** ? Chọn **Terminate instance**.
-4. Nhấn **Terminate** để xác nhận. Trạng thái máy chủ sẽ chuyển từ `Running` ? `Shutting-down` ? `Terminated`.
+3. Chọn menu **Instance state** -> Chọn **Terminate instance**.
+4. Nhấn **Terminate** để xác nhận. Trạng thái máy chủ sẽ chuyển từ `Running` -> `Shutting-down` -> `Terminated`.
 
 #### Bước 4: Xóa Kho lưu trữ Amazon ECR
 
-1. Truy cập dịch vụ **Amazon ECR** ? Chọn mục **Private repositories**.
+1. Truy cập dịch vụ **Amazon ECR** -> Chọn mục **Private repositories**.
 2. Chọn kho lưu trữ `learnsphere-be`.
 3. Nhấn nút **Delete**, nhập tên repository `learnsphere-be` để xác nhận xóa kho lưu trữ cùng toàn bộ các bản đóng gói Docker Image tags bên trong.
 
 #### Bước 5: Xóa Hệ thống Giám sát CloudWatch & Amazon SNS
 
 1. **Xóa CloudWatch Alarms:**
-   - Truy cập **CloudWatch** ? Chọn **Alarms** ? **All alarms**.
+   - Truy cập **CloudWatch** -> Chọn **Alarms** -> **All alarms**.
    - Chọn 2 cảnh báo: `LearnSphere-EC2-HighCPU` và `LearnSphere-EC2-StatusCheckFailed`.
-   - Chọn **Actions** ? Nhấn **Delete**.
+   - Chọn **Actions** -> Nhấn **Delete**.
 2. **Xóa CloudWatch Log Group:**
-   - Chọn mục **Logs** ? **Log groups**.
+   - Chọn mục **Logs** -> **Log groups**.
    - Tìm Log Group `/learnsphere/backend`.
-   - Chọn **Actions** ? Nhấn **Delete log group**.
+   - Chọn **Actions** -> Nhấn **Delete log group**.
 3. **Xóa Amazon SNS Topic & Subscriptions:**
-   - Truy cập dịch vụ **Amazon SNS** ? Chọn mục **Topics**.
-   - Chọn Topic `LearnSphere-Alerts` ? Nhấn **Delete**.
-   - Chọn mục **Subscriptions** ? Chọn Subscription Email liên quan ? Nhấn **Delete**.
+   - Truy cập dịch vụ **Amazon SNS** -> Chọn mục **Topics**.
+   - Chọn Topic `LearnSphere-Alerts` -> Nhấn **Delete**.
+   - Chọn mục **Subscriptions** -> Chọn Subscription Email liên quan -> Nhấn **Delete**.
 
 #### Bước 6: Xóa Phân quyền IAM Roles & OIDC Provider
 
 1. **Xóa IAM Roles:**
-   - Truy cập dịch vụ **IAM** ? Chọn mục **Roles**.
+   - Truy cập dịch vụ **IAM** -> Chọn mục **Roles**.
    - Tìm và xóa Role `LearnSphereGitHubDeployRole` (Role của GitHub Actions).
    - Tìm và xóa Role `LearnSphereEc2Role` (Role của máy chủ EC2).
 2. **Xóa Identity Provider:**
-   - Tại menu IAM ? Chọn mục **Identity providers**.
-   - Chọn Provider `token.actions.githubusercontent.com` ? Nhấn **Delete**.
+   - Tại menu IAM -> Chọn mục **Identity providers**.
+   - Chọn Provider `token.actions.githubusercontent.com` -> Nhấn **Delete**.
 
 ---
 

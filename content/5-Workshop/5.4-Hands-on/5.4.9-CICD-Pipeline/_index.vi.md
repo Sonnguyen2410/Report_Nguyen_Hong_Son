@@ -12,7 +12,7 @@ Trong bước này, người thực hiện sẽ khai báo các biến bảo mậ
 
 ### 9.1. Khai báo GitHub Actions Secrets
 
-Mở GitHub Repository ? **Settings** ? **Secrets and variables** ? **Actions** ? chọn **New repository secret**:
+Mở GitHub Repository -> **Settings** -> **Secrets and variables** -> **Actions** -> chọn **New repository secret**:
 
 | Secret | Giá trị / Nội dung |
 |---|---|

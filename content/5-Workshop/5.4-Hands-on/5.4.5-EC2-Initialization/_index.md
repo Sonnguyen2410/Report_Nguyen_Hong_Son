@@ -12,7 +12,7 @@ In this step, practitioners launch an **Amazon EC2** instance, attach an IAM Ins
 
 ### 5.1. Launch EC2 Instance
 
-1. Open **AWS Management Console** ? navigate to **Amazon EC2** ? click **Launch instance**.
+1. Open **AWS Management Console** -> navigate to **Amazon EC2** -> click **Launch instance**.
 2. **Name:** `LearnSphere-Backend-Server`.
 3. Instance Specifications:
 
@@ -37,7 +37,7 @@ In this step, practitioners launch an **Amazon EC2** instance, attach an IAM Ins
 
 ### 5.2. Install Docker Engine & Configure 2GB Swap RAM
 
-Connect to EC2 via **AWS SSM Session Manager** (Click **Connect** ? **Session Manager**), then run the setup script:
+Connect to EC2 via **AWS SSM Session Manager** (Click **Connect** -> **Session Manager**), then run the setup script:
 
 ```bash
 # Update OS packages and install Docker

@@ -20,7 +20,7 @@ Bucket này đảm nhận việc lưu trữ toàn bộ các tệp truyền thôn
 
 #### Thao tác cấu hình:
 
-1. Truy cập dịch vụ **Amazon S3** ? chọn **Create bucket**.
+1. Truy cập dịch vụ **Amazon S3** -> chọn **Create bucket**.
 2. **Bucket name:** `learnsphere-media-575620421319` (duy nhất trên toàn cầu).
 3. **Region:** `ap-southeast-1` (Singapore).
 4. **Block Public Access:** Bật công tắc **Block all public access = ON** (Khóa toàn bộ truy cập công khai).
@@ -34,8 +34,8 @@ Bucket này đảm nhận việc lưu trữ toàn bộ các tệp truyền thôn
 
 Do Frontend React chạy trên tên miền CloudFront cần thực hiện tải video/tài liệu trực tiếp lên S3 qua cơ chế Presigned URL, chúng ta cần cấu hình CORS cho S3 Media Bucket:
 
-1. Mở Bucket `learnsphere-media-575620421319` ? chuyển sang tab **Permissions**.
-2. Kéo xuống mục **Cross-origin resource sharing (CORS)** ? chọn **Edit** và dán cấu hình JSON:
+1. Mở Bucket `learnsphere-media-575620421319` -> chuyển sang tab **Permissions**.
+2. Kéo xuống mục **Cross-origin resource sharing (CORS)** -> chọn **Edit** và dán cấu hình JSON:
 
 ```json
 [
