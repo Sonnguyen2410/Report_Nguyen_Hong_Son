@@ -6,8 +6,6 @@ chapter: false
 pre: " <b> 5.4. </b> "
 ---
 
-# Practical Steps (Các bước thực hành)
-
 ### Overview
 
 Trong phần này, bạn sẽ trực tiếp thực thi tuần tự 11 bước thực hành chi tiết để đưa toàn bộ hệ thống LearnSphere từ môi trường phát triển local lên hạ tầng đám mây AWS khu vực Singapore (`ap-southeast-1`).

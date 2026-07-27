@@ -6,8 +6,6 @@ chapter: false
 pre: " <b> 5.4. </b> "
 ---
 
-# Practical Steps
-
 ### Overview
 
 In this section, you will directly execute 11 sequential, detailed hands-on steps to migrate the complete LearnSphere system from your local development environment to AWS Cloud infrastructure in the Singapore region (`ap-southeast-1`).
