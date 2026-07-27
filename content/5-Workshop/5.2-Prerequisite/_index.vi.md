@@ -89,9 +89,9 @@ Người thực hiện cần chuẩn bị một máy tính cá nhân (hệ đi�
 
 Trước khi chuyển sang **Phần 5.3 (Mô tả kiến trúc)** và **Phần 5.4 (Các bước thực hành)**, người thực hiện phải xác nhận đạt 100% các tiêu chuẩn trong bảng kiểm tra dưới đây:
 
-- [x] **Tài khoản AWS:** Đã đăng nhập vào AWS Management Console tại Region Singapore (`ap-southeast-1`) bằng tài khoản có quyền IAM phù hợp.
-- [x] **Cơ sở dữ liệu:** Đã kết nối thử nghiệm thành công tới MongoDB Atlas Cluster qua phần mềm MongoDB Compass hoặc ứng dụng test tại local.
-- [x] **Mã nguồn Local:** Đã chạy thử lệnh kiểm thử backend thành công và chạy lệnh build frontend tạo ra thư mục `dist` mà không có bất kỳ lỗi biên dịch TypeScript nào.
-- [x] **Docker Local:** Đã thực thi lệnh build thử nghiệm Docker Image cho backend tại máy cá nhân và container khởi chạy phản hồi trạng thái 200 OK tại endpoint `/health/ready`.
-- [x] **GitHub Repository:** Mã nguồn đã được đưa lên nhánh `main` của GitHub Repository và sẵn sàng cho việc thiết lập OIDC cùng Repository Secrets.
-- [x] **Môi trường Máy cá nhân:** Đã mở sẵn cửa sổ dòng lệnh Terminal, trình duyệt web và phần mềm Docker Desktop ở trạng thái sẵn sàng làm việc.
+- **Tài khoản AWS:** Đã đăng nhập vào AWS Management Console tại Region Singapore (`ap-southeast-1`) bằng tài khoản có quyền IAM phù hợp.
+- **Cơ sở dữ liệu:** Đã kết nối thử nghiệm thành công tới MongoDB Atlas Cluster qua phần mềm MongoDB Compass hoặc ứng dụng test tại local.
+- **Mã nguồn Local:** Đã chạy thử lệnh kiểm thử backend thành công và chạy lệnh build frontend tạo ra thư mục `dist` mà không có bất kỳ lỗi biên dịch TypeScript nào.
+- **Docker Local:** Đã thực thi lệnh build thử nghiệm Docker Image cho backend tại máy cá nhân và container khởi chạy phản hồi trạng thái 200 OK tại endpoint `/health/ready`.
+- **GitHub Repository:** Mã nguồn đã được đưa lên nhánh `main` của GitHub Repository và sẵn sàng cho việc thiết lập OIDC cùng Repository Secrets.
+- **Môi trường Máy cá nhân:** Đã mở sẵn cửa sổ dòng lệnh Terminal, trình duyệt web và phần mềm Docker Desktop ở trạng thái sẵn sàng làm việc.

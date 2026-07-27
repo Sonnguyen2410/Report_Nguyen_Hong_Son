@@ -89,9 +89,9 @@ Practitioners should prepare a local computer (Windows 10/11, macOS, or Linux) w
 
 Before proceeding to **Section 5.3 (Architecture Description)** and **Section 5.4 (Hands-on Steps)**, verify 100% compliance with the checklist below:
 
-- [x] **AWS Account:** Logged into AWS Management Console in Singapore Region (`ap-southeast-1`) using appropriate IAM credentials.
-- [x] **Database:** Successfully tested connection to MongoDB Atlas Cluster via MongoDB Compass or local test script.
-- [x] **Local Codebase:** Ran backend tests successfully and compiled frontend `dist` directory without TypeScript errors.
-- [x] **Local Docker:** Built backend Docker Image locally and verified 200 OK response on `/health/ready` endpoint.
-- [x] **GitHub Repository:** Code pushed to `main` branch of GitHub Repository and ready for OIDC & Repository Secrets setup.
-- [x] **Local Machine:** Terminal, web browser, and Docker Desktop open and ready for work.
+- **AWS Account:** Logged into AWS Management Console in Singapore Region (`ap-southeast-1`) using appropriate IAM credentials.
+- **Database:** Successfully tested connection to MongoDB Atlas Cluster via MongoDB Compass or local test script.
+- **Local Codebase:** Ran backend tests successfully and compiled frontend `dist` directory without TypeScript errors.
+- **Local Docker:** Built backend Docker Image locally and verified 200 OK response on `/health/ready` endpoint.
+- **GitHub Repository:** Code pushed to `main` branch of GitHub Repository and ready for OIDC & Repository Secrets setup.
+- **Local Machine:** Terminal, web browser, and Docker Desktop open and ready for work.
