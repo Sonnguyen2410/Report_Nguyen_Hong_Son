@@ -14,7 +14,7 @@ Trong bước này, người thực hiện sẽ cấu hình cơ chế bảo mậ
 
 Cơ chế OIDC cho phép GitHub Actions nhận thông tin xác thực tạm thời ngắn hạn từ AWS Security Token Service (STS) khi chạy pipeline. Nhờ đó, hệ thống tuyệt đối **không cần lưu `AWS_ACCESS_KEY_ID` và `AWS_SECRET_ACCESS_KEY` tĩnh** trên GitHub Secrets hoặc máy chủ.
 
-1. Đăng nhập **AWS Management Console** $\rightarrow$ dịch vụ **IAM** $\rightarrow$ chọn **Identity providers** $\rightarrow$ bấm **Add provider**.
+1. Đăng nhập **AWS Management Console** ? dịch vụ **IAM** ? chọn **Identity providers** ? bấm **Add provider**.
 2. Chọn loại Provider: **OpenID Connect**.
 3. Cấu hình thông số:
    - **Provider URL:** `https://token.actions.githubusercontent.com`
@@ -29,7 +29,7 @@ Cơ chế OIDC cho phép GitHub Actions nhận thông tin xác thực tạm th�
 
 ### 2.2. Tạo IAM Role cho GitHub Actions (`LearnSphereGitHubDeployRole`)
 
-1. Tại bảng điều khiển IAM, chuyển đến mục **Roles** $\rightarrow$ chọn **Create role**.
+1. Tại bảng điều khiển IAM, chuyển đến mục **Roles** ? chọn **Create role**.
 2. **Selected trusted entity:** Chọn **Web identity**.
    - **Identity provider:** Select `token.actions.githubusercontent.com`.
    - **Audience:** Select `sts.amazonaws.com`.
@@ -75,7 +75,7 @@ Cơ chế OIDC cho phép GitHub Actions nhận thông tin xác thực tạm th�
 
 Role này được gán trực tiếp vào EC2 Instance Profile, giúp ứng dụng Backend Node.js và AWS CLI trên máy chủ tự động nhận temporary credentials từ Instance Metadata Service (IMDSv2) mà không lưu Access Key trong file `.env`.
 
-1. Tại IAM Roles Console, chọn **Create role** $\rightarrow$ Trusted entity chọn **AWS service** $\rightarrow$ Use case chọn **EC2**.
+1. Tại IAM Roles Console, chọn **Create role** ? Trusted entity chọn **AWS service** ? Use case chọn **EC2**.
 2. Đặt tên Role: `LearnSphereEc2Role`.
 3. Đính kèm các nhóm quyền tối thiểu:
    - `AmazonSSMManagedInstanceCore`: Cho phép kết nối và điều khiển từ xa qua Systems Manager Session Manager.

@@ -12,7 +12,7 @@ In this step, practitioners initialize a Private **Amazon ECR (Elastic Container
 
 ### 4.1. Initialize Private ECR Repository
 
-1. Open **AWS Management Console** $\rightarrow$ navigate to **Amazon ECR** $\rightarrow$ select **Private repositories**.
+1. Open **AWS Management Console** ? navigate to **Amazon ECR** ? select **Private repositories**.
 2. Click **Create repository**.
 3. **Visibility settings:** Select **Private**.
 4. **Repository name:** Name the repository:
@@ -33,11 +33,11 @@ learnsphere-be
 
 To optimize storage costs on ECR, create an automated rule to purge older unused Docker images:
 
-1. Open Repository `learnsphere-be` $\rightarrow$ select **Lifecycle policies** from the left menu $\rightarrow$ click **Create rule**.
+1. Open Repository `learnsphere-be` ? select **Lifecycle policies** from the left menu ? click **Create rule**.
 2. **Rule priority:** `1`.
 3. **Description:** `Keep 10 most recent Docker images`.
 4. **Image status:** `Tagged`.
-5. **Match criteria:** Select `Image count more than` $\rightarrow$ Count: `10`.
+5. **Match criteria:** Select `Image count more than` ? Count: `10`.
 6. Click **Save**.
 
 ---

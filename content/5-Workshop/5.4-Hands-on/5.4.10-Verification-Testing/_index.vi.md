@@ -58,7 +58,7 @@ curl -fsS http://127.0.0.1:5000/health/ready
 
 ### 10.3. Kiểm tra CloudWatch Logs tập trung
 
-Mở **Amazon CloudWatch** $\rightarrow$ **Log groups** $\rightarrow$ chọn `/learnsphere/backend`.
+Mở **Amazon CloudWatch** ? **Log groups** ? chọn `/learnsphere/backend`.
 
 Xác nhận:
 - Server Node.js khởi động thành công trên cổng 5000.
@@ -82,9 +82,9 @@ https://www.learnsphere.id.vn/
 
 #### Thực hiện các bài kiểm thử tính năng đầu-cuối (End-to-End Testing):
 1. **Đăng ký / Đăng nhập:** Đăng ký tài khoản mới và đăng nhập nhận JWT Token.
-2. **Quản lý Khóa học:** Đăng nhập tài khoản Giáo viên (Tutor) $\rightarrow$ Tạo khóa học mới.
+2. **Quản lý Khóa học:** Đăng nhập tài khoản Giáo viên (Tutor) ? Tạo khóa học mới.
 3. **Upload Media Presigned URL:** Tải lên video bài giảng, thumbnail và tài liệu PDF. Xác minh trình duyệt nhận Presigned PUT URL và upload trực tiếp lên S3 Media Bucket mà không bị chặn CORS.
-4. **Học tập & Stream Video:** Đăng nhập tài khoản Học viên (Student) $\rightarrow$ Xem bài học $\rightarrow$ Trình duyệt phát video trực tiếp từ S3 qua Presigned GET URL.
+4. **Học tập & Stream Video:** Đăng nhập tài khoản Học viên (Student) ? Xem bài học ? Trình duyệt phát video trực tiếp từ S3 qua Presigned GET URL.
 5. **Thi Quiz & AI Assistant:** Thực hiện bài thi Quiz trắc nghiệm và tương tác hỏi đáp trực tiếp với AI Assistant.
 
 ![Sản phẩm LearnSphere sau khi triển khai hoàn chỉnh lên AWS](/images/5-Workshop/5.4/5.4.10.4.png)

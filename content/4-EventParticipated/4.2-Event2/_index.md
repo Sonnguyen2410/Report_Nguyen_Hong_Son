@@ -26,8 +26,8 @@ pre: " <b> 4.2. </b> "
 #### 1. Realities of Data Analytics Engineering & MNC Working Culture
 - **Work Reality:** The work of a Data Analytics Engineer is tightly bound to business operation processes (such as tracking GMV, Fulfillment, Last Mile Cost, Fill Rate metrics at companies like Kamereo, Colgate-Palmolive).
 - **4 Core Skills:** Critical Thinking, Communication, Data Storytelling, and Problem Solving.
-- **5-Stage Growth Model:** Career roadmap progression from Follower (Execution) $\rightarrow$ Learner (Proactive Learning) $\rightarrow$ Problem Solver (Solving Issues) $\rightarrow$ System Thinker (Systematic Thinking) $\rightarrow$ Super Star (Strategic Leadership).
-- **Demystifying MNC Culture:** Understanding standard 4-step recruitment processes (ATS Screening $\rightarrow$ Aptitude Test $\rightarrow$ STAR Model Technical Interview $\rightarrow$ Cultural Fit). Exploring positive cultural models such as No-Blame Post-Mortem (Tech MNC) and Caring & Inclusive (FMCG MNC).
+- **5-Stage Growth Model:** Career roadmap progression from Follower (Execution) ? Learner (Proactive Learning) ? Problem Solver (Solving Issues) ? System Thinker (Systematic Thinking) ? Super Star (Strategic Leadership).
+- **Demystifying MNC Culture:** Understanding standard 4-step recruitment processes (ATS Screening ? Aptitude Test ? STAR Model Technical Interview ? Cultural Fit). Exploring positive cultural models such as No-Blame Post-Mortem (Tech MNC) and Caring & Inclusive (FMCG MNC).
 
 #### 2. Realities of DevOps Engineering – Beyond the Hype
 - **Practical View on DevOps:** DevOps is not merely writing CI/CD pipelines or managing Kubernetes/Docker, but acting as a bridge ensuring system stability, workflow automation, and optimizing collaboration between Dev and Ops.

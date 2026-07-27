@@ -12,7 +12,7 @@ Trong bước này, người thực hiện sẽ khởi tạo máy chủ **Amazon
 
 ### 5.1. Khởi tạo EC2 Instance
 
-1. Mở **AWS Management Console** $\rightarrow$ dịch vụ **Amazon EC2** $\rightarrow$ chọn **Launch instance**.
+1. Mở **AWS Management Console** ? dịch vụ **Amazon EC2** ? chọn **Launch instance**.
 2. **Name:** `LearnSphere-Backend-Server`.
 3. Thông số kỹ thuật lựa chọn:
 
@@ -37,7 +37,7 @@ Trong bước này, người thực hiện sẽ khởi tạo máy chủ **Amazon
 
 ### 5.2. Cài đặt Docker Engine & Cấu hình Swap RAM 2GB
 
-Kết nối tới EC2 qua **AWS SSM Session Manager** (trên console chọn **Connect** $\rightarrow$ **Session Manager**), thực thi kịch bản cài đặt:
+Kết nối tới EC2 qua **AWS SSM Session Manager** (trên console chọn **Connect** ? **Session Manager**), thực thi kịch bản cài đặt:
 
 ```bash
 # Cập nhật hệ thống và cài đặt Docker

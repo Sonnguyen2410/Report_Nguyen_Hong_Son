@@ -20,7 +20,7 @@ This bucket handles storage for all system media assets:
 
 #### Configuration Steps:
 
-1. Navigate to **Amazon S3** service $\rightarrow$ click **Create bucket**.
+1. Navigate to **Amazon S3** service ? click **Create bucket**.
 2. **Bucket name:** `learnsphere-media-575620421319` (globally unique).
 3. **Region:** `ap-southeast-1` (Singapore).
 4. **Block Public Access:** Keep **Block all public access = ON**.
@@ -34,8 +34,8 @@ This bucket handles storage for all system media assets:
 
 Because the Frontend React app running on CloudFront uploads media directly to S3 via Presigned URLs, we must configure CORS rules on the S3 Media Bucket:
 
-1. Open Bucket `learnsphere-media-575620421319` $\rightarrow$ navigate to **Permissions** tab.
-2. Scroll to **Cross-origin resource sharing (CORS)** $\rightarrow$ click **Edit** and paste:
+1. Open Bucket `learnsphere-media-575620421319` ? navigate to **Permissions** tab.
+2. Scroll to **Cross-origin resource sharing (CORS)** ? click **Edit** and paste:
 
 ```json
 [

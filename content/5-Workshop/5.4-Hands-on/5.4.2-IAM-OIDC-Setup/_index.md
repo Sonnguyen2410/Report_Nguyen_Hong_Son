@@ -14,7 +14,7 @@ In this step, practitioners configure **Zero Static Credentials** security by cr
 
 The OIDC mechanism enables GitHub Actions to fetch short-lived temporary credentials from AWS Security Token Service (STS) during pipeline execution. This completely **eliminates long-term static `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`** from GitHub Secrets or servers.
 
-1. Log into **AWS Management Console** $\rightarrow$ **IAM** service $\rightarrow$ select **Identity providers** $\rightarrow$ click **Add provider**.
+1. Log into **AWS Management Console** ? **IAM** service ? select **Identity providers** ? click **Add provider**.
 2. Select Provider Type: **OpenID Connect**.
 3. Configure parameters:
    - **Provider URL:** `https://token.actions.githubusercontent.com`
@@ -29,7 +29,7 @@ The OIDC mechanism enables GitHub Actions to fetch short-lived temporary credent
 
 ### 2.2. Create IAM Role for GitHub Actions (`LearnSphereGitHubDeployRole`)
 
-1. In IAM Console, navigate to **Roles** $\rightarrow$ click **Create role**.
+1. In IAM Console, navigate to **Roles** ? click **Create role**.
 2. **Selected trusted entity:** Select **Web identity**.
    - **Identity provider:** Select `token.actions.githubusercontent.com`.
    - **Audience:** Select `sts.amazonaws.com`.
@@ -75,7 +75,7 @@ The OIDC mechanism enables GitHub Actions to fetch short-lived temporary credent
 
 This role is attached directly to the EC2 Instance Profile, allowing the Backend Node.js app and AWS CLI on the server to automatically fetch temporary credentials from IMDSv2 without static Access Keys in `.env`.
 
-1. In IAM Roles Console, click **Create role** $\rightarrow$ Trusted entity: **AWS service** $\rightarrow$ Use case: **EC2**.
+1. In IAM Roles Console, click **Create role** ? Trusted entity: **AWS service** ? Use case: **EC2**.
 2. Name Role: `LearnSphereEc2Role`.
 3. Attach minimal policy permissions:
    - `AmazonSSMManagedInstanceCore`: Enables remote connection via Systems Manager Session Manager.
