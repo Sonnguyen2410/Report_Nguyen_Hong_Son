@@ -6,237 +6,66 @@ chapter : false
 pre : " <b> 5.2. </b> "
 ---
 
-#### IAM permissions
-Gắn IAM permission policy sau vào tài khoản aws user của bạn để triển khai và dọn dẹp tài nguyên trong workshop này.
-```
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Sid": "VisualEditor0",
-            "Effect": "Allow",
-            "Action": [
-                "cloudformation:*",
-                "cloudwatch:*",
-                "ec2:AcceptTransitGatewayPeeringAttachment",
-                "ec2:AcceptTransitGatewayVpcAttachment",
-                "ec2:AllocateAddress",
-                "ec2:AssociateAddress",
-                "ec2:AssociateIamInstanceProfile",
-                "ec2:AssociateRouteTable",
-                "ec2:AssociateSubnetCidrBlock",
-                "ec2:AssociateTransitGatewayRouteTable",
-                "ec2:AssociateVpcCidrBlock",
-                "ec2:AttachInternetGateway",
-                "ec2:AttachNetworkInterface",
-                "ec2:AttachVolume",
-                "ec2:AttachVpnGateway",
-                "ec2:AuthorizeSecurityGroupEgress",
-                "ec2:AuthorizeSecurityGroupIngress",
-                "ec2:CreateClientVpnEndpoint",
-                "ec2:CreateClientVpnRoute",
-                "ec2:CreateCustomerGateway",
-                "ec2:CreateDhcpOptions",
-                "ec2:CreateFlowLogs",
-                "ec2:CreateInternetGateway",
-                "ec2:CreateLaunchTemplate",
-                "ec2:CreateNetworkAcl",
-                "ec2:CreateNetworkInterface",
-                "ec2:CreateNetworkInterfacePermission",
-                "ec2:CreateRoute",
-                "ec2:CreateRouteTable",
-                "ec2:CreateSecurityGroup",
-                "ec2:CreateSubnet",
-                "ec2:CreateSubnetCidrReservation",
-                "ec2:CreateTags",
-                "ec2:CreateTransitGateway",
-                "ec2:CreateTransitGatewayPeeringAttachment",
-                "ec2:CreateTransitGatewayPrefixListReference",
-                "ec2:CreateTransitGatewayRoute",
-                "ec2:CreateTransitGatewayRouteTable",
-                "ec2:CreateTransitGatewayVpcAttachment",
-                "ec2:CreateVpc",
-                "ec2:CreateVpcEndpoint",
-                "ec2:CreateVpcEndpointConnectionNotification",
-                "ec2:CreateVpcEndpointServiceConfiguration",
-                "ec2:CreateVpnConnection",
-                "ec2:CreateVpnConnectionRoute",
-                "ec2:CreateVpnGateway",
-                "ec2:DeleteCustomerGateway",
-                "ec2:DeleteFlowLogs",
-                "ec2:DeleteInternetGateway",
-                "ec2:DeleteNetworkInterface",
-                "ec2:DeleteNetworkInterfacePermission",
-                "ec2:DeleteRoute",
-                "ec2:DeleteRouteTable",
-                "ec2:DeleteSecurityGroup",
-                "ec2:DeleteSubnet",
-                "ec2:DeleteSubnetCidrReservation",
-                "ec2:DeleteTags",
-                "ec2:DeleteTransitGateway",
-                "ec2:DeleteTransitGatewayPeeringAttachment",
-                "ec2:DeleteTransitGatewayPrefixListReference",
-                "ec2:DeleteTransitGatewayRoute",
-                "ec2:DeleteTransitGatewayRouteTable",
-                "ec2:DeleteTransitGatewayVpcAttachment",
-                "ec2:DeleteVpc",
-                "ec2:DeleteVpcEndpoints",
-                "ec2:DeleteVpcEndpointServiceConfigurations",
-                "ec2:DeleteVpnConnection",
-                "ec2:DeleteVpnConnectionRoute",
-                "ec2:Describe*",
-                "ec2:DetachInternetGateway",
-                "ec2:DisassociateAddress",
-                "ec2:DisassociateRouteTable",
-                "ec2:GetLaunchTemplateData",
-                "ec2:GetTransitGatewayAttachmentPropagations",
-                "ec2:ModifyInstanceAttribute",
-                "ec2:ModifySecurityGroupRules",
-                "ec2:ModifyTransitGatewayVpcAttachment",
-                "ec2:ModifyVpcAttribute",
-                "ec2:ModifyVpcEndpoint",
-                "ec2:ReleaseAddress",
-                "ec2:ReplaceRoute",
-                "ec2:RevokeSecurityGroupEgress",
-                "ec2:RevokeSecurityGroupIngress",
-                "ec2:RunInstances",
-                "ec2:StartInstances",
-                "ec2:StopInstances",
-                "ec2:UpdateSecurityGroupRuleDescriptionsEgress",
-                "ec2:UpdateSecurityGroupRuleDescriptionsIngress",
-                "iam:AddRoleToInstanceProfile",
-                "iam:AttachRolePolicy",
-                "iam:CreateInstanceProfile",
-                "iam:CreatePolicy",
-                "iam:CreateRole",
-                "iam:DeleteInstanceProfile",
-                "iam:DeletePolicy",
-                "iam:DeleteRole",
-                "iam:DeleteRolePolicy",
-                "iam:DetachRolePolicy",
-                "iam:GetInstanceProfile",
-                "iam:GetPolicy",
-                "iam:GetRole",
-                "iam:GetRolePolicy",
-                "iam:ListPolicyVersions",
-                "iam:ListRoles",
-                "iam:PassRole",
-                "iam:PutRolePolicy",
-                "iam:RemoveRoleFromInstanceProfile",
-                "lambda:CreateFunction",
-                "lambda:DeleteFunction",
-                "lambda:DeleteLayerVersion",
-                "lambda:GetFunction",
-                "lambda:GetLayerVersion",
-                "lambda:InvokeFunction",
-                "lambda:PublishLayerVersion",
-                "logs:CreateLogGroup",
-                "logs:DeleteLogGroup",
-                "logs:DescribeLogGroups",
-                "logs:PutRetentionPolicy",
-                "route53:ChangeTagsForResource",
-                "route53:CreateHealthCheck",
-                "route53:CreateHostedZone",
-                "route53:CreateTrafficPolicy",
-                "route53:DeleteHostedZone",
-                "route53:DisassociateVPCFromHostedZone",
-                "route53:GetHostedZone",
-                "route53:ListHostedZones",
-                "route53domains:ListDomains",
-                "route53domains:ListOperations",
-                "route53domains:ListTagsForDomain",
-                "route53resolver:AssociateResolverEndpointIpAddress",
-                "route53resolver:AssociateResolverRule",
-                "route53resolver:CreateResolverEndpoint",
-                "route53resolver:CreateResolverRule",
-                "route53resolver:DeleteResolverEndpoint",
-                "route53resolver:DeleteResolverRule",
-                "route53resolver:DisassociateResolverEndpointIpAddress",
-                "route53resolver:DisassociateResolverRule",
-                "route53resolver:GetResolverEndpoint",
-                "route53resolver:GetResolverRule",
-                "route53resolver:ListResolverEndpointIpAddresses",
-                "route53resolver:ListResolverEndpoints",
-                "route53resolver:ListResolverRuleAssociations",
-                "route53resolver:ListResolverRules",
-                "route53resolver:ListTagsForResource",
-                "route53resolver:UpdateResolverEndpoint",
-                "route53resolver:UpdateResolverRule",
-                "s3:AbortMultipartUpload",
-                "s3:CreateBucket",
-                "s3:DeleteBucket",
-                "s3:DeleteObject",
-                "s3:GetAccountPublicAccessBlock",
-                "s3:GetBucketAcl",
-                "s3:GetBucketOwnershipControls",
-                "s3:GetBucketPolicy",
-                "s3:GetBucketPolicyStatus",
-                "s3:GetBucketPublicAccessBlock",
-                "s3:GetObject",
-                "s3:GetObjectVersion",
-                "s3:GetBucketVersioning",
-                "s3:ListAccessPoints",
-                "s3:ListAccessPointsForObjectLambda",
-                "s3:ListAllMyBuckets",
-                "s3:ListBucket",
-                "s3:ListBucketMultipartUploads",
-                "s3:ListBucketVersions",
-                "s3:ListJobs",
-                "s3:ListMultipartUploadParts",
-                "s3:ListMultiRegionAccessPoints",
-                "s3:ListStorageLensConfigurations",
-                "s3:PutAccountPublicAccessBlock",
-                "s3:PutBucketAcl",
-                "s3:PutBucketPolicy",
-                "s3:PutBucketPublicAccessBlock",
-                "s3:PutObject",
-                "secretsmanager:CreateSecret",
-                "secretsmanager:DeleteSecret",
-                "secretsmanager:DescribeSecret",
-                "secretsmanager:GetSecretValue",
-                "secretsmanager:ListSecrets",
-                "secretsmanager:ListSecretVersionIds",
-                "secretsmanager:PutResourcePolicy",
-                "secretsmanager:TagResource",
-                "secretsmanager:UpdateSecret",
-                "sns:ListTopics",
-                "ssm:DescribeInstanceProperties",
-                "ssm:DescribeSessions",
-                "ssm:GetConnectionStatus",
-                "ssm:GetParameters",
-                "ssm:ListAssociations",
-                "ssm:ResumeSession",
-                "ssm:StartSession",
-                "ssm:TerminateSession"
-            ],
-            "Resource": "*"
-        }
-    ]
-}
+Để bài thực hành Workshop triển khai ứng dụng LearnSphere lên hạ tầng AWS diễn ra thuận lợi và đạt kết quả tốt nhất, người thực hiện cần chuẩn bị đầy đủ các tài khoản, quyền hạn truy cập, công cụ môi trường local và mã nguồn dự án theo danh sách dưới đây.
 
-```
+### 1. Yêu cầu Tài khoản và Quyền truy cập Đám mây
 
-#### Khởi tạo tài nguyên bằng CloudFormation
+**Tài khoản đám mây AWS (AWS Account):**
+* Tài khoản AWS ở trạng thái hoạt động bình thường (Active), ưu tiên các tài khoản còn trong thời gian Free Tier để tối ưu chi phí.
+* **Vùng triển khai (Region):** Tất cả tài nguyên trong bài workshop sẽ được khởi tạo đồng bộ tại Region Singapore (`ap-southeast-1`).
+* **Quyền hạn IAM:** Tài khoản cần có quyền quản trị viên (`AdministratorAccess`) hoặc có đầy đủ nhóm quyền quản trị trên các dịch vụ: IAM, EC2, S3, ECR, CloudFront, CloudWatch, SNS và Systems Manager.
 
-Trong lab này, chúng ta sẽ dùng N.Virginia region (us-east-1).
+**Tài khoản lưu trữ mã nguồn GitHub:**
+* Tài khoản GitHub cá nhân và một Repository đặt tên `LearnSphere` đã được khởi tạo để lưu trữ mã nguồn dự án.
+* Quyền truy cập thiết lập GitHub Repository Settings để khai báo các Repository Secrets cho quy trình CI/CD.
 
-Để chuẩn bị cho môi trường làm workshop, chúng ta deploy CloudFormation template sau (click link): [PrivateLinkWorkshop ](https://us-east-1.console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/quickcreate?templateURL=https://s3.us-east-1.amazonaws.com/reinvent-endpoints-builders-session/Nested.yaml&stackName=PLCloudSetup). Để nguyên các lựa chọn mặc định.
+**Tài khoản Cơ sở dữ liệu MongoDB Atlas:**
+* Tài khoản MongoDB Atlas đã khởi tạo sẵn một Cluster cơ sở dữ liệu (có thể dùng gói miễn phí M0 Sandbox hoặc gói M2 Shared).
+* Đã lấy được chuỗi kết nối tiêu chuẩn SRV phục vụ khai báo môi trường cho ứng dụng Backend.
 
-![create stack](/images/5-Workshop/5.2-Prerequisite/create-stack1.png)
+---
 
-+ Lựa chọn 2 mục acknowledgement 
-+ Chọn Create stack
+### 2. Chuẩn bị Công cụ trên Môi trường Máy cá nhân (Local Environment)
 
-![create stack](/images/5-Workshop/5.2-Prerequisite/create-stack2.png)
+Người thực hiện cần cài đặt và kiểm tra sẵn các công cụ phần mềm sau trên máy tính cá nhân (Windows, macOS hoặc Linux):
 
-Quá trình triển khai CloudFormation cần khoảng 15 phút để hoàn thành.
+**Môi trường Runtime Node.js và npm:**
+* Cài đặt Node.js phiên bản `v24 LTS` trở lên.
+* Công cụ npm đi kèm để cài đặt bộ thư viện dependencies, chạy kiểm thử unit test cho Backend và biên dịch mã nguồn tĩnh cho Frontend.
 
-![complete](/images/5-Workshop/5.2-Prerequisite/complete.png)
+**Công cụ quản lý phiên bản Git CLI:**
+* Git đã được cài đặt và cấu hình thông tin cá nhân (email, username).
+* Đã liên kết và xác thực thành công với GitHub Repository của dự án.
 
-+ 2 VPCs đã được tạo
+**Nền tảng đóng gói Docker Desktop:**
+* Phần mềm Docker Desktop đã được cài đặt và đang ở trạng thái hoạt động (Running).
+* Sử dụng để thực thi lệnh build thử nghiệm Docker Image của Backend và kiểm thử container tại môi trường máy cá nhân trước khi đẩy lên mây.
 
-![vpcs](/images/5-Workshop/5.2-Prerequisite/vpcs.png)
+**Công cụ tương tác AWS CLI (Version 2):**
+* Đã cài đặt công cụ dòng lệnh AWS CLI phiên bản 2.
+* Được sử dụng để kiểm tra xác thực danh tính phân quyền IAM và thử nghiệm tương tác với dịch vụ Amazon S3 từ cửa sổ dòng lệnh.
 
-+ 3 EC2s đã được tạo
+**Trình soạn thảo mã nguồn và Terminal:**
+* Trình soạn thảo mã nguồn ưu tiên như Visual Studio Code.
+* Cửa sổ dòng lệnh Terminal (macOS/Linux) hoặc PowerShell (Windows) để thực thi các câu lệnh điều khiển.
 
-![EC2](/images/5-Workshop/5.2-Prerequisite/ec2.png)
+---
+
+### 3. Chuẩn bị Mã nguồn Dự án và Tệp Cấu hình Mẫu
+
+**Cấu trúc Thư mục Monorepo LearnSphere:**
+* Mã nguồn dự án tại local phải đảm bảo cấu trúc thư mục hoàn chỉnh gồm thư mục `LearnSphere_BE` (chứa mã nguồn ứng dụng Backend Express.js), thư mục `LearnSphere_FE` (chứa mã nguồn giao diện React/Vite) và thư mục `.github/workflows` (chứa file cấu hình tự động hóa triển khai).
+
+**File Cấu hình Môi trường Mẫu (`.env.example`):**
+* Chuẩn bị sẵn danh sách các biến môi trường cần thiết cho ứng dụng Backend như: cổng dịch vụ `PORT=5000`, môi trường `NODE_ENV=production`, chuỗi kết nối `MONGODB_URI`, khóa mã hóa `JWT_SECRET`, tên miền `FRONTEND_URL`, Region AWS và tên S3 Bucket lưu trữ truyền thông.
+
+---
+
+### 4. Danh mục Kiểm tra Sẵn sàng (Checklist)
+
+Trước khi bắt đầu bước thực hành đầu tiên, người thực hiện nên rà soát lại toàn bộ bảng kiểm tra dưới đây:
+
+- [x] Đã đăng nhập thành công vào trang quản trị AWS Management Console tại Region Singapore (`ap-southeast-1`).
+- [x] Đã khởi tạo và truy cập được vào bảng điều khiển MongoDB Atlas Cluster.
+- [x] Máy tính cá nhân đã mở sẵn Docker Desktop và cửa sổ dòng lệnh Terminal.
+- [x] Mã nguồn dự án tại local đã chạy thử nghiệm thành công các lệnh kiểm thử và biên dịch mà không phát sinh lỗi.
