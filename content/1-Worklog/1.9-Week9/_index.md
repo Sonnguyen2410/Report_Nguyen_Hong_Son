@@ -24,7 +24,7 @@ pre: " <b> 1.9. </b> "
 | **Tuesday (Jul 28, 2026)** | • Authored Chapter 3 (Technical Blog Posts on Docker, OIDC, CloudFront OAC).<br>• Authored Chapter 4 (Participated FCAJ Tech Talks & Workshops).<br>• Asset-managed architecture diagrams and event certificates. | • Finalized Chapters 3 & 4.<br>• Standardized image assets. |
 | **Wednesday (Jul 29, 2026)** | • Synthesized Chapter 5 AWS Workshop: Authored 5.1 Overview, 5.2 Prerequisite, 5.3 Architecture.<br>• Compiled 11 Hands-on steps (5.4.1 to 5.4.11) with 27 centered image captions.<br>• Authored 5.5 Resource Clean-up procedures and Clean-up Checklist Table. | • Finalized complete Chapter 5.<br>• Integrated 27 screenshot figures. |
 | **Thursday (Jul 30, 2026)** | • Authored Chapter 6 (Self-Assessment with 12 criteria table and 3 improvement areas).<br>• Authored Chapter 7 (Personal Feedback on FCAJ program, Mentor/Admin responses, Coffee Talk suggestions).<br>• Standardized all `->` arrow indicators, AWS logo links, and English translations. | • Finalized Chapters 6 & 7.<br>• 100% audited Hugo site code. |
-| **Friday (Jul 31, 2026)** | • Deployed internship report website to GitHub Repository and verified GitHub Pages publishing.<br>• Attended Final Internship Defense with FCAJ Program Management and Mentors.<br>• Received final internship evaluation and Certificate of Completion. | • Published report on GitHub Pages.<br>• Graduated internship program. |
+| **Friday (Jul 31, 2026)** | • Deployed internship report website to GitHub Repository and verified GitHub Pages publishing.<br>• Submit the report to the FCAJ website. | • Published report on GitHub Pages. |
 
 ---
 
