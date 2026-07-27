@@ -6,7 +6,7 @@ chapter: false
 pre: " <b> 5.4.10. </b> "
 ---
 
-After CI/CD pipeline execution, practitioners verify Backend containers, inspect centralized log streams, test database connectivity, and perform End-to-End user testing on the CloudFront HTTPS Production domain.
+After CI/CD pipeline execution, practitioners verify Backend containers, inspect centralized log streams, test database connectivity, and perform End-to-End user testing on the official Production HTTPS domain.
 
 ---
 
@@ -73,10 +73,11 @@ Confirm:
 
 ### 10.4. Production Application Testing & User Experience
 
-Navigate directly to the official CloudFront Production URL:
+Navigate directly to the official Production URL:
 
 ```text
-https://d2onzy56n3iw1w.cloudfront.net
+https://www.learnsphere.id.vn/
+(Or CloudFront HTTPS Distribution URL: https://d2onzy56n3iw1w.cloudfront.net)
 ```
 
 #### Execute End-to-End Feature Verification Tests:

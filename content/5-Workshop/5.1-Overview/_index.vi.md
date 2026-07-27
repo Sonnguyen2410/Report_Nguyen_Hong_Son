@@ -23,7 +23,8 @@ pre: " <b> 5.1. </b> "
 
 | Tài nguyên | Liên kết (URL) | Mô tả chi tiết |
 | --- | --- | --- |
-| 🌐 **Live Website** | [https://sonnguyen2410.github.io/Report_Nguyen_Hong_Son/](https://sonnguyen2410.github.io/Report_Nguyen_Hong_Son/) | Truy cập trực tiếp hệ thống báo cáo & ứng dụng đang chạy thực tế |
+| 🌐 **Website Sản phẩm (Production)** | [https://www.learnsphere.id.vn/](https://www.learnsphere.id.vn/) | Website ứng dụng LearnSphere chính thức đang vận hành thực tế trên AWS |
+| 📊 **Trang Báo cáo Thực tập (Live Report)** | [https://sonnguyen2410.github.io/Report_Nguyen_Hong_Son/](https://sonnguyen2410.github.io/Report_Nguyen_Hong_Son/) | Trang web báo cáo quy trình triển khai & tài liệu thực hành workshop |
 | 🐙 **GitHub Repository** | [https://github.com/HoiaeKHMT/LearnSphere](https://github.com/HoiaeKHMT/LearnSphere) | Mã nguồn dự án LearnSphere (Backend Express.js & Frontend React Monorepo) |
 | 🎬 **Video Demo** | [Xem Video Demo trên Google Drive](https://drive.google.com/file/d/1J6heEzrB1jZO3C5Z3tuz1LBwdkRozMh4/view) | Video giới thiệu các tính năng và toàn bộ quy trình vận hành hệ thống |
 
@@ -60,4 +61,4 @@ Sau khi hoàn thành bài workshop, người thực hiện sẽ làm chủ các 
 
 ### 4. Kết quả đạt được sau khi hoàn thành
 
-Sau khi hoàn tất bài workshop, hệ thống LearnSphere sẽ vận hành hoàn chỉnh trên môi trường Production dưới một tên miền HTTPS duy nhất do CloudFront cung cấp. Mọi thao tác từ đăng ký, đăng nhập, tải bài giảng, xem video, làm bài thi Quiz đến tương tác với AI Assistant đều diễn ra tự động, bảo mật và có tính sẵn sàng cao.
+Sau khi hoàn tất bài workshop, hệ thống LearnSphere sẽ vận hành hoàn chỉnh trên môi trường Production dưới tên miền chính thức **[https://www.learnsphere.id.vn/](https://www.learnsphere.id.vn/)** (kết nối qua CloudFront HTTPS Distribution). Mọi thao tác từ đăng ký, đăng nhập, tải bài giảng, xem video, làm bài thi Quiz đến tương tác với AI Assistant đều diễn ra tự động, bảo mật và có tính sẵn sàng cao.

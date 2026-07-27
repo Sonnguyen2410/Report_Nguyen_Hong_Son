@@ -6,7 +6,7 @@ chapter: false
 pre: " <b> 5.4.10. </b> "
 ---
 
-Sau khi quy trình CI/CD hoàn tất, người thực hiện tiến hành kiểm tra toàn bộ container, log tập trung, kết nối cơ sở dữ liệu và trải nghiệm sản phẩm trực tiếp trên tên miền CloudFront HTTPS Production.
+Sau khi quy trình CI/CD hoàn tất, người thực hiện tiến hành kiểm tra toàn bộ container, log tập trung, kết nối cơ sở dữ liệu và trải nghiệm sản phẩm trực tiếp trên tên miền Production HTTPS.
 
 ---
 
@@ -71,12 +71,13 @@ Xác nhận:
 
 ---
 
-### 10.4. Trải nghiệm Sản phẩm trên Tên miền CloudFront Production
+### 10.4. Trải nghiệm Sản phẩm trên Tên miền Production
 
-Truy cập trực tiếp đường dẫn sản phẩm chính thức:
+Truy cập trực tiếp tên miền sản phẩm chính thức:
 
 ```text
-https://d2onzy56n3iw1w.cloudfront.net
+https://www.learnsphere.id.vn/
+(Hoặc đường dẫn CloudFront HTTPS: https://d2onzy56n3iw1w.cloudfront.net)
 ```
 
 #### Thực hiện các bài kiểm thử tính năng đầu-cuối (End-to-End Testing):
