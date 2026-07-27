@@ -1,0 +1,18 @@
+---
+title: "Tài liệu tham khảo"
+date: 2026-07-27
+weight: 8
+chapter: false
+pre: " <b> 8. </b> "
+---
+
+Trong quá trình thực hiện dự án E-Learning **LearnSphere** và tham gia kỳ thực tập **AWS First Cloud AI Journey (FCAJ)**, hệ thống mã nguồn, tài liệu và video báo cáo đã được lưu trữ và tổng hợp tại các liên kết sau đây:
+
+### 🌐 Liên kết Dự án & Tài nguyên (Project Links & Resources)
+
+| Tài nguyên | Liên kết (URL) | Mô tả chi tiết |
+| --- | --- | --- |
+| 🌐 **Website Sản phẩm (Production)** | [https://www.learnsphere.id.vn/](https://www.learnsphere.id.vn/) | Website ứng dụng LearnSphere chính thức đang vận hành thực tế trên hạ tầng AWS. |
+| 🐙 **Mã nguồn Dự án (Source Code)** | [https://github.com/HoiaeKHMT/LearnSphere](https://github.com/HoiaeKHMT/LearnSphere) | Mã nguồn gốc dự án LearnSphere (bao gồm Backend Express.js & Frontend React cấu trúc Monorepo). |
+| 🎬 **Video Demo** | [Xem Video Demo trên Google Drive](https://drive.google.com/file/d/1J6heEzrB1jZO3C5Z3tuz1LBwdkRozMh4/view) | Video trình bày chi tiết về các tính năng, trải nghiệm người dùng và toàn bộ quy trình vận hành hệ thống. |
+| 📘 **GitHub Repository Báo cáo** | [https://github.com/Sonnguyen2410/Report_Nguyen_Hong_Son](https://github.com/Sonnguyen2410/Report_Nguyen_Hong_Son) | Kho lưu trữ mã nguồn của website Báo cáo thực tập này (được xây dựng bằng Hugo Relearn Theme). |
