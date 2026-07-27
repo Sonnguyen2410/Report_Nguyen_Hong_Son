@@ -6,7 +6,7 @@ chapter: false
 pre: " <b> 6. </b> "
 ---
 
-Trong suốt thời gian thực tập từ ngày 01/06/2026 đến ngày 27/07/2026, tôi đã có cơ hội học hỏi, rèn luyện và áp dụng kiến thức chuyên môn đã học tại trường vào môi trường thực tế.
+Trong suốt thời gian thực tập tại AWS First Cloud AI Journey (FCAJ) từ ngày 15/06/2026 đến ngày 14/08/2026, tôi đã có cơ hội học hỏi, rèn luyện và áp dụng kiến thức chuyên môn đã học tại trường vào môi trường thực tế.
 
 Tôi đã trực tiếp tham gia **Dự án Triển khai và Vận hành Hệ thống LearnSphere trên Hạ tầng Cloud AWS**, thực hiện các công việc chính như: đóng gói container Docker Multi-stage, cấu hình phân quyền bảo mật IAM/OIDC, khởi tạo hệ thống phân phối CloudFront CDN/S3, xây dựng pipeline CI/CD tự động và thiết lập hệ thống giám sát với CloudWatch/SNS. Qua đó, tôi đã hoàn thiện tốt các kỹ năng chuyên môn về Điện toán đám mây (AWS), quy trình DevOps và xây dựng tài liệu kỹ thuật.
 
