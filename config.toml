@@ -1,6 +1,6 @@
 baseURL = "https://Sonnguyen2410.github.io/Report_Nguyen_Hong_Son/"
 relativeURLs = false
-canonifyURLs = true
+canonifyURLs = false
 defaultContentLanguage = "en"
 
 # Change the default theme to be use when building the site with Hugo
