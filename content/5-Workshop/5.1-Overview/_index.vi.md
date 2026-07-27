@@ -6,8 +6,6 @@ chapter: false
 pre: " <b> 5.1. </b> "
 ---
 
-# Overview (Giới thiệu tổng quan dự án LearnSphere)
-
 ### 1. Giới thiệu tổng quan dự án LearnSphere
 
 **LearnSphere** là một nền tảng học tập trực tuyến (E-Learning Platform) hiện đại, hỗ trợ toàn bộ quy trình dạy và học dành cho cả Giáo viên (Tutor) và Học viên (Student). Hệ thống được thiết kế theo cấu trúc Monorepo đơn giản, giúp quản lý đồng bộ mã nguồn và tối ưu hóa quy trình kiểm thử:

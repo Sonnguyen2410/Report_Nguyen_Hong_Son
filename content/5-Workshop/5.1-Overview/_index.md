@@ -6,8 +6,6 @@ chapter: false
 pre: " <b> 5.1. </b> "
 ---
 
-# Overview (LearnSphere Project Overview)
-
 ### 1. Overview of the LearnSphere Project
 
 **LearnSphere** is a modern online learning platform (E-Learning Platform) supporting teaching and learning workflows for both Tutors and Students. Designed with a simple Monorepo architecture, it simplifies source code management and optimizes testing:
