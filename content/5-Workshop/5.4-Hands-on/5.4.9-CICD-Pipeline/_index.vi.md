@@ -24,6 +24,8 @@ Mở GitHub Repository $\rightarrow$ **Settings** $\rightarrow$ **Secrets and va
 
 > **Không sử dụng các Secret tĩnh cũ:** Không khai báo `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` hay `EC2_SSH_KEY` vì quy trình triển khai sử dụng 100% xác thực **OIDC** và quản trị qua **AWS Systems Manager (SSM)**.
 
+![Các biến cấu hình được sử dụng bởi pipeline CI/CD](/images/5-Workshop/5.4/5.4.9.1.png)
+
 ---
 
 ### 9.2. Xây dựng Quy trình CI/CD Workflow (`.github/workflows/deploy.yml`)
@@ -130,6 +132,8 @@ jobs:
           aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_FE_DISTRIBUTION_ID }} --paths "/*"
 ```
 
+![Quy trình CI/CD tự động của LearnSphere](/images/5-Workshop/5.4/5.4.9.2.png)
+
 ---
 
 ### 9.3. Kích hoạt CI/CD Pipeline & Xử lý Lỗi OIDC
@@ -141,6 +145,8 @@ git add .
 git commit -m "feat: deploy LearnSphere to AWS"
 git push origin main
 ```
+
+![Pipeline triển khai Backend và Frontend hoàn tất thành công](/images/5-Workshop/5.4/5.4.9.3.png)
 
 #### Xử lý Lỗi OIDC ở Lần Chạy Đầu:
 Nếu gặp thông báo lỗi `Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWebIdentity`, hãy kiểm tra lại cấu hình **Trust Policy** của `LearnSphereGitHubDeployRole` đảm bảo khớp chính xác tên `repo:username/repository:ref:refs/heads/main`. Bấm nút **Re-run jobs** trên GitHub Actions để chạy lại pipeline thành công.

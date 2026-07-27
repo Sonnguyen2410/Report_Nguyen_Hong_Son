@@ -51,6 +51,8 @@ curl -fsS http://127.0.0.1:5000/health/ready
 }
 ```
 
+![Backend container hoạt động ổn định và kết nối MongoDB thành công](/images/5-Workshop/5.4/5.4.10.2.png)
+
 ---
 
 ### 10.3. Kiểm tra CloudWatch Logs tập trung
@@ -62,6 +64,8 @@ Xác nhận:
 - MongoDB Atlas kết nối ổn định.
 - Không lặp lại bất kỳ lỗi crash/restart nào.
 - Nhận đầy đủ HTTP request log được chuyển tiếp từ CloudFront.
+
+![Log Backend được tập trung trên Amazon CloudWatch](/images/5-Workshop/5.4/5.4.10.3.png)
 
 ---
 
@@ -79,3 +83,5 @@ https://d2onzy56n3iw1w.cloudfront.net
 3. **Upload Media Presigned URL:** Tải lên video bài giảng, thumbnail và tài liệu PDF. Xác minh trình duyệt nhận Presigned PUT URL và upload trực tiếp lên S3 Media Bucket mà không bị chặn CORS.
 4. **Học tập & Stream Video:** Đăng nhập tài khoản Học viên (Student) $\rightarrow$ Xem bài học $\rightarrow$ Trình duyệt phát video trực tiếp từ S3 qua Presigned GET URL.
 5. **Thi Quiz & AI Assistant:** Thực hiện bài thi Quiz trắc nghiệm và tương tác hỏi đáp trực tiếp với AI Assistant.
+
+![Sản phẩm LearnSphere sau khi triển khai hoàn chỉnh lên AWS](/images/5-Workshop/5.4/5.4.10.4.png)

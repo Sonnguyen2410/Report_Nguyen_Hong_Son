@@ -31,6 +31,8 @@ The LearnSphere system continues to use **MongoDB Atlas** as its Production data
 2. Enter the **IPv4 Public IP** of the EC2 Backend instance (`i-008c48e6c120b2978`).
 3. Click **Confirm** to save IP Access List rules.
 
+![MongoDB Atlas cluster utilized as production database](/images/5-Workshop/5.4/5.4.6.png)
+
 ---
 
 ### 6.3. Retrieve SRV Connection String & Health Check Integration

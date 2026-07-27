@@ -27,6 +27,8 @@ This bucket handles storage for all system media assets:
 5. **Static Website Hosting:** Keep `Disabled`.
 6. Click **Create bucket**.
 
+![Creating S3 Media Bucket learnsphere-media](/images/5-Workshop/5.4/5.4.3.1.1.png)
+
 #### CORS Configuration:
 
 Because the Frontend React app running on CloudFront uploads media directly to S3 via Presigned URLs, we must configure CORS rules on the S3 Media Bucket:
@@ -51,6 +53,8 @@ Because the Frontend React app running on CloudFront uploads media directly to S
 
 > **Important Note:** Exposing the `ETag` header (`ExposeHeaders: ["ETag"]`) is mandatory for the browser to read upload checksums during S3 Multipart Uploads of large video files.
 
+![CORS configuration enabling browser uploads/downloads via presigned URLs](/images/5-Workshop/5.4/5.4.3.1.2.png)
+
 ---
 
 ### 3.2. Create S3 Bucket 2 — Frontend Static Assets (`learnsphere-fe-575620421319`)
@@ -63,5 +67,7 @@ This bucket stores compiled React SPA static assets (`index.html`, JavaScript, C
 4. **Block Public Access:** Keep **Block all public access = ON**.
 5. **Static Website Hosting:** Keep `Disabled`.
 6. Click **Create bucket**.
+
+![Private S3 bucket for storing compiled Frontend build](/images/5-Workshop/5.4/5.4.3.2.png)
 
 > **Note:** This bucket remains 100% Private. Read permissions will be granted exclusively to CloudFront Origin Access Control (OAC) in **Step 7A**.

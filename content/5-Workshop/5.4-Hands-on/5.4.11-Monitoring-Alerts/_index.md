@@ -30,6 +30,8 @@ All monitoring resources in this step are provisioned in the **Singapore (`ap-so
 3. Open your email inbox $\rightarrow$ Open email from **AWS Notifications** $\rightarrow$ Click **Confirm subscription**.
 4. Confirm in SNS Console that the Subscription displays a valid ARN and is no longer `Pending confirmation`.
 
+![SNS Topic channel dispatching LearnSphere operations alerts via email](/images/5-Workshop/5.4/5.4.11.2.png)
+
 ---
 
 ### 11.3. Create CloudWatch Alarm 1 — EC2 CPUUtilization > 80% for 10 Minutes
@@ -46,6 +48,8 @@ All monitoring resources in this step are provisioned in the **Singapore (`ap-so
 5. **Alarm name:** `LearnSphere-EC2-HighCPU`.
 6. Click **Create alarm**.
 
+![CloudWatch tracking EC2 CPU and alerting when exceeding 80% for 10 minutes](/images/5-Workshop/5.4/5.4.11.3.png)
+
 ---
 
 ### 11.4. Create CloudWatch Alarm 2 — EC2 StatusCheckFailed >= 1 in 60 Seconds
@@ -60,6 +64,8 @@ All monitoring resources in this step are provisioned in the **Singapore (`ap-so
 3. **Notification Action:** Send notification to SNS Topic `LearnSphere-Alerts`.
 4. **Alarm name:** `LearnSphere-EC2-StatusCheckFailed`.
 5. Click **Create alarm**.
+
+![CloudWatch detecting EC2 status check failure and dispatching SNS notification](/images/5-Workshop/5.4/5.4.11.4.png)
 
 ---
 

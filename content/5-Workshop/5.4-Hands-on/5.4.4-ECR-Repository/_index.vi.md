@@ -24,6 +24,8 @@ learnsphere-be
 5. **Image scan settings:** Bật công tắc **Scan on push = ON** (Tự động chạy bộ quét lỗ hổng an ninh dựa trên cơ sở dữ liệu CVE mỗi khi có Docker Image mới được đẩy lên).
 6. Bấm **Create repository** để hoàn tất.
 
+![Docker images của Backend được lưu trên Amazon ECR](/images/5-Workshop/5.4/5.4.4.png)
+
 ---
 
 ### 4.2. Thiết lập Lifecycle Policy Tự động dọn dẹp Image cũ

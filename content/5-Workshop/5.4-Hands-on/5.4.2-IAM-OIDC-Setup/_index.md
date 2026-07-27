@@ -22,6 +22,8 @@ The OIDC mechanism enables GitHub Actions to fetch short-lived temporary credent
 4. Click **Get thumbprint** for AWS to automatically verify GitHub's certificate thumbprint.
 5. Click **Add provider** to finish.
 
+![Configuring GitHub OIDC Provider in AWS IAM](/images/5-Workshop/5.4/5.4.2.1.png)
+
 ---
 
 ### 2.2. Create IAM Role for GitHub Actions (`LearnSphereGitHubDeployRole`)
@@ -54,11 +56,15 @@ The OIDC mechanism enables GitHub Actions to fetch short-lived temporary credent
 }
 ```
 
+![Trust policy restricting GitHub repository allowed to assume role](/images/5-Workshop/5.4/5.4.2.2.1.png)
+
 5. Attach minimal permissions (**Least Privilege**):
    - Push Docker Images to ECR repository `learnsphere-be`.
    - Upload Frontend build artifacts to S3 bucket `learnsphere-fe-575620421319`.
    - Create CloudFront invalidations.
    - Send `AWS-RunShellScript` commands to the EC2 server via AWS Systems Manager (SSM).
+
+![Deployment permissions attached to GitHub Actions](/images/5-Workshop/5.4/5.4.2.2.2.png)
 
 ---
 
@@ -74,3 +80,5 @@ This role is attached directly to the EC2 Instance Profile, allowing the Backend
    - **S3 Media Custom Policy:** Grants `ListBucket`, `PutObject`, `GetObject`, `DeleteObject`, `AbortMultipartUpload` on bucket `learnsphere-media-575620421319`.
    - **CloudWatch Logs Custom Policy:** Grants log stream creation and event logging to Log Group `/learnsphere/backend`.
    - **Amazon Bedrock Policy:** Grants `InvokeModel` and `InvokeModelWithResponseStream`.
+
+![IAM Role providing AWS permissions for Backend on EC2](/images/5-Workshop/5.4/5.4.2.3.png)

@@ -51,6 +51,8 @@ Sau khi Distribution khởi tạo thành công, sao chép Bucket Policy và cậ
 }
 ```
 
+![Bucket policy được cập nhật sau khi tạo CloudFront OAC](/images/5-Workshop/5.4/5.4.7.A.png)
+
 ---
 
 ### 7B. Kết nối Backend EC2 & Thêm Behavior API `/api/*`
@@ -60,6 +62,8 @@ Sau khi Distribution khởi tạo thành công, sao chép Bucket Policy và cậ
 1. Mở CloudFront Distribution `EQRDOBSCG5MC8` $\rightarrow$ tab **Origins** $\rightarrow$ chọn **Create origin**.
 2. **Origin Domain:** Nhập IPv4 Public DNS của EC2 Instance (ví dụ `ec2-xx-xx-xx-xx.ap-southeast-1.compute.amazonaws.com`).
 3. **Protocol Policy:** `HTTP Only`, Port `5000`.
+
+![Hai origin Frontend và Backend của CloudFront distribution](/images/5-Workshop/5.4/5.4.7.B.1.png)
 
 #### 7B.2. Tạo Behavior `/api/*`
 
@@ -72,6 +76,8 @@ Sau khi Distribution khởi tạo thành công, sao chép Bucket Policy và cậ
    - **Origin Request Policy:** `AllViewerExceptHostHeader` (Giữ nguyên JWT Headers)
 
 > **Tác dụng:** Trình duyệt gọi `/api/*` tới CloudFront domain duy nhất, CloudFront chuyển tiếp về EC2 cổng 5000, **triệt tiêu hoàn toàn lỗi CORS và Mixed Content**.
+
+![CloudFront định tuyến Frontend và Backend API](/images/5-Workshop/5.4/5.4.7.B.2.png)
 
 #### 7B.3. Gắn CloudFront Function cho SPA Client-side Routing
 
@@ -92,6 +98,8 @@ function handler(event) {
 ```
 
 > Gắn Function này vào sự kiện **Viewer Request** của Default Behavior `/*`.
+
+![CloudFront Function hỗ trợ điều hướng SPA Router](/images/5-Workshop/5.4/5.4.7.B.3.png)
 
 #### 7B.4. Ghi nhận Thông tin CloudFront Distribution
 

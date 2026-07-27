@@ -66,6 +66,8 @@ sudo awk -F= '
 
 > **Kết quả mong đợi:** Tất cả các tên biến quan trọng đều hiển thị trạng thái `OK: TÊN_BIẾN`.
 
+![Kiểm tra các biến môi trường production trên EC2](/images/5-Workshop/5.4/5.4.8.3.png)
+
 ---
 
 ### 8.4. Xác minh IAM Instance Profile & S3 Access từ EC2
@@ -87,3 +89,5 @@ aws s3api head-bucket --bucket learnsphere-media-575620421319
 ```
 
 > Điều này chứng minh EC2 đang nhận temporary credentials an toàn từ IAM Role `LearnSphereEc2Role` thông qua IMDSv2.
+
+![EC2 nhận temporary credentials từ IAM Role](/images/5-Workshop/5.4/5.4.8.4.png)

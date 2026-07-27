@@ -24,6 +24,8 @@ learnsphere-be
 5. **Image scan settings:** Enable **Scan on push = ON** (Automatically scans Docker images for CVE security vulnerabilities upon each push).
 6. Click **Create repository**.
 
+![Docker images of Backend stored on Amazon ECR](/images/5-Workshop/5.4/5.4.4.png)
+
 ---
 
 ### 4.2. Configure Lifecycle Policy for Automated Image Cleanup

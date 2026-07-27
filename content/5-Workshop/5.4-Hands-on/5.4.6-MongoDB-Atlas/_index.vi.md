@@ -31,6 +31,8 @@ Hệ thống LearnSphere tiếp tục sử dụng **MongoDB Atlas** làm hệ qu
 2. Nhập địa chỉ **IPv4 Public IP** của máy chủ EC2 `i-008c48e6c120b2978`.
 3. Bấm **Confirm** để lưu quy tắc Network Access List.
 
+![MongoDB Atlas được sử dụng làm cơ sở dữ liệu production](/images/5-Workshop/5.4/5.4.6.png)
+
 ---
 
 ### 6.3. Lấy chuỗi SRV Connection String & Kiểm tra Health Check

@@ -30,6 +30,8 @@ Toàn bộ các tài nguyên trong bước này được khởi tạo đồng b�
 3. Mở Hộp thư Email cá nhân $\rightarrow$ Mở thư thông báo từ **AWS Notifications** $\rightarrow$ Bấm nút **Confirm subscription**.
 4. Kiểm tra trang điều khiển SNS đảm bảo trạng thái Subscription hiển thị mã ARN hợp lệ và không còn ở trạng thái `Pending confirmation`.
 
+![Kênh SNS gửi cảnh báo vận hành LearnSphere qua email](/images/5-Workshop/5.4/5.4.11.2.png)
+
 ---
 
 ### 11.3. Tạo CloudWatch Alarm 1 — EC2 CPUUtilization > 80% trong 10 phút
@@ -46,6 +48,8 @@ Toàn bộ các tài nguyên trong bước này được khởi tạo đồng b�
 5. **Alarm name:** `LearnSphere-EC2-HighCPU`.
 6. Bấm **Create alarm**.
 
+![CloudWatch theo dõi CPU EC2 và cảnh báo khi vượt 80% trong 10 phút](/images/5-Workshop/5.4/5.4.11.3.png)
+
 ---
 
 ### 11.4. Tạo CloudWatch Alarm 2 — EC2 StatusCheckFailed >= 1 trong 60 giây
@@ -60,6 +64,8 @@ Toàn bộ các tài nguyên trong bước này được khởi tạo đồng b�
 3. **Notification Action:** Gửi thông báo tới SNS Topic `LearnSphere-Alerts`.
 4. **Alarm name:** `LearnSphere-EC2-StatusCheckFailed`.
 5. Bấm **Create alarm**.
+
+![CloudWatch phát hiện lỗi trạng thái EC2 và gửi thông báo qua SNS](/images/5-Workshop/5.4/5.4.11.4.png)
 
 ---
 

@@ -30,6 +30,8 @@ In this step, practitioners launch an **Amazon EC2** instance, attach an IAM Ins
    - **SSH Port 22:** Remove SSH port 22 rule completely.
 5. Click **Launch instance**.
 
+![Launching EC2 instance for LearnSphere Backend](/images/5-Workshop/5.4/5.4.5.1.png)
+
 ---
 
 ### 5.2. Install Docker Engine & Configure 2GB Swap RAM
@@ -70,6 +72,8 @@ free -h
 ```
 
 > **Result:** `free -h` shows ~1.9 GB Physical RAM and 2.0 GB Swap RAM active.
+
+![Docker environment and Swap memory allocation on EC2](/images/5-Workshop/5.4/5.4.5.2.png)
 
 ---
 

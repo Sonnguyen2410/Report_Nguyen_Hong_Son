@@ -51,6 +51,8 @@ curl -fsS http://127.0.0.1:5000/health/ready
 }
 ```
 
+![Backend container running healthy and connected to MongoDB](/images/5-Workshop/5.4/5.4.10.2.png)
+
 ---
 
 ### 10.3. Inspect Centralized CloudWatch Logs
@@ -62,6 +64,8 @@ Confirm:
 - MongoDB Atlas connection is healthy.
 - Zero crash/restart loops.
 - Receives inbound HTTP request logs forwarded from CloudFront.
+
+![Backend logs aggregated in Amazon CloudWatch](/images/5-Workshop/5.4/5.4.10.3.png)
 
 ---
 
@@ -79,3 +83,5 @@ https://d2onzy56n3iw1w.cloudfront.net
 3. **Presigned URL Media Upload:** Upload lecture videos, thumbnails, and PDFs. Confirm browser fetches Presigned PUT URLs and uploads directly to S3 Media Bucket without CORS issues.
 4. **Learning & Video Streaming:** Log in as a Student $\rightarrow$ Open a lesson $\rightarrow$ Confirm video streams seamlessly via short-lived Presigned GET URLs.
 5. **Quiz Exams & AI Assistant:** Complete quiz examinations and test AI Assistant interactions.
+
+![LearnSphere application operating on AWS Production environment](/images/5-Workshop/5.4/5.4.10.4.png)

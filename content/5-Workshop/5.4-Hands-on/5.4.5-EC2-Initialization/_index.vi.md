@@ -30,6 +30,8 @@ Trong bước này, người thực hiện sẽ khởi tạo máy chủ **Amazon
    - **SSH Port 22:** Xóa bỏ luật SSH Port 22.
 5. Bấm **Launch instance**.
 
+![Khởi tạo EC2 instance chạy Backend LearnSphere](/images/5-Workshop/5.4/5.4.5.1.png)
+
 ---
 
 ### 5.2. Cài đặt Docker Engine & Cấu hình Swap RAM 2GB
@@ -70,6 +72,8 @@ free -h
 ```
 
 > **Kết quả:** Lệnh `free -h` hiển thị khoảng 1.9 GB RAM vật lý và 2.0 GB Swap sẵn sàng sử dụng.
+
+![Môi trường Docker và tài nguyên bộ nhớ Swap trên EC2](/images/5-Workshop/5.4/5.4.5.2.png)
 
 ---
 

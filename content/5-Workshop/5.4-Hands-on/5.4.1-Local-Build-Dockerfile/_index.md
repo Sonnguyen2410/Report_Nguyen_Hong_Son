@@ -138,3 +138,5 @@ curl http://localhost:5000/health/ready
 ```powershell
 docker stop test-be && docker rm test-be
 ```
+
+![Packaging LearnSphere Backend into a Docker image](/images/5-Workshop/5.4/5.4.1.png)

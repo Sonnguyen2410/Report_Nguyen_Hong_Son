@@ -51,6 +51,8 @@ After Distribution creation, copy the generated OAC Bucket Policy banner and upd
 }
 ```
 
+![Bucket policy updated after creating CloudFront OAC](/images/5-Workshop/5.4/5.4.7.A.png)
+
 ---
 
 ### 7B. Connect Backend EC2 & Create API Behavior `/api/*`
@@ -60,6 +62,8 @@ After Distribution creation, copy the generated OAC Bucket Policy banner and upd
 1. Open CloudFront Distribution `EQRDOBSCG5MC8` $\rightarrow$ **Origins** tab $\rightarrow$ click **Create origin**.
 2. **Origin Domain:** EC2 IPv4 Public DNS (e.g., `ec2-xx-xx-xx-xx.ap-southeast-1.compute.amazonaws.com`).
 3. **Protocol Policy:** `HTTP Only`, Port `5000`.
+
+![Dual origins Frontend and Backend on CloudFront distribution](/images/5-Workshop/5.4/5.4.7.B.1.png)
 
 #### 7B.2. Create Behavior `/api/*`
 
@@ -72,6 +76,8 @@ After Distribution creation, copy the generated OAC Bucket Policy banner and upd
    - **Origin Request Policy:** `AllViewerExceptHostHeader` (Preserves Authorization JWT headers)
 
 > **Benefit:** Browser calls `/api/*` on the single CloudFront domain, CloudFront reverse-proxies to EC2 port 5000, **completely eliminating CORS and Mixed Content errors**.
+
+![CloudFront routing configuration for Frontend and Backend API](/images/5-Workshop/5.4/5.4.7.B.2.png)
 
 #### 7B.3. Attach CloudFront Function for Client-Side SPA Routing
 
@@ -91,6 +97,8 @@ function handler(event) {
 ```
 
 > Associate this function with **Viewer Request** events on the Default Behavior `/*`.
+
+![CloudFront Function supporting client-side SPA routing](/images/5-Workshop/5.4/5.4.7.B.3.png)
 
 #### 7B.4. Record CloudFront Details
 

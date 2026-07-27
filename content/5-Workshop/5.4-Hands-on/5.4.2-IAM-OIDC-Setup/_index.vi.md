@@ -22,6 +22,8 @@ Cơ chế OIDC cho phép GitHub Actions nhận thông tin xác thực tạm th�
 4. Bấm nút **Get thumbprint** để AWS tự động xác thực vân tay bảo mật của GitHub.
 5. Chọn **Add provider** để hoàn tất.
 
+![Cấu hình GitHub OIDC Provider trong AWS IAM](/images/5-Workshop/5.4/5.4.2.1.png)
+
 ---
 
 ### 2.2. Tạo IAM Role cho GitHub Actions (`LearnSphereGitHubDeployRole`)
@@ -54,11 +56,15 @@ Cơ chế OIDC cho phép GitHub Actions nhận thông tin xác thực tạm th�
 }
 ```
 
+![Trust policy giới hạn GitHub repository được phép assume role](/images/5-Workshop/5.4/5.4.2.2.1.png)
+
 5. Gắn các chính sách phân quyền tối thiểu (**Least Privilege**):
    - Đẩy Docker Image vào ECR repository `learnsphere-be`.
    - Đẩy bản build Frontend vào S3 bucket `learnsphere-fe-575620421319`.
    - Tạo CloudFront invalidation để dọn đệm CDN.
    - Gửi lệnh `AWS-RunShellScript` tới máy chủ EC2 thông qua AWS Systems Manager (SSM).
+
+![Các quyền triển khai được gắn cho GitHub Actions](/images/5-Workshop/5.4/5.4.2.2.2.png)
 
 ---
 
@@ -74,3 +80,5 @@ Role này được gán trực tiếp vào EC2 Instance Profile, giúp ứng d�
    - **S3 Media Custom Policy:** Cho phép `ListBucket`, `PutObject`, `GetObject`, `DeleteObject`, `AbortMultipartUpload` trên bucket `learnsphere-media-575620421319`.
    - **CloudWatch Logs Custom Policy:** Cấp quyền tạo log stream và ghi log vào Log Group `/learnsphere/backend`.
    - **Amazon Bedrock Policy:** Cấp quyền `InvokeModel` và `InvokeModelWithResponseStream`.
+
+![IAM Role cung cấp quyền AWS cho Backend trên EC2](/images/5-Workshop/5.4/5.4.2.3.png)
