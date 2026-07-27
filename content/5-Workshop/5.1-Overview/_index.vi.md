@@ -24,7 +24,6 @@ pre: " <b> 5.1. </b> "
 | Tài nguyên | Liên kết (URL) | Mô tả chi tiết |
 | --- | --- | --- |
 | 🌐 **Website Sản phẩm (Production)** | [https://www.learnsphere.id.vn/](https://www.learnsphere.id.vn/) | Website ứng dụng LearnSphere chính thức đang vận hành thực tế trên AWS |
-| 📊 **Trang Báo cáo Thực tập (Live Report)** | [https://sonnguyen2410.github.io/Report_Nguyen_Hong_Son/](https://sonnguyen2410.github.io/Report_Nguyen_Hong_Son/) | Trang web báo cáo quy trình triển khai & tài liệu thực hành workshop |
 | 🐙 **GitHub Repository** | [https://github.com/HoiaeKHMT/LearnSphere](https://github.com/HoiaeKHMT/LearnSphere) | Mã nguồn dự án LearnSphere (Backend Express.js & Frontend React Monorepo) |
 | 🎬 **Video Demo** | [Xem Video Demo trên Google Drive](https://drive.google.com/file/d/1J6heEzrB1jZO3C5Z3tuz1LBwdkRozMh4/view) | Video giới thiệu các tính năng và toàn bộ quy trình vận hành hệ thống |
 

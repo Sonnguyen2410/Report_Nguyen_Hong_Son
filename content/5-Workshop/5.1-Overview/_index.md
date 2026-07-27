@@ -24,7 +24,6 @@ pre: " <b> 5.1. </b> "
 | Resource | Link (URL) | Description |
 | --- | --- | --- |
 | 🌐 **Production Product Website** | [https://www.learnsphere.id.vn/](https://www.learnsphere.id.vn/) | Official LearnSphere web application operating live on AWS infrastructure |
-| 📊 **Live Report Site** | [https://sonnguyen2410.github.io/Report_Nguyen_Hong_Son/](https://sonnguyen2410.github.io/Report_Nguyen_Hong_Son/) | Deployment report and step-by-step workshop documentation website |
 | 🐙 **GitHub Repository** | [https://github.com/HoiaeKHMT/LearnSphere](https://github.com/HoiaeKHMT/LearnSphere) | LearnSphere source code repository (Express.js Backend & React Frontend Monorepo) |
 | 🎬 **Demo Video** | [Watch Demo Video on Google Drive](https://drive.google.com/file/d/1J6heEzrB1jZO3C5Z3tuz1LBwdkRozMh4/view) | Comprehensive video showcasing platform features and system architecture |
 
