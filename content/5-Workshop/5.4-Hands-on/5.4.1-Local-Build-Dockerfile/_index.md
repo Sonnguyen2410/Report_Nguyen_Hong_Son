@@ -6,34 +6,54 @@ chapter: false
 pre: " <b> 5.4.1. </b> "
 ---
 
-# 5.4.1. Local Source Code & Dockerfile Preparation
-
-In this step, practitioners prepare the **LearnSphere** project source code on their local machine, verify the Monorepo directory structure, and craft an optimized multi-stage `Dockerfile` to containerize the Backend service.
+In this step, practitioners test the **LearnSphere** project source code locally, verify Frontend static compilation, and construct an optimized Multi-stage `Dockerfile` to containerize the Backend service.
 
 ---
 
-### 1. Verify Monorepo Source Code Structure
+### 1.1. Local Source Code Inspection & Testing
 
-Open your Terminal and navigate to the LearnSphere project directory:
+The LearnSphere codebase is structured as a Monorepo repository:
 
-```bash
-cd LearnSphere
-ls -la
+```text
+LearnSphere/
+├── LearnSphere_BE/       # Backend Node.js / Express.js REST API
+├── LearnSphere_FE/       # Frontend React.js / Vite Single Page Application
+├── .github/workflows/    # CI/CD automation workflows
+└── docs/                 # Project documentation
 ```
 
-The directory structure must include:
-- `LearnSphere_BE/`: Backend Node.js/Express application source code.
-- `LearnSphere_FE/`: Frontend React/Vite application source code.
-- `.github/workflows/`: CI/CD automation workflow configurations.
+#### Run Backend local test suite:
+
+Open your Terminal / PowerShell window and execute the Backend test suite:
+
+```powershell
+cd LearnSphere_BE
+npm ci
+npm test
+```
+
+> **Requirement:** All backend unit tests must pass cleanly (`Pass`) with 0 failures (`Failed`).
+
+#### Test Frontend production build:
+
+Navigate to the `LearnSphere_FE` directory and run Vite's static bundler:
+
+```powershell
+cd ..\LearnSphere_FE
+npm ci
+npm run build
+```
+
+> **Requirement:** TypeScript compiler reports zero errors and Vite creates the output directory `LearnSphere_FE/dist`.
 
 ---
 
-### 2. Craft Optimized Backend Dockerfile (`LearnSphere_BE`)
+### 1.2. Write Multi-stage Dockerfile for Backend
 
-Create a `Dockerfile` inside the `LearnSphere_BE/` directory utilizing multi-stage builds based on lightweight Linux Alpine:
+To build a Production-Grade container image, create a `Dockerfile` inside `LearnSphere_BE/` using a **Multi-stage Build** approach on lightweight `node:24-alpine`:
 
 ```dockerfile
-# Stage 1: Build dependencies & production ready image
+# Stage 1: Build Dependencies
 FROM node:24-alpine AS builder
 
 WORKDIR /app
@@ -41,22 +61,22 @@ WORKDIR /app
 # Copy package descriptors to leverage Docker layer caching
 COPY package*.json ./
 
-# Install all dependencies including devDependencies
+# Install all dependencies using npm ci
 RUN npm ci
 
-# Copy full application code
+# Copy full application source code
 COPY . .
 
-# Stage 2: Production Runtime Image
+# Stage 2: Production Runtime
 FROM node:24-alpine AS runner
 
 WORKDIR /app
 
-# Create non-root system group and user for security
+# Create non-root system group and user (UID 1001) for security
 RUN addgroup -g 1001 -S nodejs && \
     adduser -u 1001 -S nodejs -G nodejs
 
-# Copy app artifacts and dependencies from builder stage
+# Copy app code and dependencies from builder stage
 COPY --from=builder /app ./
 
 # Transfer directory ownership to non-root user
@@ -65,17 +85,17 @@ USER nodejs
 # Expose backend application port
 EXPOSE 5000
 
-# Periodic container healthcheck directive
+# Container periodic healthcheck directive
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:5000/health/ready || exit 1
 
-# Launch application
+# Launch Node.js application server
 CMD ["node", "src/server.js"]
 ```
 
 ---
 
-### 3. Create `.dockerignore` File
+### 1.3. Create `.dockerignore` File
 
 Create a `.dockerignore` file in `LearnSphere_BE/` to exclude unwanted build artifacts:
 
@@ -92,29 +112,29 @@ logs
 
 ---
 
-### 4. Build & Test Container Locally
+### 1.4. Build & Verify Docker Image Locally
 
 Build the local test Docker Image:
 
-```bash
+```powershell
 cd LearnSphere_BE
 docker build -t learnsphere-be:local .
 ```
 
-Run the container on port 5000:
+Run the container locally:
 
-```bash
+```powershell
 docker run -d -p 5000:5000 --name test-be --env-file .env.example learnsphere-be:local
 ```
 
-Verify container health:
+Verify application readiness endpoint:
 
-```bash
+```powershell
 curl http://localhost:5000/health/ready
 ```
 
-**Expected Result:** Terminal returns HTTP `200 OK` status. After verification, clean up local test containers:
+**Expected Result:** Returns JSON response `{"status":"ready"}` with HTTP Status `200 OK`. Clean up local container afterwards:
 
-```bash
+```powershell
 docker stop test-be && docker rm test-be
 ```

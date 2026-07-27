@@ -6,39 +6,45 @@ chapter: false
 pre: " <b> 5.4.4. </b> "
 ---
 
-# 5.4.4. Create Amazon ECR (Elastic Container Registry) Repository
-
-In this step, practitioners initialize a Private Repository on **Amazon ECR** to manage Backend Docker Images and configure automatic cleanup rules (Lifecycle Policy).
+In this step, practitioners initialize a Private **Amazon ECR (Elastic Container Registry)** repository to manage and store Backend Docker Images for the LearnSphere system.
 
 ---
 
-### 1. Initialize ECR Private Repository
+### 4.1. Initialize Private ECR Repository
 
-1. Access **Amazon ECR** service $\rightarrow$ navigate to **Repositories** $\rightarrow$ click **Create repository**.
-2. **Visibility settings:** Select **Private**.
-3. **Repository name:** Name it `learnsphere-be`.
-4. **Image scan settings:** Enable **Scan on push** (automatically scans for CVE security vulnerabilities upon image push).
-5. Click **Create repository**.
+1. Open **AWS Management Console** $\rightarrow$ navigate to **Amazon ECR** $\rightarrow$ select **Private repositories**.
+2. Click **Create repository**.
+3. **Visibility settings:** Select **Private**.
+4. **Repository name:** Name the repository:
+
+```text
+learnsphere-be
+```
+
+5. **Image scan settings:** Enable **Scan on push = ON** (Automatically scans Docker images for CVE security vulnerabilities upon each push).
+6. Click **Create repository**.
 
 ---
 
-### 2. Configure Lifecycle Policy for Automatic Image Purging
+### 4.2. Configure Lifecycle Policy for Automated Image Cleanup
+
+To optimize storage costs on ECR, create an automated rule to purge older unused Docker images:
 
 1. Open Repository `learnsphere-be` $\rightarrow$ select **Lifecycle policies** from the left menu $\rightarrow$ click **Create rule**.
 2. **Rule priority:** `1`.
-3. **Rule description:** `Keep last 10 tagged images`.
+3. **Description:** `Keep 10 most recent Docker images`.
 4. **Image status:** `Tagged`.
 5. **Match criteria:** Select `Image count more than` $\rightarrow$ Count: `10`.
 6. Click **Save**.
 
 ---
 
-### 3. Verify ECR Login CLI Command
+### 4.3. Image Tagging Convention via Git Commit SHA
 
-Test logging into your ECR Registry from local terminal:
+Every Docker Image pushed to ECR during the CI/CD pipeline will be tagged matching the exact Git Commit SHA hash:
 
-```bash
-aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 575620421319.dkr.ecr.ap-southeast-1.amazonaws.com
+```text
+575620421319.dkr.ecr.ap-southeast-1.amazonaws.com/learnsphere-be:<GIT_SHA>
 ```
 
-**Expected Result:** Terminal outputs `Login Succeeded`.
+> **Benefits:** Tagging by Commit SHA pinpoints the exact version running in Production and enables automated Rollback to previous container releases.

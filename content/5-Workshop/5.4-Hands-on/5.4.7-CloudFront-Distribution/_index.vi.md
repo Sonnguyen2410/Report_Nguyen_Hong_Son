@@ -6,34 +6,32 @@ chapter: false
 pre: " <b> 5.4.7. </b> "
 ---
 
-# 5.4.7. Cấu hình Amazon CloudFront (CDN, Origins, Behaviors & SPA Function)
-
-Trong bước này, người thực hiện sẽ khởi tạo **Amazon CloudFront Distribution** đóng vai trò là điểm truy cập HTTPS duy nhất cho toàn bộ ứng dụng LearnSphere, định tuyến giao diện tĩnh về S3 và chuyển tiếp API về máy chủ EC2.
+Trong bước này, người thực hiện sẽ khởi tạo **Amazon CloudFront Distribution** đóng vai trò là điểm truy cập HTTPS duy nhất cho toàn bộ ứng dụng LearnSphere, kết nối với S3 Frontend qua OAC và định tuyến API `/api/*` về máy chủ EC2.
 
 ---
 
-### 1. Tạo CloudFront Distribution
+### 7A. Cấu hình Frontend S3 & Origin Access Control (OAC)
 
-1. Truy cập dịch vụ **Amazon CloudFront** $\rightarrow$ chọn **Create distribution**.
-2. **Origin Domain 1 (S3 Frontend):** Chọn Bucket `learnsphere-fe-575620421319.s3.ap-southeast-1.amazonaws.com`.
-3. **Origin Access:** Chọn **Origin access control settings (recommended)** $\rightarrow$ chọn **Create control setting** (Bật Sign requests).
+#### 7A.1. Tạo CloudFront Distribution
+
+1. Mở **AWS Management Console** $\rightarrow$ dịch vụ **Amazon CloudFront** $\rightarrow$ chọn **Create distribution**.
+2. **Origin Domain (S3 FE):** Chọn Bucket `learnsphere-fe-575620421319.s3.ap-southeast-1.amazonaws.com`.
+3. **Origin Access:** Select **Origin access control settings (recommended)** $\rightarrow$ Create control setting (Bật Sign requests).
 4. **Default Cache Behavior (`/*`):**
-   - **Viewer Protocol Policy:** `Redirect HTTP to HTTPS`.
-   - **Allowed HTTP Methods:** `GET, HEAD`.
-   - **Cache Policy:** `CachingOptimized`.
+   - **Default root object:** `index.html`
+   - **Viewer Protocol Policy:** `Redirect HTTP to HTTPS`
+   - **Allowed HTTP Methods:** `GET, HEAD`
+   - **Cache Policy:** `CachingOptimized`
 5. Bấm **Create distribution**.
 
----
+#### 7A.2. Cập nhật Bucket Policy cho S3 Frontend
 
-### 2. Cập nhật Bucket Policy cho S3 Frontend
-
-1. Sau khi tạo Distribution, CloudFront hiển thị thông báo vàng yêu cầu cập nhật S3 Bucket Policy.
-2. Chọn **Copy policy**.
-3. Mở S3 Bucket `learnsphere-fe-575620421319` $\rightarrow$ tab **Permissions** $\rightarrow$ mục **Bucket policy** bấm **Edit** và dán policy để cấp quyền OAC:
+Sau khi Distribution khởi tạo thành công, sao chép Bucket Policy và cập nhật tại S3 Bucket `learnsphere-fe-575620421319` (Tab **Permissions** $\rightarrow$ **Bucket Policy**):
 
 ```json
 {
-  "Version": "2012-10-17",
+  "Version": "2008-10-17",
+  "Id": "PolicyForCloudFrontPrivateContent",
   "Statement": [
     {
       "Sid": "AllowCloudFrontServicePrincipal",
@@ -45,7 +43,7 @@ Trong bước này, người thực hiện sẽ khởi tạo **Amazon CloudFront
       "Resource": "arn:aws:s3:::learnsphere-fe-575620421319/*",
       "Condition": {
         "ArnLike": {
-          "AWS:SourceArn": "arn:aws:cloudfront::575620421319:distribution/*"
+          "AWS:SourceArn": "arn:aws:cloudfront::575620421319:distribution/EQRDOBSCG5MC8"
         }
       }
     }
@@ -55,40 +53,49 @@ Trong bước này, người thực hiện sẽ khởi tạo **Amazon CloudFront
 
 ---
 
-### 3. Thêm Origin 2 (EC2 Backend) & Behavior API (`/api/*`)
+### 7B. Kết nối Backend EC2 & Thêm Behavior API `/api/*`
 
-1. Tại CloudFront Distribution vừa tạo $\rightarrow$ tab **Origins** $\rightarrow$ chọn **Create origin**.
+#### 7B.1. Thêm EC2 Backend Origin
+
+1. Mở CloudFront Distribution `EQRDOBSCG5MC8` $\rightarrow$ tab **Origins** $\rightarrow$ chọn **Create origin**.
 2. **Origin Domain:** Nhập IPv4 Public DNS của EC2 Instance (ví dụ `ec2-xx-xx-xx-xx.ap-southeast-1.compute.amazonaws.com`).
 3. **Protocol Policy:** `HTTP Only`, Port `5000`.
-4. Chuyển sang tab **Behaviors** $\rightarrow$ chọn **Create behavior**:
+
+#### 7B.2. Tạo Behavior `/api/*`
+
+1. Chuyển sang tab **Behaviors** $\rightarrow$ chọn **Create behavior**:
    - **Path pattern:** `/api/*`
    - **Target Origin:** Chọn EC2 Backend Origin vừa tạo.
-   - **Viewer Protocol Policy:** `Redirect HTTP to HTTPS`.
-   - **Allowed HTTP Methods:** `GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE`.
-   - **Cache Policy:** `CachingDisabled`.
-   - **Origin Request Policy:** `AllViewerExceptHostHeader`.
+   - **Viewer Protocol Policy:** `Redirect HTTP to HTTPS`
+   - **Allowed HTTP Methods:** `GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE`
+   - **Cache Policy:** `CachingDisabled` (Tuyệt đối không lưu đệm dữ liệu API)
+   - **Origin Request Policy:** `AllViewerExceptHostHeader` (Giữ nguyên JWT Headers)
 
----
+> **Tác dụng:** Trình duyệt gọi `/api/*` tới CloudFront domain duy nhất, CloudFront chuyển tiếp về EC2 cổng 5000, **triệt tiêu hoàn toàn lỗi CORS và Mixed Content**.
 
-### 4. Gắn CloudFront Function xử lý Client-Side SPA Routing
+#### 7B.3. Gắn CloudFront Function cho SPA Client-side Routing
 
-1. Tại menu CloudFront bên trái $\rightarrow$ chọn **Functions** $\rightarrow$ bấm **Create function**.
-2. **Name:** `LearnSphereSPARouting`.
-3. Dán đoạn mã kịch bản điều hướng SPA Router:
+Để tránh lỗi `404 Not Found` từ S3 khi người dùng ấn F5 tải lại trang trên các tuyến đường phụ như `/profile` hay `/courses`, chúng ta tạo một CloudFront Function:
 
 ```javascript
 function handler(event) {
-    var request = event.request;
-    var uri = request.uri;
-    
-    // Nếu URL không chứa dấu chấm extension (file), điều hướng về /index.html
-    if (!uri.includes('.')) {
-        request.uri = '/index.html';
-    }
-    
-    return request;
+  var request = event.request;
+  var uri = request.uri;
+
+  // Nếu đường dẫn không chứa dấu chấm extension file, chuyển URI thành /index.html
+  if (uri.endsWith("/") || !uri.split("/").pop().includes(".")) {
+    request.uri = "/index.html";
+  }
+
+  return request;
 }
 ```
 
-4. Bấm **Save changes** $\rightarrow$ tab **Publish** $\rightarrow$ chọn **Publish function**.
-5. Trong mục **Associated distributions**, đính kèm Function này vào Distribution tại sự kiện **Viewer Request** của Behavior mặc định `/*`.
+> Gắn Function này vào sự kiện **Viewer Request** của Default Behavior `/*`.
+
+#### 7B.4. Ghi nhận Thông tin CloudFront Distribution
+
+```text
+Distribution ID: EQRDOBSCG5MC8
+Domain Name: d2onzy56n3iw1w.cloudfront.net
+```

@@ -6,37 +6,76 @@ chapter: false
 pre: " <b> 5.4.10. </b> "
 ---
 
-# 5.4.10. Kiểm tra & Trải nghiệm Sản phẩm Production
-
-Trong bước này, người thực hiện sẽ truy cập ứng dụng LearnSphere chính thức trên môi trường Production qua miền CloudFront HTTPS và thực hiện bài kiểm thử đầu-cuối (End-to-End Verification).
+Sau khi quy trình CI/CD hoàn tất, người thực hiện tiến hành kiểm tra toàn bộ container, log tập trung, kết nối cơ sở dữ liệu và trải nghiệm sản phẩm trực tiếp trên tên miền CloudFront HTTPS Production.
 
 ---
 
-### 1. Truy cập Tên miền CloudFront HTTPS
+### 10.1. Kiểm tra Trạng thái Container Backend trên EC2
 
-1. Mở trình duyệt web và truy cập địa chỉ CloudFront Distribution: `https://d2onzy56n3iw1w.cloudfront.net`.
-2. Kiểm tra chứng chỉ **TLS/SSL Padlock** trên trình duyệt thông báo kết nối an toàn HTTPS.
+Kết nối vào máy chủ EC2 qua Session Manager và chạy lệnh kiểm tra container:
+
+```bash
+sudo docker ps --filter name=learnsphere-be
+```
+
+Xác minh chi tiết trạng thái sức khỏe của container:
+
+```bash
+sudo docker inspect \
+  --format 'status={{.State.Status}} health={{.State.Health.Status}} restarts={{.RestartCount}} image={{.Config.Image}}' \
+  learnsphere-be
+```
+
+**Kết quả mong đợi:**
+```text
+status=running
+health=healthy
+restarts=0
+```
 
 ---
 
-### 2. Kiểm thử Luồng Đăng nhập & Đăng ký (Authentication Verification)
+### 10.2. Kiểm tra Kết nối Database qua Endpoint Health Check
 
-1. Thực hiện Đăng ký tài khoản Học viên mới.
-2. Kiểm tra yêu cầu API `/api/v1/auth/register` được chuyển tiếp thành công về EC2 Backend.
-3. Đăng nhập và xác minh chuỗi JWT Token lưu giữ an toàn tại LocalStorage.
+Chạy lệnh gọi endpoint kiểm tra kết nối tới cơ sở dữ liệu MongoDB Atlas:
+
+```bash
+curl -fsS http://127.0.0.1:5000/health/ready
+```
+
+**Kết quả trả về:**
+```json
+{
+  "status": "ready",
+  "database": "connected"
+}
+```
 
 ---
 
-### 3. Kiểm thử Tải lên & Xem Bài giảng Video qua Presigned URL
+### 10.3. Kiểm tra CloudWatch Logs tập trung
 
-1. Đăng nhập tài khoản Giáo viên $\rightarrow$ Tạo khóa học mới.
-2. Thử nghiệm tải tệp Video bài giảng $\rightarrow$ Xác minh trình duyệt gọi API lấy Presigned PUT URL và tải trực tiếp lên S3 Media Bucket mà không bị chặn lỗi CORS.
-3. Đăng nhập tài khoản Học viên $\rightarrow$ Bấm xem bài học $\rightarrow$ Trình duyệt nhận Presigned GET URL và phát video dạng Stream mượt mà.
+Mở **Amazon CloudWatch** $\rightarrow$ **Log groups** $\rightarrow$ chọn `/learnsphere/backend`.
+
+Xác nhận:
+- Server Node.js khởi động thành công trên cổng 5000.
+- MongoDB Atlas kết nối ổn định.
+- Không lặp lại bất kỳ lỗi crash/restart nào.
+- Nhận đầy đủ HTTP request log được chuyển tiếp từ CloudFront.
 
 ---
 
-### 4. Kiểm thử F5 Reload trên Sub-routes (SPA Routing Check)
+### 10.4. Trải nghiệm Sản phẩm trên Tên miền CloudFront Production
 
-1. Truy cập trực tiếp đường dẫn phụ: `https://d2onzy56n3iw1w.cloudfront.net/courses`.
-2. Nhấn phím **F5** để tải lại trang.
-3. **Kết quả mong đợi:** CloudFront Function can thiệp sửa đổi URI thành `/index.html`, React Router hiển thị đúng trang thông tin khóa học mà không bị lỗi 404 Not Found từ S3.
+Truy cập trực tiếp đường dẫn sản phẩm chính thức:
+
+```text
+https://d2onzy56n3iw1w.cloudfront.net
+```
+
+#### Thực hiện các bài kiểm thử tính năng đầu-cuối (End-to-End Testing):
+1. **Đăng ký / Đăng nhập:** Đăng ký tài khoản mới và đăng nhập nhận JWT Token.
+2. **Quản lý Khóa học:** Đăng nhập tài khoản Giáo viên (Tutor) $\rightarrow$ Tạo khóa học mới.
+3. **Upload Media Presigned URL:** Tải lên video bài giảng, thumbnail và tài liệu PDF. Xác minh trình duyệt nhận Presigned PUT URL và upload trực tiếp lên S3 Media Bucket mà không bị chặn CORS.
+4. **Học tập & Stream Video:** Đăng nhập tài khoản Học viên (Student) $\rightarrow$ Xem bài học $\rightarrow$ Trình duyệt phát video trực tiếp từ S3 qua Presigned GET URL.
+5. **Thi Quiz & AI Assistant:** Thực hiện bài thi Quiz trắc nghiệm và tương tác hỏi đáp trực tiếp với AI Assistant.

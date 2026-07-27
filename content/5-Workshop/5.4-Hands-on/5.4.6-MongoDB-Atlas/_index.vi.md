@@ -6,40 +6,42 @@ chapter: false
 pre: " <b> 5.4.6. </b> "
 ---
 
-# 5.4.6. Cấu hình Cơ sở dữ liệu Cloud MongoDB Atlas
-
-Trong bước này, người thực hiện sẽ khởi tạo và cấu hình bảo mật cho Cluster cơ sở dữ liệu NoSQL **MongoDB Atlas**, tạo tài khoản truy cập Database User và mở đường mạng kết nối an toàn từ máy chủ EC2.
+Hệ thống LearnSphere tiếp tục sử dụng **MongoDB Atlas** làm hệ quản trị cơ sở dữ liệu trên môi trường Production thay vì chuyển sang Amazon RDS/DynamoDB vì các lý do kỹ thuật sau:
+- Mã nguồn Backend đã viết hoàn chỉnh bằng Mongoose ODM.
+- Cấu trúc dữ liệu người dùng, khóa học, quiz có thiết kế Document-oriented NoSQL phù hợp tuyệt đối với MongoDB.
+- Giữ nguyên cơ sở dữ liệu giúp giảm thiểu nguy cơ phát sinh lỗi trong quá trình chuyển đổi.
 
 ---
 
-### 1. Khởi tạo Database User trên MongoDB Atlas
+### 6.1. Khởi tạo Production Database User
 
-1. Đăng nhập trang quản trị **MongoDB Atlas** $\rightarrow$ chọn mục **Database Access** bên danh sách trái.
+1. Đăng nhập trang quản trị **MongoDB Atlas** $\rightarrow$ chọn mục **Database Access** bên menu trái.
 2. Chọn **Add New Database User**.
-3. **Authentication Method:** Chọn **Password**.
-4. Khai báo **Username:** `learnsphere_prod`.
-5. Tạo mật khẩu phức tạp (Password) và sao chép lại mật khẩu bảo mật này.
+3. **Authentication Method:** Select **Password**.
+4. **Username:** `learnsphere_prod`.
+5. Khởi tạo mật khẩu phức tạp dài trên 32 ký tự (lưu giữ bảo mật, không commit lên Git).
 6. **Database User Privileges:** Chọn **Read and write to any database** (`readWriteAnyDatabase`).
-7. Bấm **Add User**.
+7. Bấm **Add User** để hoàn tất.
 
 ---
 
-### 2. Cấu hình Bảo mật Mạng (Network Access IP Whitelist)
+### 6.2. Cấu hình Mạng & IP Access List cho EC2
 
-1. Chọn mục **Network Access** bên danh sách trái $\rightarrow$ chọn **Add IP Address**.
-2. Thêm địa chỉ **IPv4 Public IP** của máy chủ EC2 (hoặc chọn `0.0.0.0/0` trong giai đoạn lab ban đầu).
-3. Bấm **Confirm**.
+1. Chọn mục **Network Access** bên menu trái $\rightarrow$ chọn **Add IP Address**.
+2. Nhập địa chỉ **IPv4 Public IP** của máy chủ EC2 `i-008c48e6c120b2978`.
+3. Bấm **Confirm** để lưu quy tắc Network Access List.
 
 ---
 
-### 3. Lấy Chuỗi Kết nối SRV Connection String
+### 6.3. Lấy chuỗi SRV Connection String & Kiểm tra Health Check
 
-1. Chọn mục **Database** $\rightarrow$ tại Cluster vừa tạo bấm nút **Connect**.
-2. Chọn phương thức **Drivers** (Node.js).
-3. Sao chép chuỗi kết nối chuẩn dạng SRV format:
+1. Chọn mục **Database** $\rightarrow$ tại Cluster Production bấm nút **Connect**.
+2. Chọn **Drivers** (Node.js).
+3. Sao chép chuỗi SRV Connection String:
 
 ```text
 mongodb+srv://learnsphere_prod:<password>@learnsphere-cluster.mongodb.net/learnsphere?retryWrites=true&w=majority
 ```
 
-4. Thay thế `<password>` bằng mật khẩu đã tạo ở Bước 1. Chuỗi kết nối này sẽ dùng để khai báo biến môi trường `MONGODB_URI` cho ứng dụng Backend.
+4. Chuỗi kết nối này được điền vào biến môi trường `MONGODB_URI` trên máy chủ EC2 ở **Bước 8**.
+5. Cơ chế kiểm tra sức khỏe của Backend (`/health/ready`) được lập trình để chỉ trả về trạng thái `ready` khi kết nối tới MongoDB Atlas Cluster thành công.

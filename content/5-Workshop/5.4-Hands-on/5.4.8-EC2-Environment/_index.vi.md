@@ -6,56 +6,84 @@ chapter: false
 pre: " <b> 5.4.8. </b> "
 ---
 
-# 5.4.8. Cấu hình Môi trường Backend trên Máy chủ EC2
-
-Trong bước này, người thực hiện sẽ khởi tạo tệp cấu hình chứa các biến môi trường Production (`/home/ec2-user/.env`) trên máy chủ EC2 để ứng dụng Backend tự động đọc thông số khi container khởi chạy.
+Trong bước này, người thực hiện sẽ khởi tạo tệp biến môi trường Production trên máy chủ EC2 tại đường dẫn `/home/ec2-user/.env`, siết chặt phân quyền tệp và xác minh tính hợp lệ của IAM Instance Profile.
 
 ---
 
-### 1. Tạo tệp `.env` Production trên EC2
+### 8.1. Khởi tạo tệp `.env` Production trên EC2
 
-Kết nối vào máy chủ EC2 qua **AWS SSM Session Manager**, khởi tạo tệp `.env` tại thư mục cá nhân:
+Kết nối vào EC2 qua **AWS SSM Session Manager** và khởi tạo tệp biến môi trường:
 
 ```bash
-cat << 'EOF' > /home/ec2-user/.env
+sudo touch /home/ec2-user/.env
+sudo chmod 600 /home/ec2-user/.env
+sudo vi /home/ec2-user/.env
+```
+
+---
+
+### 8.2. Khai báo các Nhóm Biến Môi trường Production
+
+Điền nội dung chi tiết vào tệp `/home/ec2-user/.env`:
+
+```dotenv
 PORT=5000
 NODE_ENV=production
 TRUST_PROXY=true
+
 MONGODB_URI=mongodb+srv://learnsphere_prod:<password>@learnsphere-cluster.mongodb.net/learnsphere?retryWrites=true&w=majority
+MONGODB_REQUIRE_TRANSACTIONS=true
+
 JWT_SECRET=c84ac761c5224c53b96ad34fc94a8194c84ac761c5224c53b96ad34fc94a8194
 FRONTEND_URL=https://d2onzy56n3iw1w.cloudfront.net
+
 AWS_REGION=ap-southeast-1
 AWS_S3_BUCKET=learnsphere-media-575620421319
+
+AI_PROVIDER=bedrock
+BEDROCK_REGION=ap-southeast-1
+BEDROCK_MODEL_ID=apac.amazon.nova-lite-v1:0
 GROQ_API_KEY=gsk_learnsphere_ai_inference_key_sample
 EOF
 ```
 
----
-
-### 2. Thiết lập Phân quyền Bảo mật Tệp Biến Môi trường
-
-Siết chặt phân quyền tệp `.env` chỉ cho phép người dùng hệ thống có quyền đọc/ghi:
-
-```bash
-# Phân quyền 600
-chmod 600 /home/ec2-user/.env
-
-# Đảm bảo SSM Agent có quyền đọc tệp khi chạy lệnh deploy tự động
-sudo chmod 644 /home/ec2-user/.env
-```
+> **Nguyên tắc bảo mật:** Tuyệt đối **không khai báo `AWS_ACCESS_KEY_ID` hoặc `AWS_SECRET_ACCESS_KEY`** trong tệp `.env` vì Backend Node.js tự động sử dụng quyền hạn từ `LearnSphereEc2Role` được gán vào Instance Profile của EC2.
 
 ---
 
-### 3. Kiểm tra Trạng thái Kết nối ECR & Docker Daemon
+### 8.3. Kiểm tra Tên biến Môi trường mà Không làm Lộ Giá trị
 
-Thực thi câu lệnh kéo (pull) thử nghiệm từ ECR để xác minh IAM Instance Profile của EC2 đã có đủ quyền:
+Chạy kịch bản `awk` để rà soát sự tồn tại của các biến mà không in giá trị bảo mật ra màn hình terminal:
 
 ```bash
-# Đăng nhập ECR
-aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 575620421319.dkr.ecr.ap-southeast-1.amazonaws.com
-
-# Kiểm tra Docker Daemon đang lắng nghe
-docker ps
+sudo awk -F= '
+  /^[A-Z0-9_]+=/ {
+    if (length($2) > 0) print "OK: " $1;
+    else print "THIEU: " $1
+  }
+' /home/ec2-user/.env
 ```
 
-**Kết quả mong đợi:** Docker Daemon sẵn sàng tiếp nhận lệnh khởi chạy container từ pipeline CI/CD.
+> **Kết quả mong đợi:** Tất cả các tên biến quan trọng đều hiển thị trạng thái `OK: TÊN_BIẾN`.
+
+---
+
+### 8.4. Xác minh IAM Instance Profile & S3 Access từ EC2
+
+Chạy lệnh xác thực danh tính giả định (Assumed Role) từ dòng lệnh EC2:
+
+```bash
+aws sts get-caller-identity
+aws s3api head-bucket --bucket learnsphere-media-575620421319
+```
+
+**Kết quả trả về:**
+```text
+{
+    "UserId": "AROAXXXXXXXXXXXXX:i-008c48e6c120b2978",
+    "Account": "575620421319",
+    "Arn": "arn:aws:sts::575620421319:assumed-role/LearnSphereEc2Role/i-008c48e6c120b2978"
+}
+```
+
+> Điều này chứng minh EC2 đang nhận temporary credentials an toàn từ IAM Role `LearnSphereEc2Role` thông qua IMDSv2.

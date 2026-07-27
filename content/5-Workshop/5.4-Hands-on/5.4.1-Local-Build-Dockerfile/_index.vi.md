@@ -6,78 +6,98 @@ chapter: false
 pre: " <b> 5.4.1. </b> "
 ---
 
-# 5.4.1. Chuẩn bị mã nguồn tại Local & Dockerfile
-
-Trong bước này, người thực hiện sẽ chuẩn bị mã nguồn dự án **LearnSphere** trên máy cá nhân, kiểm tra cấu trúc Monorepo và viết file `Dockerfile` tối ưu phục vụ đóng gói container cho dịch vụ Backend.
+Trong bước này, người thực hiện sẽ kiểm thử mã nguồn dự án **LearnSphere** trên máy cá nhân, kiểm tra khả năng biên dịch Frontend, và chuẩn bị tệp `Dockerfile` Multi-stage tối ưu để đóng gói ứng dụng Backend.
 
 ---
 
-### 1. Kiểm tra Cấu trúc Mã nguồn Monorepo tại Local
+### 1.1. Kiểm tra Cấu trúc Dự án & Chạy Kiểm thử Local
 
-Mở cửa sổ dòng lệnh Terminal và di chuyển vào thư mục dự án LearnSphere:
+Mã nguồn dự án LearnSphere được tổ chức dưới dạng cấu trúc Monorepo bao gồm 2 phần chính:
 
-```bash
-cd LearnSphere
-ls -la
+```text
+LearnSphere/
+├── LearnSphere_BE/       # Backend Node.js / Express.js REST API
+├── LearnSphere_FE/       # Frontend React.js / Vite Single Page Application
+├── .github/workflows/    # Quy trình tự động hóa CI/CD
+└── docs/                 # Tài liệu hướng dẫn kỹ thuật
 ```
 
-Cấu trúc thư mục phải bao gồm:
-- `LearnSphere_BE/`: Mã nguồn ứng dụng Backend (Node.js/Express).
-- `LearnSphere_FE/`: Mã nguồn ứng dụng Frontend (React/Vite).
-- `.github/workflows/`: Thư mục chứa các tệp cấu hình tự động hóa triển khai CI/CD.
+#### Thực hiện kiểm thử Backend trên môi trường local:
+
+Mở cửa sổ dòng lệnh Terminal/PowerShell và thực thi lệnh kiểm thử bộ test case của Backend:
+
+```powershell
+cd LearnSphere_BE
+npm ci
+npm test
+```
+
+> **Yêu cầu đạt được:** Tất cả các Unit Test backend phải vượt qua thành công (`Pass`), không có test case thất bại (`Failed`).
+
+#### Thực hiện kiểm thử biên dịch Frontend:
+
+Di chuyển sang thư mục `LearnSphere_FE` và chạy lệnh đóng gói tĩnh của Vite:
+
+```powershell
+cd ..\LearnSphere_FE
+npm ci
+npm run build
+```
+
+> **Yêu cầu đạt được:** Trình biên dịch TypeScript không phát sinh lỗi và Vite tạo ra thư mục chứa sản phẩm tĩnh `LearnSphere_FE/dist`.
 
 ---
 
-### 2. Viết file Dockerfile tối ưu cho Backend (`LearnSphere_BE`)
+### 1.2. Viết file Dockerfile Multi-stage cho Backend
 
-Tạo file `Dockerfile` bên trong thư mục `LearnSphere_BE/` với nội dung đóng gói chuẩn Multi-stage build trên nền Linux Alpine siêu nhẹ:
+Để đóng gói Backend Node.js đạt tiêu chuẩn Production-Grade, chúng ta xây dựng tệp `Dockerfile` tại thư mục `LearnSphere_BE/` sử dụng kỹ thuật **Multi-stage Build** trên nền hình ảnh `node:24-alpine` siêu nhẹ:
 
 ```dockerfile
-# Stage 1: Build dependencies & production ready image
+# Stage 1: Build Dependencies
 FROM node:24-alpine AS builder
 
 WORKDIR /app
 
-# Copy package.json và package-lock.json để tận dụng Docker Cache
+# Copy các tệp mô tả thư viện để tận dụng bộ nhớ đệm (Layer Cache) của Docker
 COPY package*.json ./
 
-# Cài đặt tất cả phụ thuộc bao gồm cả devDependencies
+# Cài đặt toàn bộ phụ thuộc với npm ci
 RUN npm ci
 
-# Copy toàn bộ mã nguồn ứng dụng
+# Copy toàn bộ mã nguồn
 COPY . .
 
-# Stage 2: Production Runtime Image
+# Stage 2: Production Runtime
 FROM node:24-alpine AS runner
 
 WORKDIR /app
 
-# Tạo group và user non-root để đảm bảo an toàn bảo mật
+# Tạo nhóm và người dùng hệ thống non-root (UID 1001) để tăng cường bảo mật
 RUN addgroup -g 1001 -S nodejs && \
     adduser -u 1001 -S nodejs -G nodejs
 
-# Copy ứng dụng và node_modules từ stage builder
+# Sao chép mã nguồn và node_modules từ stage builder
 COPY --from=builder /app ./
 
 # Cấp quyền sở hữu thư mục ứng dụng cho user non-root
 USER nodejs
 
-# Khai báo cổng ứng dụng lắng nghe
+# Khai báo cổng 5000 ứng dụng lắng nghe
 EXPOSE 5000
 
-# Chỉ thị kiểm tra sức khỏe container định kỳ
+# Chỉ thị kiểm tra sức khỏe container định kỳ (Health Check)
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
   CMD wget --no-verbose --tries=1 --spider http://localhost:5000/health/ready || exit 1
 
-# Lệnh khởi chạy ứng dụng
+# Lệnh khởi chạy server Node.js
 CMD ["node", "src/server.js"]
 ```
 
 ---
 
-### 3. Tạo file `.dockerignore`
+### 1.3. Tạo tệp `.dockerignore`
 
-Tạo file `.dockerignore` tại thư mục `LearnSphere_BE/` để loại bỏ các tệp rác khi build image:
+Tạo tệp `.dockerignore` cùng cấp với `Dockerfile` trong thư mục `LearnSphere_BE/` để loại bỏ các tệp không cần thiết và thông tin nhạy cảm khỏi Docker Image:
 
 ```text
 node_modules
@@ -92,29 +112,29 @@ logs
 
 ---
 
-### 4. Build và Kiểm thử Container tại Máy cá nhân
+### 1.4. Kiểm thử Đóng gói Docker Image tại Local
 
-Thực thi lệnh build Docker Image thử nghiệm ở local:
+Chạy lệnh đóng gói Docker Image trên máy cá nhân để xác minh cú pháp:
 
-```bash
+```powershell
 cd LearnSphere_BE
 docker build -t learnsphere-be:local .
 ```
 
-Khởi chạy container thử nghiệm trên cổng 5000:
+Khởi chạy container chạy thử ở local:
 
-```bash
+```powershell
 docker run -d -p 5000:5000 --name test-be --env-file .env.example learnsphere-be:local
 ```
 
-Kiểm tra trạng thái phản hồi sức khỏe của container:
+Kiểm tra endpoint sức khỏe của ứng dụng:
 
-```bash
+```powershell
 curl http://localhost:5000/health/ready
 ```
 
-**Kết quả mong đợi:** Trình duyệt/Terminal trả về mã phản hồi `200 OK` với thông báo kết nối hệ thống sẵn sàng. Sau khi kiểm thử thành công, xóa container thử nghiệm:
+**Kết quả mong đợi:** Trả về kết quả JSON `{"status":"ready"}` với mã HTTP Status `200 OK`. Dừng và xóa container thử nghiệm sau khi hoàn tất:
 
-```bash
+```powershell
 docker stop test-be && docker rm test-be
 ```

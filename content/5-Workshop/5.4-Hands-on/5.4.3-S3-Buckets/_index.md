@@ -6,43 +6,39 @@ chapter: false
 pre: " <b> 5.4.3. </b> "
 ---
 
-# 5.4.3. Create & Configure Amazon S3 (Frontend & Media Buckets)
-
-In this step, practitioners initialize 2 distinct S3 Buckets with strict security settings: **S3 Frontend Bucket** (storing compiled React static assets) and **S3 Media Bucket** (storing video/PDF/image lecture files).
+The LearnSphere system utilizes two distinct S3 Buckets to enforce security isolation between user-generated media content and compiled Frontend static source code.
 
 ---
 
-### 1. Initialize S3 Bucket 1 (Frontend Static Hosting)
+### 3.1. Create S3 Bucket 1 — Media Storage (`learnsphere-media-575620421319`)
+
+This bucket handles storage for all system media assets:
+- Lecture videos.
+- Learning documents (PDF, DOCX).
+- Course cover thumbnails.
+- User profile avatars.
+
+#### Configuration Steps:
 
 1. Navigate to **Amazon S3** service $\rightarrow$ click **Create bucket**.
-2. Bucket Name: `learnsphere-fe-575620421319` (globally unique).
-3. **Region:** Select `ap-southeast-1` (Singapore).
-4. **Block Public Access:** Keep default **Block all public access = ON**.
-5. Click **Create bucket**.
-
----
-
-### 2. Initialize S3 Bucket 2 (Media Storage)
-
-1. Click **Create bucket**.
-2. Bucket Name: `learnsphere-media-575620421319`.
+2. **Bucket name:** `learnsphere-media-575620421319` (globally unique).
 3. **Region:** `ap-southeast-1` (Singapore).
-4. **Block Public Access:** Keep default **Block all public access = ON**.
-5. Click **Create bucket**.
+4. **Block Public Access:** Keep **Block all public access = ON**.
+5. **Static Website Hosting:** Keep `Disabled`.
+6. Click **Create bucket**.
 
----
+#### CORS Configuration:
 
-### 3. Configure CORS on S3 Media Bucket
+Because the Frontend React app running on CloudFront uploads media directly to S3 via Presigned URLs, we must configure CORS rules on the S3 Media Bucket:
 
 1. Open Bucket `learnsphere-media-575620421319` $\rightarrow$ navigate to **Permissions** tab.
-2. Scroll to **Cross-origin resource sharing (CORS)** $\rightarrow$ click **Edit**.
-3. Paste JSON CORS configuration allowing direct browser Multipart Uploads:
+2. Scroll to **Cross-origin resource sharing (CORS)** $\rightarrow$ click **Edit** and paste:
 
 ```json
 [
   {
     "AllowedHeaders": ["*"],
-    "AllowedMethods": ["GET", "PUT", "HEAD"],
+    "AllowedMethods": ["GET", "PUT"],
     "AllowedOrigins": [
       "http://localhost:5173",
       "https://d2onzy56n3iw1w.cloudfront.net"
@@ -53,4 +49,19 @@ In this step, practitioners initialize 2 distinct S3 Buckets with strict securit
 ]
 ```
 
-4. Click **Save changes**.
+> **Important Note:** Exposing the `ETag` header (`ExposeHeaders: ["ETag"]`) is mandatory for the browser to read upload checksums during S3 Multipart Uploads of large video files.
+
+---
+
+### 3.2. Create S3 Bucket 2 — Frontend Static Assets (`learnsphere-fe-575620421319`)
+
+This bucket stores compiled React SPA static assets (`index.html`, JavaScript, CSS, images).
+
+1. Click **Create bucket**.
+2. **Bucket name:** `learnsphere-fe-575620421319`.
+3. **Region:** `ap-southeast-1` (Singapore).
+4. **Block Public Access:** Keep **Block all public access = ON**.
+5. **Static Website Hosting:** Keep `Disabled`.
+6. Click **Create bucket**.
+
+> **Note:** This bucket remains 100% Private. Read permissions will be granted exclusively to CloudFront Origin Access Control (OAC) in **Step 7A**.

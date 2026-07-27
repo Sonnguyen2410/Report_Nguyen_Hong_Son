@@ -6,37 +6,76 @@ chapter: false
 pre: " <b> 5.4.10. </b> "
 ---
 
-# 5.4.10. Production Testing & Verification
-
-In this step, practitioners access the official LearnSphere application in the Production environment via the CloudFront HTTPS domain and execute End-to-End verification testing.
+After CI/CD pipeline execution, practitioners verify Backend containers, inspect centralized log streams, test database connectivity, and perform End-to-End user testing on the CloudFront HTTPS Production domain.
 
 ---
 
-### 1. Access CloudFront HTTPS Domain
+### 10.1. Inspect Backend Container Status on EC2
 
-1. Open a web browser and navigate to your CloudFront URL: `https://d2onzy56n3iw1w.cloudfront.net`.
-2. Verify the **TLS/SSL Padlock** icon indicating a secure HTTPS connection.
+Connect to EC2 via Session Manager and check container status:
+
+```bash
+sudo docker ps --filter name=learnsphere-be
+```
+
+Inspect detailed container health details:
+
+```bash
+sudo docker inspect \
+  --format 'status={{.State.Status}} health={{.State.Health.Status}} restarts={{.RestartCount}} image={{.Config.Image}}' \
+  learnsphere-be
+```
+
+**Expected Output:**
+```text
+status=running
+health=healthy
+restarts=0
+```
 
 ---
 
-### 2. Verify Authentication Workflows (Login & Register)
+### 10.2. Verify Database Connection via Health Check Endpoint
 
-1. Register a new Student account.
-2. Confirm API requests to `/api/v1/auth/register` are properly reverse-proxied to EC2 Backend.
-3. Log in and verify JWT Token storage in LocalStorage.
+Query the application readiness endpoint to confirm MongoDB Atlas connectivity:
+
+```bash
+curl -fsS http://127.0.0.1:5000/health/ready
+```
+
+**Expected Output:**
+```json
+{
+  "status": "ready",
+  "database": "connected"
+}
+```
 
 ---
 
-### 3. Verify Media Upload & Playback via Presigned URLs
+### 10.3. Inspect Centralized CloudWatch Logs
 
-1. Log into a Tutor account $\rightarrow$ Create a new course.
-2. Upload a lecture video file $\rightarrow$ Verify the browser requests a Presigned PUT URL and uploads directly to the S3 Media Bucket without CORS errors.
-3. Log into a Student account $\rightarrow$ Play a video lesson $\rightarrow$ Confirm the browser streams video via a short-lived Presigned GET URL.
+Open **Amazon CloudWatch** $\rightarrow$ **Log groups** $\rightarrow$ select `/learnsphere/backend`.
+
+Confirm:
+- Node.js server initialized successfully on port 5000.
+- MongoDB Atlas connection is healthy.
+- Zero crash/restart loops.
+- Receives inbound HTTP request logs forwarded from CloudFront.
 
 ---
 
-### 4. Verify Client-Side Sub-route Page Refresh (SPA Routing Check)
+### 10.4. Production Application Testing & User Experience
 
-1. Navigate directly to a sub-route: `https://d2onzy56n3iw1w.cloudfront.net/courses`.
-2. Press **F5** to refresh the page.
-3. **Expected Result:** CloudFront Function rewrites internal URI to `/index.html`, and React Router renders the course page without 404 Not Found errors.
+Navigate directly to the official CloudFront Production URL:
+
+```text
+https://d2onzy56n3iw1w.cloudfront.net
+```
+
+#### Execute End-to-End Feature Verification Tests:
+1. **Registration & Authentication:** Create a new user account and verify JWT Token generation.
+2. **Course Management:** Log in as a Tutor $\rightarrow$ Create a new course.
+3. **Presigned URL Media Upload:** Upload lecture videos, thumbnails, and PDFs. Confirm browser fetches Presigned PUT URLs and uploads directly to S3 Media Bucket without CORS issues.
+4. **Learning & Video Streaming:** Log in as a Student $\rightarrow$ Open a lesson $\rightarrow$ Confirm video streams seamlessly via short-lived Presigned GET URLs.
+5. **Quiz Exams & AI Assistant:** Complete quiz examinations and test AI Assistant interactions.

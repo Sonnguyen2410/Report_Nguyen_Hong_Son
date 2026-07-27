@@ -6,68 +6,76 @@ chapter: false
 pre: " <b> 5.4.5. </b> "
 ---
 
-# 5.4.5. Khởi tạo và Cấu hình Máy chủ EC2 (Amazon Linux 2023 & Security Group)
-
-Trong bước này, người thực hiện sẽ khởi tạo máy chủ **Amazon EC2**, gán IAM Role bảo mật, cấu hình Security Group khép kín và thiết lập bộ nhớ ảo Swap 2.0GB để chống tràn RAM.
+Trong bước này, người thực hiện sẽ khởi tạo máy chủ **Amazon EC2**, gán IAM Instance Profile, cài đặt Docker Engine và thiết lập bộ nhớ ảo Swap RAM 2GB.
 
 ---
 
-### 1. Khởi tạo EC2 Instance
+### 5.1. Khởi tạo EC2 Instance
 
-1. Truy cập dịch vụ **Amazon EC2** $\rightarrow$ chọn **Launch instance**.
+1. Mở **AWS Management Console** $\rightarrow$ dịch vụ **Amazon EC2** $\rightarrow$ chọn **Launch instance**.
 2. **Name:** `LearnSphere-Backend-Server`.
-3. **Application and OS Images (AMI):** Chọn **Amazon Linux 2023 AMI** 64-bit (x86).
-4. **Instance type:** Chọn `t3.small` (2 vCPU, 2.0 GiB Memory).
-5. **Key pair (login):** Chọn **Proceed without a key pair** (Do chúng ta sẽ quản trị máy chủ qua SSM Session Manager, không dùng SSH).
-6. **Network settings:**
-   - **VPC:** Select Default VPC.
-   - **Auto-assign public IP:** `Enable`.
-   - **Security Group:** Chọn Create Security Group `learnsphere-backend-sg`.
-   - **Inbound Security Group Rules:** Thêm luật Custom TCP, Port `5000`, Source trỏ tới AWS Managed Prefix List `com.amazonaws.global.cloudfront.origin-facing` (hoặc tạm thời `0.0.0.0/0` trong quá trình setup). Xóa bỏ cổng 22.
-7. **Advanced Details:**
-   - **IAM instance profile:** Chọn Role `LearnSphereEc2Role`.
-8. Bấm **Launch instance**.
+3. Thông số kỹ thuật lựa chọn:
+
+| Thuộc tính | Giá trị |
+|---|---|
+| AMI | Amazon Linux 2023 64-bit (x86) |
+| Instance type | `t3.small` (2 vCPU, 2.0 GiB RAM) |
+| Key pair (login) | **Proceed without a key pair** (Quản trị 100% qua Systems Manager) |
+| IAM instance profile | `LearnSphereEc2Role` |
+| Instance ID | `i-008c48e6c120b2978` |
+
+4. **Network settings:**
+   - **Security Group:** Tạo Security Group mới `learnsphere-backend-sg`.
+   - **Inbound Rules:** Thêm luật Custom TCP, Port `5000`, Source trỏ tới AWS Managed Prefix List `com.amazonaws.global.cloudfront.origin-facing` (chỉ cho phép CloudFront gửi request tới port 5000).
+   - **SSH Port 22:** Xóa bỏ luật SSH Port 22.
+5. Bấm **Launch instance**.
 
 ---
 
-### 2. Thiết lập Bộ nhớ RAM Swap 2.0GB trên EC2
+### 5.2. Cài đặt Docker Engine & Cấu hình Swap RAM 2GB
 
-Kết nối vào máy chủ EC2 qua **AWS SSM Session Manager** (trên AWS Console chọn **Connect** $\rightarrow$ **Session Manager**), sau đó chạy chuỗi lệnh khởi tạo tệp Swap:
+Kết nối tới EC2 qua **AWS SSM Session Manager** (trên console chọn **Connect** $\rightarrow$ **Session Manager**), thực thi kịch bản cài đặt:
 
 ```bash
-# Tạo file swap dung lượng 2GB
-sudo dd if=/dev/zero of=/swapfile bs=1M count=2048
+# Cập nhật hệ thống và cài đặt Docker
+sudo yum update -y
+sudo yum install -y docker
 
-# Cấp quyền siết chặt 600
+# Khởi chạy dịch vụ Docker
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker ec2-user
+
+# Kiểm tra phiên bản Docker & AWS CLI
+docker --version
+aws --version
+```
+
+#### Thiết lập 2.0GB Swap RAM phòng chống tràn bộ nhớ:
+
+Do Backend Node.js thực hiện xử lý tài liệu PDF và nhận diện hình ảnh OCR, máy chủ được bổ sung 2.0GB tệp bộ nhớ Swap:
+
+```bash
+# Khởi tạo tệp swap 2GB
+sudo fallocate -l 2G /swapfile
 sudo chmod 600 /swapfile
-
-# Định dạng bộ nhớ swap
 sudo mkswap /swapfile
-
-# Kích hoạt bộ nhớ swap
 sudo swapon /swapfile
 
-# Kiểm tra bộ nhớ sau khi tạo
-free -h
-
-# Đăng ký cấu hình tự động kích hoạt khi khởi động lại
+# Cấu hình tự động mount khi khởi động lại
 echo '/swapfile swap swap defaults 0 0' | sudo tee -a /etc/fstab
+
+# Kiểm tra dung lượng bộ nhớ
+free -h
 ```
+
+> **Kết quả:** Lệnh `free -h` hiển thị khoảng 1.9 GB RAM vật lý và 2.0 GB Swap sẵn sàng sử dụng.
 
 ---
 
-### 3. Cài đặt Docker & AWS CLI v2 trên EC2
+### 5.3. Xác nhận IAM Instance Profile & Connection
 
-Thực thi kịch bản cài đặt môi trường Docker trên Amazon Linux 2023:
-
-```bash
-# Cài đặt Docker
-sudo dnf install -y docker
-
-# Bật dịch vụ Docker tự động chạy khi khởi động
-sudo systemctl enable --now docker
-
-# Thêm user ec2-user và ssm-user vào nhóm docker
-sudo usermod -aG docker ec2-user
-sudo usermod -aG docker ssm-user
-```
+Kiểm tra trong EC2 Console:
+- IAM Role đã đính kèm chính xác là `LearnSphereEc2Role`.
+- Máy chủ đã hiển thị trạng thái `Managed` trên AWS Systems Manager.
+- Kết nối thành công bằng **Session Manager** mà không cần mở cổng 22 SSH.
