@@ -21,6 +21,15 @@ pre: " <b> 5.1. </b> "
 
 ---
 
+### 🌐 Liên kết Dự án & Tài nguyên (Project Links & Resources)
+
+| Tài nguyên | Liên kết (URL) | Mô tả chi tiết |
+| --- | --- | --- |
+| 🌐 **Live Website** | [https://sonnguyen2410.github.io/Report_Nguyen_Hong_Son/](https://sonnguyen2410.github.io/Report_Nguyen_Hong_Son/) | Truy cập trực tiếp hệ thống báo cáo & ứng dụng đang chạy thực tế |
+| 🐙 **GitHub Repository** | [https://github.com/Sonnguyen2410/Report_Nguyen_Hong_Son](https://github.com/Sonnguyen2410/Report_Nguyen_Hong_Son) | Xem mã nguồn dự án, cấu hình Docker và các workflow CI/CD |
+| 🎬 **Video Demo** | [Xem Video Demo trên YouTube / Google Drive](#) | Video giới thiệu các tính năng và toàn bộ quy trình vận hành hệ thống |
+
+---
 
 ### 2. Mục tiêu kỹ thuật của Bài Workshop
 
