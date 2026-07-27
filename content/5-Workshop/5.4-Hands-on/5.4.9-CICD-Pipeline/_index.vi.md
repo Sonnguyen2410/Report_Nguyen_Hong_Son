@@ -25,7 +25,7 @@ Mở GitHub Repository $\rightarrow$ **Settings** $\rightarrow$ **Secrets and va
 > **Không sử dụng các Secret tĩnh cũ:** Không khai báo `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` hay `EC2_SSH_KEY` vì quy trình triển khai sử dụng 100% xác thực **OIDC** và quản trị qua **AWS Systems Manager (SSM)**.
 
 ![Các biến cấu hình được sử dụng bởi pipeline CI/CD](/images/5-Workshop/5.4/5.4.9.1.png)
-*Hình 5.4.9.1 — Khai báo các Repository Secrets phục vụ quy trình triển khai CI/CD.*
+<p align="center"><i>Hình 5.4.9.1 — Khai báo các Repository Secrets phục vụ quy trình triển khai CI/CD.</i></p>
 
 ---
 
@@ -97,7 +97,7 @@ jobs:
               "docker run -d -p 5001:5000 --name candidate --env-file /home/ec2-user/.env '${{ steps.login-ecr.outputs.registry }}'/learnsphere-be:'${{ github.sha }}'",
               "SUCCESS=0",
               "for i in {1..24}; do if curl -s http://localhost:5001/health/ready | grep -q \"ready\"; then SUCCESS=1; break; fi; sleep 5; done",
-              "if [ $SUCCESS -eq 1 ]; then echo \"Health check passed! Swapping containers Swapping...\"; docker stop learnsphere-be-rollback || true && docker rm learnsphere-be-rollback || true; docker rename learnsphere-be learnsphere-be-rollback || true; docker rename candidate learnsphere-be; docker stop learnsphere-be || true; docker run -d -p 5000:5000 --name learnsphere-be --restart unless-stopped --env-file /home/ec2-user/.env --log-driver awslogs --log-opt awslogs-group=/learnsphere/backend '${{ steps.login-ecr.outputs.registry }}'/learnsphere-be:'${{ github.sha }}'; else echo \"Health check failed! Aborting candidate container...\"; docker stop candidate || true && docker rm candidate || true; exit 1; fi"
+              "if [ $SUCCESS -eq 1 ]; then echo \"Health check passed! Swapping containers...\"; docker stop learnsphere-be-rollback || true && docker rm learnsphere-be-rollback || true; docker rename learnsphere-be learnsphere-be-rollback || true; docker rename candidate learnsphere-be; docker stop learnsphere-be || true; docker run -d -p 5000:5000 --name learnsphere-be --restart unless-stopped --env-file /home/ec2-user/.env --log-driver awslogs --log-opt awslogs-group=/learnsphere/backend '${{ steps.login-ecr.outputs.registry }}'/learnsphere-be:'${{ github.sha }}'; else echo \"Health check failed! Aborting candidate container...\"; docker stop candidate || true && docker rm candidate || true; exit 1; fi"
             ]'
 
   deploy-frontend:
@@ -134,7 +134,7 @@ jobs:
 ```
 
 ![Quy trình CI/CD tự động của LearnSphere](/images/5-Workshop/5.4/5.4.9.2.png)
-*Hình 5.4.9.2 — Sơ đồ luồng xử lý tự động của file quy trình deploy.yml.*
+<p align="center"><i>Hình 5.4.9.2 — Sơ đồ luồng xử lý tự động của file quy trình deploy.yml.</i></p>
 
 ---
 
@@ -149,7 +149,7 @@ git push origin main
 ```
 
 ![Pipeline triển khai Backend và Frontend hoàn tất thành công](/images/5-Workshop/5.4/5.4.9.3.png)
-*Hình 5.4.9.3 — Pipeline GitHub Actions triển khai hoàn tất 2 job Backend và Frontend.*
+<p align="center"><i>Hình 5.4.9.3 — Pipeline GitHub Actions triển khai hoàn tất 2 job Backend và Frontend.</i></p>
 
 #### Xử lý Lỗi OIDC ở Lần Chạy Đầu:
 Nếu gặp thông báo lỗi `Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWebIdentity`, hãy kiểm tra lại cấu hình **Trust Policy** của `LearnSphereGitHubDeployRole` đảm bảo khớp chính xác tên `repo:username/repository:ref:refs/heads/main`. Bấm nút **Re-run jobs** trên GitHub Actions để chạy lại pipeline thành công.

@@ -52,7 +52,7 @@ Sau khi Distribution khởi tạo thành công, sao chép Bucket Policy và cậ
 ```
 
 ![Bucket policy được cập nhật sau khi tạo CloudFront OAC](/images/5-Workshop/5.4/5.4.7.A.png)
-*Hình 5.4.7.A — Cập nhật S3 Bucket Policy cấp quyền đọc cho CloudFront OAC.*
+<p align="center"><i>Hình 5.4.7.A — Cập nhật S3 Bucket Policy cấp quyền đọc cho CloudFront OAC.</i></p>
 
 ---
 
@@ -65,7 +65,7 @@ Sau khi Distribution khởi tạo thành công, sao chép Bucket Policy và cậ
 3. **Protocol Policy:** `HTTP Only`, Port `5000`.
 
 ![Hai origin Frontend và Backend của CloudFront distribution](/images/5-Workshop/5.4/5.4.7.B.1.png)
-*Hình 5.4.7.B.1 — Danh sách hai Origins (S3 Frontend và EC2 Backend) trên CloudFront Distribution.*
+<p align="center"><i>Hình 5.4.7.B.1 — Danh sách hai Origins (S3 Frontend và EC2 Backend) trên CloudFront Distribution.</i></p>
 
 #### 7B.2. Tạo Behavior `/api/*`
 
@@ -80,7 +80,7 @@ Sau khi Distribution khởi tạo thành công, sao chép Bucket Policy và cậ
 > **Tác dụng:** Trình duyệt gọi `/api/*` tới CloudFront domain duy nhất, CloudFront chuyển tiếp về EC2 cổng 5000, **triệt tiêu hoàn toàn lỗi CORS và Mixed Content**.
 
 ![CloudFront định tuyến Frontend và Backend API](/images/5-Workshop/5.4/5.4.7.B.2.png)
-*Hình 5.4.7.B.2 — Quy tắc CloudFront Behavior phân tách lưu lượng Frontend (`/*`) và Backend API (`/api/*`).*
+<p align="center"><i>Hình 5.4.7.B.2 — Quy tắc CloudFront Behavior phân tách lưu lượng Frontend (`/*`) và Backend API (`/api/*`).</i></p>
 
 #### 7B.3. Gắn CloudFront Function cho SPA Client-side Routing
 
@@ -103,7 +103,7 @@ function handler(event) {
 > Gắn Function này vào sự kiện **Viewer Request** của Default Behavior `/*`.
 
 ![CloudFront Function hỗ trợ điều hướng SPA Router](/images/5-Workshop/5.4/5.4.7.B.3.png)
-*Hình 5.4.7.B.3 — CloudFront Function chuyển hướng mọi tuyến đường con về /index.html hỗ trợ React Router.*
+<p align="center"><i>Hình 5.4.7.B.3 — CloudFront Function chuyển hướng mọi tuyến đường con về /index.html hỗ trợ React Router.</i></p>
 
 #### 7B.4. Ghi nhận Thông tin CloudFront Distribution
 

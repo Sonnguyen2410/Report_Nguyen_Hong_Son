@@ -140,4 +140,4 @@ docker stop test-be && docker rm test-be
 ```
 
 ![Packaging LearnSphere Backend into a Docker image](/images/5-Workshop/5.4/5.4.1.png)
-*Figure 5.4.1 — Local source code inspection and Backend Docker image containerization.*
+<p align="center"><i>Figure 5.4.1 — Local source code inspection and Backend Docker image containerization.</i></p>

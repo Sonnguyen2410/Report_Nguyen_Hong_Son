@@ -25,7 +25,7 @@ learnsphere-be
 6. Bấm **Create repository** để hoàn tất.
 
 ![Docker images của Backend được lưu trên Amazon ECR](/images/5-Workshop/5.4/5.4.4.png)
-*Hình 5.4.4 — Private ECR Repository lưu trữ và quét lỗ hổng các Docker Image của Backend.*
+<p align="center"><i>Hình 5.4.4 — Private ECR Repository lưu trữ và quét lỗ hổng các Docker Image của Backend.</i></p>
 
 ---
 

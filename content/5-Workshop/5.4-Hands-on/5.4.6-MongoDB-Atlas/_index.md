@@ -32,7 +32,7 @@ The LearnSphere system continues to use **MongoDB Atlas** as its Production data
 3. Click **Confirm** to save IP Access List rules.
 
 ![MongoDB Atlas cluster utilized as production database](/images/5-Workshop/5.4/5.4.6.png)
-*Figure 5.4.6 — MongoDB Atlas Cluster database management and EC2 IP Access List configuration.*
+<p align="center"><i>Figure 5.4.6 — MongoDB Atlas Cluster database management and EC2 IP Access List configuration.</i></p>
 
 ---
 

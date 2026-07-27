@@ -23,7 +23,7 @@ Cơ chế OIDC cho phép GitHub Actions nhận thông tin xác thực tạm th�
 5. Chọn **Add provider** để hoàn tất.
 
 ![Cấu hình GitHub OIDC Provider trong AWS IAM](/images/5-Workshop/5.4/5.4.2.1.png)
-*Hình 5.4.2.1 — Cấu hình GitHub OIDC Provider trong AWS IAM.*
+<p align="center"><i>Hình 5.4.2.1 — Cấu hình GitHub OIDC Provider trong AWS IAM.</i></p>
 
 ---
 
@@ -58,7 +58,7 @@ Cơ chế OIDC cho phép GitHub Actions nhận thông tin xác thực tạm th�
 ```
 
 ![Trust policy giới hạn GitHub repository được phép assume role](/images/5-Workshop/5.4/5.4.2.2.1.png)
-*Hình 5.4.2.2a — Trust policy giới hạn duy nhất nhánh main của GitHub repository.*
+<p align="center"><i>Hình 5.4.2.2a — Trust policy giới hạn duy nhất nhánh main của GitHub repository.</i></p>
 
 5. Gắn các chính sách phân quyền tối thiểu (**Least Privilege**):
    - Đẩy Docker Image vào ECR repository `learnsphere-be`.
@@ -67,7 +67,7 @@ Cơ chế OIDC cho phép GitHub Actions nhận thông tin xác thực tạm th�
    - Gửi lệnh `AWS-RunShellScript` tới máy chủ EC2 thông qua AWS Systems Manager (SSM).
 
 ![Các quyền triển khai được gắn cho GitHub Actions](/images/5-Workshop/5.4/5.4.2.2.2.png)
-*Hình 5.4.2.2b — Các chính sách phân quyền triển khai gắn cho GitHub Actions.*
+<p align="center"><i>Hình 5.4.2.2b — Các chính sách phân quyền triển khai gắn cho GitHub Actions.</i></p>
 
 ---
 
@@ -85,4 +85,4 @@ Role này được gán trực tiếp vào EC2 Instance Profile, giúp ứng d�
    - **Amazon Bedrock Policy:** Cấp quyền `InvokeModel` và `InvokeModelWithResponseStream`.
 
 ![IAM Role cung cấp quyền AWS cho Backend trên EC2](/images/5-Workshop/5.4/5.4.2.3.png)
-*Hình 5.4.2.3 — IAM Role cung cấp quyền tự động cho Backend Node.js trên máy chủ EC2.*
+<p align="center"><i>Hình 5.4.2.3 — IAM Role cung cấp quyền tự động cho Backend Node.js trên máy chủ EC2.</i></p>

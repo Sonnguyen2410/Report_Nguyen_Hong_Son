@@ -31,7 +31,7 @@ Toàn bộ các tài nguyên trong bước này được khởi tạo đồng b�
 4. Kiểm tra trang điều khiển SNS đảm bảo trạng thái Subscription hiển thị mã ARN hợp lệ và không còn ở trạng thái `Pending confirmation`.
 
 ![Kênh SNS gửi cảnh báo vận hành LearnSphere qua email](/images/5-Workshop/5.4/5.4.11.2.png)
-*Hình 5.4.11.2 — Kênh SNS Topic phát thông báo cảnh báo vận hành tới email đã xác nhận.*
+<p align="center"><i>Hình 5.4.11.2 — Kênh SNS Topic phát thông báo cảnh báo vận hành tới email đã xác nhận.</i></p>
 
 ---
 
@@ -50,7 +50,7 @@ Toàn bộ các tài nguyên trong bước này được khởi tạo đồng b�
 6. Bấm **Create alarm**.
 
 ![CloudWatch theo dõi CPU EC2 và cảnh báo khi vượt 80% trong 10 phút](/images/5-Workshop/5.4/5.4.11.3.png)
-*Hình 5.4.11.3 — CloudWatch Alarm theo dõi CPU EC2 và phát cảnh báo khi vượt ngưỡng 80%.*
+<p align="center"><i>Hình 5.4.11.3 — CloudWatch Alarm theo dõi CPU EC2 và phát cảnh báo khi vượt ngưỡng 80%.</i></p>
 
 ---
 
@@ -68,7 +68,7 @@ Toàn bộ các tài nguyên trong bước này được khởi tạo đồng b�
 5. Bấm **Create alarm**.
 
 ![CloudWatch phát hiện lỗi trạng thái EC2 và gửi thông báo qua SNS](/images/5-Workshop/5.4/5.4.11.4.png)
-*Hình 5.4.11.4 — CloudWatch Alarm phát hiện sự cố máy chủ EC2 và phát tín hiệu khẩn cấp qua SNS.*
+<p align="center"><i>Hình 5.4.11.4 — CloudWatch Alarm phát hiện sự cố máy chủ EC2 và phát tín hiệu khẩn cấp qua SNS.</i></p>
 
 ---
 

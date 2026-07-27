@@ -52,7 +52,7 @@ curl -fsS http://127.0.0.1:5000/health/ready
 ```
 
 ![Backend container hoạt động ổn định và kết nối MongoDB thành công](/images/5-Workshop/5.4/5.4.10.2.png)
-*Hình 5.4.10.2 — Container Backend hoạt động ổn định và kết nối MongoDB Atlas thành công.*
+<p align="center"><i>Hình 5.4.10.2 — Container Backend hoạt động ổn định và kết nối MongoDB Atlas thành công.</i></p>
 
 ---
 
@@ -67,7 +67,7 @@ Xác nhận:
 - Nhận đầy đủ HTTP request log được chuyển tiếp từ CloudFront.
 
 ![Log Backend được tập trung trên Amazon CloudWatch](/images/5-Workshop/5.4/5.4.10.3.png)
-*Hình 5.4.10.3 — Nhật ký hệ thống Log Stream Backend được tập trung trên CloudWatch Log Groups.*
+<p align="center"><i>Hình 5.4.10.3 — Nhật ký hệ thống Log Stream Backend được tập trung trên CloudWatch Log Groups.</i></p>
 
 ---
 
@@ -87,4 +87,4 @@ https://d2onzy56n3iw1w.cloudfront.net
 5. **Thi Quiz & AI Assistant:** Thực hiện bài thi Quiz trắc nghiệm và tương tác hỏi đáp trực tiếp với AI Assistant.
 
 ![Sản phẩm LearnSphere sau khi triển khai hoàn chỉnh lên AWS](/images/5-Workshop/5.4/5.4.10.4.png)
-*Hình 5.4.10.4 — Trải nghiệm ứng dụng LearnSphere vận hành hoàn chỉnh trên hạ tầng AWS Production.*
+<p align="center"><i>Hình 5.4.10.4 — Trải nghiệm ứng dụng LearnSphere vận hành hoàn chỉnh trên hạ tầng AWS Production.</i></p>

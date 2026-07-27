@@ -32,7 +32,7 @@ Hệ thống LearnSphere tiếp tục sử dụng **MongoDB Atlas** làm hệ qu
 3. Bấm **Confirm** để lưu quy tắc Network Access List.
 
 ![MongoDB Atlas được sử dụng làm cơ sở dữ liệu production](/images/5-Workshop/5.4/5.4.6.png)
-*Hình 5.4.6 — Quản trị CSDL MongoDB Atlas Cluster và phân quyền truy cập cho máy chủ EC2.*
+<p align="center"><i>Hình 5.4.6 — Quản trị CSDL MongoDB Atlas Cluster và phân quyền truy cập cho máy chủ EC2.</i></p>
 
 ---
 
