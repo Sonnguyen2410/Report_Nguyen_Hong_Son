@@ -1,6 +1,6 @@
 ---
 title: "Worklog Tuần 1"
-date: 2026-06-19
+date: 2026-07-27
 weight: 1
 chapter: false
 pre: " <b> 1.1. </b> "
@@ -8,7 +8,7 @@ pre: " <b> 1.1. </b> "
 
 ## Chủ đề: Onboarding, Tìm hiểu AWS VPC/IAM & Thiết kế Database Schema cho LearnSphere
 
-### 1. Mục tiêu tuần 1
+### 1. Mục tiêu tuần 1 (01/06/2026 – 05/06/2026)
 * Tham gia Onboarding chương trình **AWS First Cloud AI Journey (FCAJ)** và nhận tài nguyên máy chủ/tài khoản thực hành.
 * Nắm vững kiến thức nền tảng về mạng đám mây AWS VPC, cơ chế bảo mật AWS IAM và cách kết nối MongoDB Atlas.
 * Hoàn thành thiết kế cấu trúc dữ liệu (Database Schema) gồm 11 Mongoose Models cho hệ thống LearnSphere.
@@ -20,11 +20,11 @@ pre: " <b> 1.1. </b> "
 
 | Ngày | Công việc thực hiện chi tiết | Đạt được / Sản phẩm |
 |---|---|---|
-| **Thứ 2 (15/06/2026)** | • Tham gia buổi họp Onboarding khởi động kỳ thực tập với Ban Quản lý FCAJ và Mentor.<br>• Tiếp nhận tài khoản AWS Sandbox, thiết lập cấu hình AWS CLI v2 trên máy cá nhân.<br>• Thảo luận với Mentor về mục tiêu và yêu cầu bài toán dự án E-Learning LearnSphere. | • Tiếp nhận môi trường AWS thành công.<br>• Thống nhất định hướng bài toán LearnSphere. |
-| **Thứ 3 (16/06/2026)** | • Tìm hiểu kiến thức chuyên sâu về mạng ảo AWS VPC (Virtual Private Cloud).<br>• Phân tích sự khác biệt giữa Public Subnet và Private Subnet.<br>• Nghiên cứu cơ chế điều hướng giao thông mạng qua Internet Gateway (IGW) và Route Table.<br>• Học cách thiết lập luật Security Group cho các cổng (22, 80, 443, 5000). | • Nắm vững sơ đồ kiến trúc mạng VPC.<br>• Bảng quy hoạch cổng Security Group. |
-| **Thứ 4 (17/06/2026)** | • Tìm hiểu dịch vụ AWS IAM (Identity and Access Management): User, Group, Role, Policy.<br>• Đào sâu nguyên tắc cấp quyền tối thiểu (*Principle of Least Privilege*).<br>• Khởi tạo Cluster M0 miễn phí trên MongoDB Atlas, thiết lập IP Access List và kết nối từ local. | • Hiểu rõ cơ chế phân quyền IAM.<br>• Khởi tạo kết nối MongoDB Atlas thành công. |
-| **Thứ 5 (18/06/2026)** | • Khởi tạo cấu trúc thư mục Monorepo `LearnSphere` chứa `LearnSphere_BE` và `LearnSphere_FE`.<br>• Tiến hành thiết kế 11 tệp Mongoose Model quản lý dữ liệu hệ thống (User, Course, Lesson, Enrollment, LessonProgress, Quiz, QuizAttempt, AIMessage, CourseDiscussion, Notification, RequestMetric). | • Cấu hình xong khung dự án Monorepo.<br>• Hoàn thành mã nguồn 11 Mongoose Models. |
-| **Thứ 6 (19/06/2026)** | • Soạn thảo tài liệu chuẩn hóa danh sách các API Endpoints (`API_DESIGN.md`).<br>• Kiểm thử kết nối chuỗi mã hóa SRV MongoDB Atlas từ Node.js Express Backend.<br>• Tham gia họp Review tiến độ tuần 1 với Mentor và ghi nhận feedback. | • Tài liệu `API_DESIGN.md` hoàn chỉnh.<br>• Báo cáo tiến độ tuần 1 đạt yêu cầu. |
+| **Thứ 2 (01/06/2026)** | • Tham gia buổi họp Onboarding khởi động kỳ thực tập với Ban Quản lý FCAJ và Mentor.<br>• Tiếp nhận tài khoản AWS Sandbox, thiết lập cấu hình AWS CLI v2 trên máy cá nhân.<br>• Thảo luận với Mentor về mục tiêu và yêu cầu bài toán dự án E-Learning LearnSphere. | • Tiếp nhận môi trường AWS thành công.<br>• Thống nhất định hướng bài toán LearnSphere. |
+| **Thứ 3 (02/06/2026)** | • Tìm hiểu kiến thức chuyên sâu về mạng ảo AWS VPC (Virtual Private Cloud).<br>• Phân tích sự khác biệt giữa Public Subnet và Private Subnet.<br>• Nghiên cứu cơ chế điều hướng giao thông mạng qua Internet Gateway (IGW) và Route Table.<br>• Học cách thiết lập luật Security Group cho các cổng (22, 80, 443, 5000). | • Nắm vững sơ đồ kiến trúc mạng VPC.<br>• Bảng quy hoạch cổng Security Group. |
+| **Thứ 4 (03/06/2026)** | • Tìm hiểu dịch vụ AWS IAM (Identity and Access Management): User, Group, Role, Policy.<br>• Đào sâu nguyên tắc cấp quyền tối thiểu (*Principle of Least Privilege*).<br>• Khởi tạo Cluster M0 miễn phí trên MongoDB Atlas, thiết lập IP Access List và kết nối từ local. | • Hiểu rõ cơ chế phân quyền IAM.<br>• Khởi tạo kết nối MongoDB Atlas thành công. |
+| **Thứ 5 (04/06/2026)** | • Khởi tạo cấu trúc thư mục Monorepo `LearnSphere` chứa `LearnSphere_BE` và `LearnSphere_FE`.<br>• Tiến hành thiết kế 11 tệp Mongoose Model quản lý dữ liệu hệ thống (User, Course, Lesson, Enrollment, LessonProgress, Quiz, QuizAttempt, AIMessage, CourseDiscussion, Notification, RequestMetric). | • Cấu hình xong khung dự án Monorepo.<br>• Hoàn thành mã nguồn 11 Mongoose Models. |
+| **Thứ 6 (05/06/2026)** | • Soạn thảo tài liệu chuẩn hóa danh sách các API Endpoints (`API_DESIGN.md`).<br>• Kiểm thử kết nối chuỗi mã hóa SRV MongoDB Atlas từ Node.js Express Backend.<br>• Tham gia họp Review tiến độ tuần 1 với Mentor và ghi nhận feedback. | • Tài liệu `API_DESIGN.md` hoàn chỉnh.<br>• Báo cáo tiến độ tuần 1 đạt yêu cầu. |
 
 ---
 

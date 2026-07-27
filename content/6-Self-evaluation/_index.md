@@ -6,7 +6,7 @@ chapter: false
 pre: " <b> 6. </b> "
 ---
 
-Throughout my internship at AWS First Cloud AI Journey (FCAJ) from June 15, 2026 to August 14, 2026, I had the invaluable opportunity to learn, practice, and apply academic knowledge acquired at university into a real-world enterprise engineering environment.
+Throughout my internship at AWS First Cloud AI Journey (FCAJ) from June 01, 2026 to July 31, 2026, I had the invaluable opportunity to learn, practice, and apply academic knowledge acquired at university into a real-world enterprise engineering environment.
 
 I directly participated in the **LearnSphere AWS Cloud Deployment and Operations Project**, executing key technical tasks such as: Multi-stage Docker container packaging, IAM/OIDC security permission setup, CloudFront CDN and S3 static media distribution architecture, automated CI/CD pipeline construction, and CloudWatch/SNS system monitoring configuration. Through these contributions, I significantly enhanced my technical proficiency in Cloud Computing (AWS), DevOps methodologies, and engineering documentation.
 
