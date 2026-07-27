@@ -26,8 +26,7 @@ pre: " <b> 5.1. </b> "
 | Resource | Link (URL) | Description |
 | --- | --- | --- |
 | 🌐 **Live Website** | [https://sonnguyen2410.github.io/Report_Nguyen_Hong_Son/](https://sonnguyen2410.github.io/Report_Nguyen_Hong_Son/) | Direct access to live report and running application |
-| 🐙 **LearnSphere Repo (Public)** | [https://github.com/HoiaeKHMT/LearnSphere](https://github.com/HoiaeKHMT/LearnSphere) | LearnSphere application source code (Backend Express.js & Frontend React Monorepo) |
-| 🐙 **Report Repo** | [https://github.com/Sonnguyen2410/Report_Nguyen_Hong_Son](https://github.com/Sonnguyen2410/Report_Nguyen_Hong_Son) | Hugo report site source code and deployment CI/CD workflows |
+| 🐙 **GitHub Repository** | [https://github.com/HoiaeKHMT/LearnSphere](https://github.com/HoiaeKHMT/LearnSphere) | LearnSphere application source code (Backend Express.js & Frontend React Monorepo) |
 | 🎬 **Video Demo** | [Watch Demo Video on Google Drive](https://drive.google.com/file/d/1J6heEzrB1jZO3C5Z3tuz1LBwdkRozMh4/view) | System walkthrough & feature demonstration video |
 
 ---
