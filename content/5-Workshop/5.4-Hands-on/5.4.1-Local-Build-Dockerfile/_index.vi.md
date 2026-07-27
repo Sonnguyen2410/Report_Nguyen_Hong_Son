@@ -140,3 +140,4 @@ docker stop test-be && docker rm test-be
 ```
 
 ![Đóng gói Backend LearnSphere thành Docker image](/images/5-Workshop/5.4/5.4.1.png)
+*Hình 5.4.1 — Kiểm tra mã nguồn và đóng gói Backend LearnSphere thành Docker image.*

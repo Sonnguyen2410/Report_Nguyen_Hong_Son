@@ -28,6 +28,7 @@ This bucket handles storage for all system media assets:
 6. Click **Create bucket**.
 
 ![Creating S3 Media Bucket learnsphere-media](/images/5-Workshop/5.4/5.4.3.1.1.png)
+*Figure 5.4.3.1a — Creating Private S3 Media Bucket learnsphere-media.*
 
 #### CORS Configuration:
 
@@ -54,6 +55,7 @@ Because the Frontend React app running on CloudFront uploads media directly to S
 > **Important Note:** Exposing the `ETag` header (`ExposeHeaders: ["ETag"]`) is mandatory for the browser to read upload checksums during S3 Multipart Uploads of large video files.
 
 ![CORS configuration enabling browser uploads/downloads via presigned URLs](/images/5-Workshop/5.4/5.4.3.1.2.png)
+*Figure 5.4.3.1b — CORS configuration enabling browser uploads/downloads via Presigned URLs.*
 
 ---
 
@@ -69,5 +71,6 @@ This bucket stores compiled React SPA static assets (`index.html`, JavaScript, C
 6. Click **Create bucket**.
 
 ![Private S3 bucket for storing compiled Frontend build](/images/5-Workshop/5.4/5.4.3.2.png)
+*Figure 5.4.3.2 — Private S3 Bucket for storing compiled Frontend static build assets.*
 
 > **Note:** This bucket remains 100% Private. Read permissions will be granted exclusively to CloudFront Origin Access Control (OAC) in **Step 7A**.

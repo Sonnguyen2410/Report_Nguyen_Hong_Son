@@ -52,6 +52,7 @@ After Distribution creation, copy the generated OAC Bucket Policy banner and upd
 ```
 
 ![Bucket policy updated after creating CloudFront OAC](/images/5-Workshop/5.4/5.4.7.A.png)
+*Figure 5.4.7.A — Updating S3 Bucket Policy granting read permissions to CloudFront OAC.*
 
 ---
 
@@ -64,6 +65,7 @@ After Distribution creation, copy the generated OAC Bucket Policy banner and upd
 3. **Protocol Policy:** `HTTP Only`, Port `5000`.
 
 ![Dual origins Frontend and Backend on CloudFront distribution](/images/5-Workshop/5.4/5.4.7.B.1.png)
+*Figure 5.4.7.B.1 — List of dual origins (S3 Frontend and EC2 Backend) on CloudFront Distribution.*
 
 #### 7B.2. Create Behavior `/api/*`
 
@@ -78,6 +80,7 @@ After Distribution creation, copy the generated OAC Bucket Policy banner and upd
 > **Benefit:** Browser calls `/api/*` on the single CloudFront domain, CloudFront reverse-proxies to EC2 port 5000, **completely eliminating CORS and Mixed Content errors**.
 
 ![CloudFront routing configuration for Frontend and Backend API](/images/5-Workshop/5.4/5.4.7.B.2.png)
+*Figure 5.4.7.B.2 — CloudFront Behavior rules separating Frontend (`/*`) and Backend API (`/api/*`).*
 
 #### 7B.3. Attach CloudFront Function for Client-Side SPA Routing
 
@@ -99,6 +102,7 @@ function handler(event) {
 > Associate this function with **Viewer Request** events on the Default Behavior `/*`.
 
 ![CloudFront Function supporting client-side SPA routing](/images/5-Workshop/5.4/5.4.7.B.3.png)
+*Figure 5.4.7.B.3 — CloudFront Function rewriting sub-path requests to /index.html for React Router.*
 
 #### 7B.4. Record CloudFront Details
 

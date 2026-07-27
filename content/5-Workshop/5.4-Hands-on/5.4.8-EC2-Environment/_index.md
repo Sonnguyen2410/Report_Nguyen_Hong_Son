@@ -67,6 +67,7 @@ sudo awk -F= '
 > **Expected Result:** All required variables display `OK: VARIABLE_NAME`.
 
 ![Verifying production environment variables on EC2](/images/5-Workshop/5.4/5.4.8.3.png)
+*Figure 5.4.8.3 — Verifying production environment variable declarations on EC2 via awk script.*
 
 ---
 
@@ -91,3 +92,4 @@ aws s3api head-bucket --bucket learnsphere-media-575620421319
 > This proves EC2 is receiving short-lived temporary credentials from the `LearnSphereEc2Role` IAM Role via IMDSv2.
 
 ![EC2 receiving temporary credentials from IAM Role](/images/5-Workshop/5.4/5.4.8.4.png)
+*Figure 5.4.8.4 — Verifying EC2 receiving temporary credentials safely from IAM Role via IMDSv2.*

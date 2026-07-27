@@ -52,6 +52,7 @@ curl -fsS http://127.0.0.1:5000/health/ready
 ```
 
 ![Backend container running healthy and connected to MongoDB](/images/5-Workshop/5.4/5.4.10.2.png)
+*Figure 5.4.10.2 — Backend container operating healthily and verified connection to MongoDB Atlas.*
 
 ---
 
@@ -66,6 +67,7 @@ Confirm:
 - Receives inbound HTTP request logs forwarded from CloudFront.
 
 ![Backend logs aggregated in Amazon CloudWatch](/images/5-Workshop/5.4/5.4.10.3.png)
+*Figure 5.4.10.3 — Centralized system log streams aggregated in CloudWatch Log Groups.*
 
 ---
 
@@ -85,3 +87,4 @@ https://d2onzy56n3iw1w.cloudfront.net
 5. **Quiz Exams & AI Assistant:** Complete quiz examinations and test AI Assistant interactions.
 
 ![LearnSphere application operating on AWS Production environment](/images/5-Workshop/5.4/5.4.10.4.png)
+*Figure 5.4.10.4 — LearnSphere web application operating live on AWS Production infrastructure.*

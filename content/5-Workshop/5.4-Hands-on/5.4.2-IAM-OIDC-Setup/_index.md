@@ -23,6 +23,7 @@ The OIDC mechanism enables GitHub Actions to fetch short-lived temporary credent
 5. Click **Add provider** to finish.
 
 ![Configuring GitHub OIDC Provider in AWS IAM](/images/5-Workshop/5.4/5.4.2.1.png)
+*Figure 5.4.2.1 — Configuring GitHub OIDC Provider in AWS IAM.*
 
 ---
 
@@ -57,6 +58,7 @@ The OIDC mechanism enables GitHub Actions to fetch short-lived temporary credent
 ```
 
 ![Trust policy restricting GitHub repository allowed to assume role](/images/5-Workshop/5.4/5.4.2.2.1.png)
+*Figure 5.4.2.2a — Trust policy constraining access strictly to the GitHub main branch.*
 
 5. Attach minimal permissions (**Least Privilege**):
    - Push Docker Images to ECR repository `learnsphere-be`.
@@ -65,6 +67,7 @@ The OIDC mechanism enables GitHub Actions to fetch short-lived temporary credent
    - Send `AWS-RunShellScript` commands to the EC2 server via AWS Systems Manager (SSM).
 
 ![Deployment permissions attached to GitHub Actions](/images/5-Workshop/5.4/5.4.2.2.2.png)
+*Figure 5.4.2.2b — Deployment permission policies attached to GitHub Actions.*
 
 ---
 
@@ -82,3 +85,4 @@ This role is attached directly to the EC2 Instance Profile, allowing the Backend
    - **Amazon Bedrock Policy:** Grants `InvokeModel` and `InvokeModelWithResponseStream`.
 
 ![IAM Role providing AWS permissions for Backend on EC2](/images/5-Workshop/5.4/5.4.2.3.png)
+*Figure 5.4.2.3 — IAM Role providing automated temporary credentials for Node.js Backend on EC2.*

@@ -25,6 +25,7 @@ learnsphere-be
 6. Click **Create repository**.
 
 ![Docker images of Backend stored on Amazon ECR](/images/5-Workshop/5.4/5.4.4.png)
+*Figure 5.4.4 — Private ECR Repository storing and vulnerability-scanning Backend Docker images.*
 
 ---
 

@@ -31,6 +31,7 @@ In this step, practitioners launch an **Amazon EC2** instance, attach an IAM Ins
 5. Click **Launch instance**.
 
 ![Launching EC2 instance for LearnSphere Backend](/images/5-Workshop/5.4/5.4.5.1.png)
+*Figure 5.4.5.1 — Launching t3.small EC2 server with attached IAM Role and Security Group.*
 
 ---
 
@@ -74,6 +75,7 @@ free -h
 > **Result:** `free -h` shows ~1.9 GB Physical RAM and 2.0 GB Swap RAM active.
 
 ![Docker environment and Swap memory allocation on EC2](/images/5-Workshop/5.4/5.4.5.2.png)
+*Figure 5.4.5.2 — Docker Engine runtime environment and 2.0GB Swap RAM memory configured successfully.*
 
 ---
 

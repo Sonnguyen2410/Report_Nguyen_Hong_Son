@@ -31,6 +31,7 @@ All monitoring resources in this step are provisioned in the **Singapore (`ap-so
 4. Confirm in SNS Console that the Subscription displays a valid ARN and is no longer `Pending confirmation`.
 
 ![SNS Topic channel dispatching LearnSphere operations alerts via email](/images/5-Workshop/5.4/5.4.11.2.png)
+*Figure 5.4.11.2 — SNS Topic channel dispatching operational alert notifications to confirmed administrator emails.*
 
 ---
 
@@ -49,6 +50,7 @@ All monitoring resources in this step are provisioned in the **Singapore (`ap-so
 6. Click **Create alarm**.
 
 ![CloudWatch tracking EC2 CPU and alerting when exceeding 80% for 10 minutes](/images/5-Workshop/5.4/5.4.11.3.png)
+*Figure 5.4.11.3 — CloudWatch Alarm monitoring EC2 CPU utilization and triggering alerts when exceeding 80%.*
 
 ---
 
@@ -66,6 +68,7 @@ All monitoring resources in this step are provisioned in the **Singapore (`ap-so
 5. Click **Create alarm**.
 
 ![CloudWatch detecting EC2 status check failure and dispatching SNS notification](/images/5-Workshop/5.4/5.4.11.4.png)
+*Figure 5.4.11.4 — CloudWatch Alarm detecting EC2 hardware/network failures and pushing urgent alerts via SNS.*
 
 ---
 

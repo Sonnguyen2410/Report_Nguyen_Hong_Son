@@ -25,6 +25,7 @@ Open GitHub Repository $\rightarrow$ **Settings** $\rightarrow$ **Secrets and va
 > **No Static Access Keys:** Do NOT declare `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, or `EC2_SSH_KEY` because the deployment workflow relies 100% on **OIDC** authentication and **AWS Systems Manager (SSM)** remote execution.
 
 ![Configuration secrets used by the CI/CD pipeline](/images/5-Workshop/5.4/5.4.9.1.png)
+*Figure 5.4.9.1 — Declaring Repository Secrets used by the CI/CD deployment pipeline.*
 
 ---
 
@@ -133,6 +134,7 @@ jobs:
 ```
 
 ![Automated CI/CD workflow of LearnSphere](/images/5-Workshop/5.4/5.4.9.2.png)
+*Figure 5.4.9.2 — Automated execution flow of the deploy.yml workflow.*
 
 ---
 
@@ -147,6 +149,7 @@ git push origin main
 ```
 
 ![Backend and Frontend deployment pipeline completed successfully](/images/5-Workshop/5.4/5.4.9.3.png)
+*Figure 5.4.9.3 — GitHub Actions pipeline completed successfully for both Backend and Frontend jobs.*
 
 #### Troubleshooting Initial OIDC Errors:
 If you encounter `Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWebIdentity`, verify that the IAM Trust Policy for `LearnSphereGitHubDeployRole` matches your exact repository string `repo:username/repository:ref:refs/heads/main`. Click **Re-run jobs** on GitHub Actions to complete the deployment.

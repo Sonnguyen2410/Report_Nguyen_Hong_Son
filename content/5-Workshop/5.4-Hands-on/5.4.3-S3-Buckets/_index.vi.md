@@ -28,6 +28,7 @@ Bucket này đảm nhận việc lưu trữ toàn bộ các tệp truyền thôn
 6. Bấm **Create bucket**.
 
 ![Tạo S3 Media Bucket learnsphere-media](/images/5-Workshop/5.4/5.4.3.1.1.png)
+*Hình 5.4.3.1a — Tạo S3 Bucket riêng tư lưu trữ dữ liệu Media.*
 
 #### Cấu hình CORS (Cross-Origin Resource Sharing):
 
@@ -54,6 +55,7 @@ Do Frontend React chạy trên tên miền CloudFront cần thực hiện tải 
 > **Lưu ý quan trọng:** Thông số `ExposeHeaders: ["ETag"]` là bắt buộc để trình duyệt đọc được mã băm ETag, phục vụ quá trình hoàn tất ghép tệp khi tải lên video dung lượng lớn (Multipart Upload).
 
 ![Cấu hình CORS để trình duyệt upload/download media bằng presigned URL](/images/5-Workshop/5.4/5.4.3.1.2.png)
+*Hình 5.4.3.1b — Cấu hình CORS để trình duyệt upload/download media bằng Presigned URL.*
 
 ---
 
@@ -69,5 +71,6 @@ Bucket này chuyên dùng để lưu trữ các tệp tĩnh sau khi biên dịch
 6. Bấm **Create bucket**.
 
 ![S3 bucket riêng tư dùng để lưu bản build Frontend](/images/5-Workshop/5.4/5.4.3.2.png)
+*Hình 5.4.3.2 — S3 Bucket riêng tư dùng để lưu các tệp tĩnh bản build Frontend.*
 
 > **Lưu ý:** Bucket này giữ ở trạng thái Private 100%. Phân quyền truy cập sẽ được cấp duy nhất cho CloudFront Origin Access Control (OAC) ở **Bước 7A**.

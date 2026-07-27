@@ -31,6 +31,7 @@ Trong bước này, người thực hiện sẽ khởi tạo máy chủ **Amazon
 5. Bấm **Launch instance**.
 
 ![Khởi tạo EC2 instance chạy Backend LearnSphere](/images/5-Workshop/5.4/5.4.5.1.png)
+*Hình 5.4.5.1 — Khởi tạo máy chủ EC2 t3.small gắn IAM Role và Security Group bảo mật.*
 
 ---
 
@@ -74,6 +75,7 @@ free -h
 > **Kết quả:** Lệnh `free -h` hiển thị khoảng 1.9 GB RAM vật lý và 2.0 GB Swap sẵn sàng sử dụng.
 
 ![Môi trường Docker và tài nguyên bộ nhớ Swap trên EC2](/images/5-Workshop/5.4/5.4.5.2.png)
+*Hình 5.4.5.2 — Môi trường Docker Engine và tài nguyên bộ nhớ ảo Swap 2.0GB được cấu hình thành công.*
 
 ---
 
