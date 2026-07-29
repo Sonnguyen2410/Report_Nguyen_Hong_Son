@@ -8,7 +8,7 @@ pre: " <b> 3.1. </b> "
 
 # [AWS ARCHITECTURE] SYSTEM ARCHITECTURE ANALYSIS OF AI-INTEGRATED LEARNING PLATFORM (LEARNSPHERE)
 
-> 🔗 **Original Post on AWS Study Group:** [https://www.facebook.com/groups/awsstudygroupfcj/permalink/2222081271890166/](https://www.facebook.com/groups/awsstudygroupfcj/permalink/2222081271890166/)
+
 
 Hello everyone in the AWS Study Group community,
 
@@ -81,4 +81,4 @@ Our team is also considering several optimization points for future iterations:
 
 Does anyone in the group have feedback or suggestions for our LearnSphere project architecture model? We look forward to receiving your thoughts and discussing further!
 
-👉 **View and discuss the post on Facebook Group:** [https://www.facebook.com/groups/awsstudygroupfcj/permalink/2222081271890166/](https://www.facebook.com/groups/awsstudygroupfcj/permalink/2222081271890166/)
+**Original Facebook Post:** [AWS Study Group Post](https://www.facebook.com/groups/awsstudygroupfcj/permalink/2222081271890166/)

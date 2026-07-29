@@ -8,8 +8,6 @@ pre: " <b> 3.1. </b> "
 
 # [AWS ARCHITECTURE] PHÂN TÍCH KIẾN TRÚC HỆ THỐNG PLATFORM HỌC TẬP TÍCH HỢP AI (LEARNSPHERE)
 
-> 🔗 **Bài viết gốc trên AWS Study Group:** [https://www.facebook.com/groups/awsstudygroupfcj/permalink/2222081271890166/](https://www.facebook.com/groups/awsstudygroupfcj/permalink/2222081271890166/)
-
 Chào mọi người trong cộng đồng AWS Study Group,
 
 Hôm nay mình xin chia sẻ bài viết phân tích chi tiết sơ đồ kiến trúc hệ thống backend & frontend cho dự án LearnSphere / AI Learning Platform mà nhóm mình vừa thiết kế.
@@ -81,4 +79,4 @@ Nhóm mình cũng đang cân nhắc một số điểm tối ưu cho các phiên
 
 Mọi người trong group có nhận xét hoặc đóng góp gì cho mô hình kiến trúc dự án LearnSphere này của nhóm mình không? Rất mong nhận được phản hồi và trao đổi từ anh em!
 
-👉 **Xem và thảo luận bài viết trên Facebook Group:** [https://www.facebook.com/groups/awsstudygroupfcj/permalink/2222081271890166/](https://www.facebook.com/groups/awsstudygroupfcj/permalink/2222081271890166/)
+**Nguồn bài viết trên Facebook:** [AWS Study Group Post](https://www.facebook.com/groups/awsstudygroupfcj/permalink/2222081271890166/)
