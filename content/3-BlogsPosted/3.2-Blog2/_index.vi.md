@@ -6,65 +6,80 @@ chapter: false
 pre: " <b> 3.2. </b> "
 ---
 
-# [AWS Troubleshooting] Xử Lý Triệt Để Lỗi CORS Và Routing Khi Đặt CloudFront Đứng Trước EC2 Backend
+# Tại sao nhóm mình không dùng Amazon Bedrock Knowledge Bases dù đang làm chatbot RAG?
 
-Chào mọi người trong AWS Study Group,
+Chào mọi người,
 
-Khi xây dựng ứng dụng web với kiến trúc tách biệt: Frontend hosted trên S3 + CloudFront và Backend REST API chạy trên EC2 Instance, một trong những "cơn ác mộng" phổ biến nhất mà các dev hay gặp phải chính là Lỗi CORS (Cross-Origin Resource Sharing) và mất Query Parameters/Headers khi request đi qua CloudFront.
+Trong quá trình làm dự án chatbot hỏi đáp tài liệu (RAG), nhóm mình sử dụng Amazon Bedrock để gọi Claude trả lời câu hỏi dựa trên các tài liệu người dùng upload. Khi tìm hiểu cách xây dựng RAG trên AWS, mình thấy hầu như tài liệu nào cũng nhắc đến Knowledge Bases for Amazon Bedrock.
 
-Nhiều bạn thường chọn giải pháp "nhanh gọn" là bật `Access-Control-Allow-Origin: *` ở phía backend. Tuy nhiên, cách này tạo ra lỗ hổng bảo mật nghiêm trọng và chưa chắc đã giải quyết tận gốc vấn đề nếu cấu hình CloudFront Behavior bị sai.
+Điều này cũng dễ hiểu. Knowledge Bases gần như làm thay toàn bộ pipeline RAG:
+* đọc tài liệu
+* chunk
+* tạo embedding
+* lưu vector
+* retrieval
 
-Bài viết này chia sẻ cách nhóm mình phân tích nguyên nhân cốt lõi và cấu hình chuẩn mực trên AWS để xử lý triệt để bài toán này.
+Nghe rất hấp dẫn. Ban đầu mình cũng nghĩ: "Vậy cần gì phải tự xây nữa?" Nhưng sau khi đọc AWS Blog và đối chiếu với kiến trúc của nhóm, tụi mình lại quyết định không sử dụng Knowledge Bases mà vẫn tự xây pipeline với FAISS.
 
-## 1. Bản Chất Nguyên Nhân Phát Sinh Lỗi
+## Knowledge Bases giúp làm gì?
 
-Khi Client (trình duyệt) gọi API, luồng dữ liệu diễn ra như sau:
-* **Client Origin:** [https://app.learnsphere.com](https://app.learnsphere.com) (Phục vụ từ CloudFront + S3)
-* **Backend Origin:** [https://api.learnsphere.com](https://api.learnsphere.com) hoặc IP của EC2 Instance.
+AWS mô tả Knowledge Bases là một dịch vụ Fully Managed RAG.
 
-Trình duyệt sẽ tự động gửi một Preflight Request (HTTP OPTIONS) để hỏi server backend xem domain frontend có được phép truy cập tài nguyên hay không.
+Chỉ cần chỉ định nơi lưu tài liệu (ví dụ Amazon S3), Bedrock sẽ tự động:
+* đọc tài liệu
+* chia nhỏ nội dung
+* tạo embedding
+* lưu vector database
+* truy xuất context
+* gửi context cho Foundation Model
 
-**3 "bẫy" cấu hình thường gặp trên AWS:**
-* **CloudFront nuốt mất OPTIONS Request:** Mặc định, CloudFront Behavior chỉ cho phép các HTTP Method cơ bản (GET, HEAD). Các request OPTIONS bị chặn ngay tại Edge Location và không bao giờ tới được EC2.
-* **CloudFront không Forward Origin Header:** CloudFront mặc định không chuyển header `Origin`, `Access-Control-Request-Method` từ Client về cho EC2 Backend. Kết quả là Backend không biết client đến từ đâu để trả về CORS header tương ứng.
-* **Cache nhầm CORS Response:** CloudFront cache lại phản hồi của API. Nếu request đầu tiên từ Client A không có CORS header và bị cache lại, tất cả Client B sau đó cũng sẽ dính lỗi CORS do nhận lại bản cache lỗi này.
+Nói cách khác, rất nhiều bước mà developer thường phải tự viết đã được AWS tự động hóa.
 
-## 2. Giải Pháp Cấu Hình Chuẩn Trên AWS CloudFront
+## Ban đầu mình định dùng luôn
 
-Để xử lý tận gốc mà không cần hạ thấp tiêu chuẩn bảo mật, cấu hình CloudFront Behavior dành riêng cho path `/api/*` (trỏ về EC2 Origin) cần được thiết lập đúng các thông số sau:
+Lúc mới đọc tài liệu mình nghĩ đây gần như là lựa chọn hoàn hảo.
 
-**Bước 1: Cho phép đầy đủ HTTP Methods**
-Trong mục Allowed HTTP Methods, chuyển từ `GET, HEAD` sang `GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE`.
-Điều này đảm bảo CloudFront chuyển tiếp toàn bộ Preflight request về cho EC2 xử lý.
+* Không cần FAISS.
+* Không cần viết pipeline ingest.
+* Không cần quản lý vector database.
 
-**Bước 2: Bật Cấu Hình Forward Headers (Origin & Authorization)**
-Tại mục Cache Key and Origin Requests, chọn cấu hình Custom / Cache Policy:
-Thêm các Header bắt buộc phải Forward gồm: `Origin`, `Access-Control-Request-Method`, `Access-Control-Request-Headers`, và `Authorization` (nếu dùng Bearer Token).
-Việc này giúp EC2 Backend nhận diện chính xác domain nguồn và phản hồi đúng chuỗi `Access-Control-Allow-Origin`.
+Mọi thứ đều có sẵn.
 
-**Bước 3: Sử dụng Response Headers Policy (Khuyên Dùng)**
-Thay vì xử lý CORS phức tạp ở từng đoạn code trong ứng dụng trên EC2, AWS cung cấp tính năng Response Headers Policy ngay tại CloudFront:
-* Bạn tạo một CORS Response Headers Policy trong CloudFront Console.
-* Định nghĩa rõ ràng:
-  * `Allow-Origin`: Chỉ điền domain chính thức của Frontend.
-  * `Allow-Credentials`: `true` (nếu dùng Cookie/Session).
-  * `Allow-Headers` & `Allow-Methods`: Tương ứng với nhu cầu hệ thống.
-* Gán Policy này vào Behavior của CloudFront. CloudFront sẽ tự động đính kèm các header CORS chuẩn mực vào mọi phản hồi trả về cho Client.
+## Nhưng khi nhìn lại dự án...
 
-## 3. Cấu Hình Tối Ưu Security Group Cho EC2
+Đây mới là điều khiến nhóm mình thay đổi quyết định. Chatbot của nhóm không chỉ upload PDF. Người dùng còn upload:
+* PDF scan
+* DOCX
+* tài liệu có bảng
+* tài liệu có ảnh
 
-Sau khi CloudFront đã xử lý chuẩn luồng traffic, bước tiếp theo là bảo mật cho EC2 Backend:
-* **Không mở Public 0.0.0.0/0 tràn lan:** Chỉ mở port HTTP/HTTPS cho các dải IP đại diện của CloudFront (sử dụng AWS Managed Prefix List cho CloudFront) hoặc chỉ nhận traffic thông qua Application Load Balancer (ALB).
-* **Đảm bảo Health Check:** Cấu hình đường dẫn `/health` hoặc `/ping` trên EC2 để CloudFront/ALB kiểm tra trạng thái hoạt động của container.
+Có những file phải OCR trước, file phải xử lý riêng, file cần chunk theo heading, file cần chunk theo section. Nếu dùng Knowledge Bases thì phần ingest sẽ được AWS quản lý. Trong khi nhóm mình lại muốn kiểm soát toàn bộ pipeline.
 
-## 4. Kết Quả Mang Lại
+## Đây là lý do nhóm mình chọn FAISS
 
-* **Xử lý dứt điểm 100% lỗi CORS:** Hệ thống chạy mượt mà trên mọi trình duyệt mà không cần tắt các chế độ bảo mật khắt khe.
-* **Tối ưu khả năng Caching:** Chỉ cache các dữ liệu cần thiết, tránh tình trạng cache sai response header của API.
-* **Tăng cường Security:** Loại bỏ việc dùng wildcard `*` cho CORS Origin, bảo vệ API khỏi các truy cập trái phép từ các domain lạ.
+FAISS khiến nhóm phải tự làm nhiều việc hơn. Nhưng đổi lại nhóm có thể chủ động:
+* tự OCR bằng Textract khi cần
+* tự quyết định cách chunk
+* tự thêm metadata theo user
+* tự xử lý multi-tenant
+* tự cập nhật vector khi user xóa tài liệu
 
-![Blog 2](/images/blog2.png)
+Đây đều là những thứ nhóm mình cần trong dự án.
+
+## Điều mình học được
+
+Sau khi đọc AWS Blog mình nhận ra một điều khá thú vị. Knowledge Bases không phải là "phiên bản tốt hơn" của FAISS. Nó chỉ là một cách khác để xây dựng RAG.
+
+Nếu muốn triển khai nhanh, Knowledge Bases gần như là lựa chọn lý tưởng. Nhưng nếu muốn kiểm soát toàn bộ pipeline ingest và retrieval, việc tự xây vẫn có nhiều lợi thế hơn. Theo mình, không có lựa chọn nào đúng tuyệt đối. Quan trọng là kiến trúc nào phù hợp với yêu cầu của dự án.
+
+## Kết luận
+
+Ban đầu mình nghĩ: AWS đã có Knowledge Bases thì chắc không cần tự xây RAG nữa. Sau khi tìm hiểu kỹ hơn, mình mới nhận ra Knowledge Bases giải quyết rất tốt bài toán triển khai nhanh. Trong khi đó, những dự án cần tùy biến sâu về xử lý tài liệu, chunking, metadata hay retrieval vẫn có lý do để xây dựng pipeline riêng. Với chatbot của nhóm mình, FAISS không phải vì "tốt hơn" Knowledge Bases, mà đơn giản là phù hợp hơn với cách hệ thống đang được thiết kế.
 
 ---
 
-🔗 **Nguồn bài viết trên Facebook:** [AWS Study Group Post](https://www.facebook.com/groups/awsstudygroupfcj/permalink/2227706841327609/#)
+🔗 **LINK BLOG THAM KHẢO**
+AWS News Blog – Knowledge Bases now delivers fully managed RAG experience in Amazon Bedrock:
+[https://aws.amazon.com/vi/blogs/aws/knowledge-bases-now-delivers-fully-managed-rag-experience-in-amazon-bedrock/](https://aws.amazon.com/vi/blogs/aws/knowledge-bases-now-delivers-fully-managed-rag-experience-in-amazon-bedrock/)
+
+🔗 **Nguồn bài viết trên Facebook:** [AWS Study Group Post](https://www.facebook.com/groups/awsstudygroupfcj/posts/2226903721407921?notif_id=1785325801641354&notif_t=tagged_with_story&ref=notif)

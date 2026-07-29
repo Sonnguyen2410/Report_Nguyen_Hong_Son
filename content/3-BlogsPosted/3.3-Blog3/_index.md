@@ -65,4 +65,4 @@ While Exact-match Caching only solves identical questions, the team's next upgra
 
 ---
 
-**Original Facebook Post:** [AWS Study Group Post](https://www.facebook.com/groups/660548818043427)
+**Original Facebook Post:** [AWS Study Group Post](https://www.facebook.com/groups/awsstudygroupfcj/posts/2225879034843723/?notif_id=1785326011357071&notif_t=group_post_approved&ref=notif)

@@ -5,66 +5,80 @@ weight: 1
 chapter: false
 pre: " <b> 3.2. </b> "
 ---
-# [AWS Troubleshooting] Completely Resolving CORS and Routing Errors When Placing CloudFront in Front of an EC2 Backend
+# Why Our Team Didn't Use Amazon Bedrock Knowledge Bases Despite Building a RAG Chatbot
 
+Hello everyone,
 
-Hello everyone in the AWS Study Group,
+While working on a document Q&A chatbot project (RAG), our team used Amazon Bedrock to call Claude to answer questions based on documents uploaded by users. When researching how to build RAG on AWS, I saw that almost every documentation mentioned Knowledge Bases for Amazon Bedrock.
 
-When building a web application with a separated architecture: Frontend hosted on S3 + CloudFront and Backend REST API running on an EC2 Instance, one of the most common "nightmares" that devs encounter is the CORS (Cross-Origin Resource Sharing) Error and the loss of Query Parameters/Headers when requests go through CloudFront.
+This is understandable. Knowledge Bases practically does the entire RAG pipeline for you:
+* reading documents
+* chunking
+* creating embeddings
+* storing vectors
+* retrieval
 
-Many people often choose the "quick and dirty" solution of enabling `Access-Control-Allow-Origin: *` on the backend. However, this creates a serious security vulnerability and may not solve the root problem if the CloudFront Behavior configuration is wrong.
+It sounds very appealing. Initially, I also thought: "So why do we need to build it ourselves?" But after reading the AWS Blog and comparing it with our team's architecture, we decided not to use Knowledge Bases and instead build our own pipeline with FAISS.
 
-This article shares how our team analyzed the root cause and standard configuration on AWS to completely solve this problem.
+## What does Knowledge Bases do?
 
-## 1. The Root Cause of the Error
+AWS describes Knowledge Bases as a Fully Managed RAG service.
 
-When the Client (browser) calls the API, the data flow is as follows:
-* **Client Origin:** [https://app.learnsphere.com](https://app.learnsphere.com) (Served from CloudFront + S3)
-* **Backend Origin:** [https://api.learnsphere.com](https://api.learnsphere.com) or the IP of the EC2 Instance.
+You just need to specify where the documents are stored (e.g., Amazon S3), and Bedrock will automatically:
+* read documents
+* chunk content
+* create embeddings
+* store in a vector database
+* retrieve context
+* send context to the Foundation Model
 
-The browser will automatically send a Preflight Request (HTTP OPTIONS) to ask the backend server if the frontend domain is allowed to access the resource.
+In other words, many steps that developers usually have to write themselves are automated by AWS.
 
-**3 common configuration "traps" on AWS:**
-* **CloudFront swallows the OPTIONS Request:** By default, CloudFront Behavior only allows basic HTTP Methods (GET, HEAD). OPTIONS requests are blocked right at the Edge Location and never reach EC2.
-* **CloudFront does not Forward the Origin Header:** CloudFront defaults to not forwarding the `Origin`, `Access-Control-Request-Method` headers from the Client to the EC2 Backend. As a result, the Backend doesn't know where the client comes from to return the corresponding CORS header.
-* **Mistakenly Caching CORS Response:** CloudFront caches the API response. If the first request from Client A lacks a CORS header and is cached, all subsequent Client Bs will also encounter CORS errors due to receiving this faulty cached version.
+## Initially, I intended to use it right away
 
-## 2. Standard Configuration Solution on AWS CloudFront
+When I first read the documentation, I thought this was almost a perfect choice.
 
-To completely resolve this without lowering security standards, the CloudFront Behavior configuration specifically for the `/api/*` path (pointing to the EC2 Origin) needs to have the following parameters set correctly:
+* No need for FAISS.
+* No need to write an ingest pipeline.
+* No need to manage a vector database.
 
-**Step 1: Allow full HTTP Methods**
-In the Allowed HTTP Methods section, switch from `GET, HEAD` to `GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE`.
-This ensures CloudFront forwards all Preflight requests to EC2 for processing.
+Everything is available.
 
-**Step 2: Enable Forward Headers Configuration (Origin & Authorization)**
-In the Cache Key and Origin Requests section, select the Custom / Cache Policy configuration:
-Add the mandatory headers to Forward including: `Origin`, `Access-Control-Request-Method`, `Access-Control-Request-Headers`, and `Authorization` (if using Bearer Token).
-This helps the EC2 Backend correctly identify the source domain and respond with the correct `Access-Control-Allow-Origin` string.
+## But when looking back at the project...
 
-**Step 3: Use Response Headers Policy (Recommended)**
-Instead of complex CORS handling in every piece of code in the application on EC2, AWS provides the Response Headers Policy feature right at CloudFront:
-* You create a CORS Response Headers Policy in the CloudFront Console.
-* Clearly define:
-  * `Allow-Origin`: Only fill in the official domain of the Frontend.
-  * `Allow-Credentials`: `true` (if using Cookie/Session).
-  * `Allow-Headers` & `Allow-Methods`: Corresponding to system requirements.
-* Attach this Policy to the CloudFront Behavior. CloudFront will automatically attach standard CORS headers to every response returned to the Client.
+This is what made our team change our decision. Our chatbot doesn't just upload PDFs. Users also upload:
+* scanned PDFs
+* DOCX
+* documents with tables
+* documents with images
 
-## 3. Optimal Security Group Configuration for EC2
+Some files need to be OCR'd first, some files need to be processed separately, some files need to be chunked by heading, and some files need to be chunked by section. If we used Knowledge Bases, the ingest part would be managed by AWS. Meanwhile, our team wanted to control the entire pipeline.
 
-After CloudFront has correctly handled the traffic flow, the next step is security for the EC2 Backend:
-* **Do not open Public 0.0.0.0/0 indiscriminately:** Only open port HTTP/HTTPS for the representative IP ranges of CloudFront (use AWS Managed Prefix List for CloudFront) or only receive traffic via an Application Load Balancer (ALB).
-* **Ensure Health Check:** Configure the `/health` or `/ping` path on EC2 for CloudFront/ALB to check the container's operational status.
+## This is why our team chose FAISS
 
-## 4. Resulting Benefits
+FAISS forces our team to do more work. But in return, our team can proactively:
+* self-OCR with Textract when needed
+* decide on the chunking method
+* add metadata per user
+* handle multi-tenant
+* update vectors when users delete documents
 
-* **Completely resolves 100% of CORS errors:** The system runs smoothly on all browsers without having to disable strict security modes.
-* **Optimizes Caching capabilities:** Only caches necessary data, avoiding the situation of caching the wrong API response header.
-* **Enhances Security:** Eliminates the use of wildcard `*` for CORS Origin, protecting the API from unauthorized access from strange domains.
+These are all things our team needs in the project.
 
-![Blog 2](/images/blog2.png)
+## What I learned
+
+After reading the AWS Blog, I realized something quite interesting. Knowledge Bases is not a "better version" of FAISS. It's just a different way to build RAG.
+
+If you want to deploy quickly, Knowledge Bases is almost an ideal choice. But if you want to control the entire ingest and retrieval pipeline, building it yourself still has many advantages. In my opinion, there is no absolutely correct choice. The important thing is which architecture is suitable for the project's requirements.
+
+## Conclusion
+
+Initially, I thought: AWS already has Knowledge Bases, so we probably don't need to build RAG ourselves anymore. After looking into it more carefully, I realized that Knowledge Bases solves the problem of quick deployment very well. Meanwhile, projects that need deep customization in document processing, chunking, metadata, or retrieval still have reasons to build a separate pipeline. For our team's chatbot, FAISS isn't because it's "better" than Knowledge Bases, but simply because it's more suitable for how the system is designed.
 
 ---
 
-🔗 **Original Facebook Post:** [AWS Study Group Post](https://www.facebook.com/groups/awsstudygroupfcj/permalink/2227706841327609/#)
+🔗 **REFERENCE BLOG LINK**
+AWS News Blog – Knowledge Bases now delivers fully managed RAG experience in Amazon Bedrock:
+[https://aws.amazon.com/blogs/aws/knowledge-bases-now-delivers-fully-managed-rag-experience-in-amazon-bedrock/](https://aws.amazon.com/blogs/aws/knowledge-bases-now-delivers-fully-managed-rag-experience-in-amazon-bedrock/)
+
+🔗 **Original Facebook Post:** [AWS Study Group Post](https://www.facebook.com/groups/awsstudygroupfcj/posts/2226903721407921?notif_id=1785325801641354&notif_t=tagged_with_story&ref=notif)
