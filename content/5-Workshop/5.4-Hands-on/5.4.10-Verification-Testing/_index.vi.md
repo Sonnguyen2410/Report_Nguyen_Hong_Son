@@ -76,7 +76,7 @@ Xác nhận:
 Truy cập trực tiếp tên miền sản phẩm chính thức:
 
 ```text
-https://www.learnsphere.id.vn/
+https://www.learnspherev2.id.vn/
 (Hoặc đường dẫn CloudFront HTTPS: https://d2onzy56n3iw1w.cloudfront.net)
 ```
 

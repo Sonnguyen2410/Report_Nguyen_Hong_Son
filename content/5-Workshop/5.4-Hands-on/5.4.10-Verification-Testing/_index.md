@@ -76,7 +76,7 @@ Confirm:
 Navigate directly to the official Production URL:
 
 ```text
-https://www.learnsphere.id.vn/
+https://www.learnspherev2.id.vn/
 (Or CloudFront HTTPS Distribution URL: https://d2onzy56n3iw1w.cloudfront.net)
 ```
 

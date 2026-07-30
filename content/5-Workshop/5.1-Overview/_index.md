@@ -23,7 +23,7 @@ pre: " <b> 5.1. </b> "
 
 | Resource | Link (URL) | Description |
 | --- | --- | --- |
-| 🌐 **Production Product Website** | [https://www.learnsphere.id.vn/](https://www.learnsphere.id.vn/) | Official LearnSphere web application operating live on AWS infrastructure |
+| 🌐 **Production Product Website** | [https://www.learnspherev2.id.vn/](https://www.learnspherev2.id.vn/) | Official LearnSphere web application operating live on AWS infrastructure |
 | 🐙 **GitHub Repository** | [https://github.com/HoiaeKHMT/LearnSphere](https://github.com/HoiaeKHMT/LearnSphere) | LearnSphere source code repository (Express.js Backend & React Frontend Monorepo) |
 | 🎬 **Demo Video** | [Watch Demo Video on Google Drive](https://drive.google.com/file/d/1J6heEzrB1jZO3C5Z3tuz1LBwdkRozMh4/view) | Comprehensive video showcasing platform features and system architecture |
 
@@ -60,4 +60,4 @@ Upon completion, practitioners will master key Cloud-Native and DevOps standards
 
 ### 4. Outcomes Achieved
 
-Upon completing the workshop, the LearnSphere platform will operate fully in Production under the official domain **[https://www.learnsphere.id.vn/](https://www.learnsphere.id.vn/)** (served via CloudFront HTTPS Distribution). All workflows—user registration, authentication, course management, video streaming, quiz exams, and AI Assistant interactions—operate automatically, securely, and with high availability.
+Upon completing the workshop, the LearnSphere platform will operate fully in Production under the official domain **[https://www.learnspherev2.id.vn/](https://www.learnspherev2.id.vn/)** (served via CloudFront HTTPS Distribution). All workflows—user registration, authentication, course management, video streaming, quiz exams, and AI Assistant interactions—operate automatically, securely, and with high availability.
