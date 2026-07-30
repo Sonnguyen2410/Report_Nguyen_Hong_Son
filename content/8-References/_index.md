@@ -15,3 +15,13 @@ During the development of the **LearnSphere** E-Learning project and participati
 | 🌐 **Production Website** | [https://www.learnsphere.id.vn/](https://www.learnsphere.id.vn/) | The official LearnSphere application website currently operating live on AWS infrastructure. |
 | 🐙 **Project Source Code** | [https://github.com/HoiaeKHMT/LearnSphere](https://github.com/HoiaeKHMT/LearnSphere) | The original LearnSphere project source code (includes Backend Express.js & Frontend React in a Monorepo structure). |
 | 🎬 **Video Demo** | [Watch Video Demo on Google Drive](https://drive.google.com/file/d/1J6heEzrB1jZO3C5Z3tuz1LBwdkRozMh4/view) | A comprehensive video presenting features, user experience, and the entire system operations workflow. |
+
+### 👤 Sample Accounts
+
+Below are the pre-configured sample accounts to experience different roles in the system:
+
+| Role | Login Email | Password |
+| --- | --- | --- |
+| **Student** | `hocvien@gmail.com` | `123456` |
+| **Tutor** | `giasu@gmail.com` | `123456` |
+| **Admin** | `admin@gmail.com` | `123456` |
