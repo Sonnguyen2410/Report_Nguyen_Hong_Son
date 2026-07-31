@@ -14,12 +14,12 @@ pre: " <b> 1. </b> "
 
 **Week 4 (Jun 22, 2026 – Jun 26, 2026):** [Frontend React Application, State Management & API Integration](1.4-week4/)
 
-**Week 5 (Jun 29, 2026 – Jul 03, 2026):** [Multi-stage Docker Containerization & Amazon EC2 Infrastructure Provisioning](1.5-week5/)
+**Week 5 (Jun 29, 2026 – Jul 03, 2026):** [Multi-AZ VPC Infrastructure, IAM, Container Packaging & ECR Provisioning](1.5-week5/)
 
-**Week 6 (Jul 06, 2026 – Jul 10, 2026):** [IAM OIDC Configuration, Amazon S3 Buckets & CloudFront CDN Setup](1.6-week6/)
+**Week 6 (Jul 06, 2026 – Jul 10, 2026):** [Backend High Availability with Application Load Balancer & Auto Scaling Group](1.6-week6/)
 
-**Week 7 (Jul 13, 2026 – Jul 17, 2026):** [CI/CD Pipeline Automation with GitHub Actions & SSM RunCommand Rollback](1.7-week7/)
+**Week 7 (Jul 13, 2026 – Jul 17, 2026):** [Frontend CloudFront, Domain & GitHub Actions CI/CD Automation](1.7-week7/)
 
-**Week 8 (Jul 20, 2026 – Jul 24, 2026):** [CloudWatch/SNS Monitoring, Production Verification & Resource Clean-up](1.8-week8/)
+**Week 8 (Jul 20, 2026 – Jul 24, 2026):** [Database/AI Integration, CloudWatch/SNS Monitoring, Production Testing & Clean-up](1.8-week8/)
 
 **Week 9 (Jul 27, 2026 – Jul 31, 2026):** [Project Synthesis, Hugo Site Internship Documentation & Final Defense](1.9-week9/)

@@ -6,14 +6,14 @@ chapter: false
 pre: " <b> 1.7. </b> "
 ---
 
-## Chủ đề: Tự động hóa CI/CD Pipeline với GitHub Actions & SSM RunCommand Rollback
+## Chủ đề: Triển khai Frontend CloudFront, Tên miền & Tự động hóa CI/CD GitHub Actions
 
 ### 1. Mục tiêu tuần 7 (13/07/2026 – 17/07/2026)
-* Khai báo toàn bộ Repository Secrets trên GitHub Actions (`AWS_GITHUB_ROLE_ARN`, `EC2_INSTANCE_ID`, `VITE_API_BASE_URL`, `S3_FE_BUCKET`, `CLOUDFRONT_FE_DISTRIBUTION_ID`).
-* Xây dựng kịch bản tự động hóa triển khai `.github/workflows/deploy.yml` gồm 2 Jobs: `deploy-backend` và `deploy-frontend`.
-* Tự động hóa quy trình triển khai Backend qua **AWS Systems Manager (SSM) RunCommand** không cần mở cổng SSH 22.
-* Xây dựng kịch bản kiểm tra sức khỏe container thử nghiệm (`candidate`), chuyển đổi Zero-Downtime Swapping và tự động hoàn tác (**Auto-Rollback**) về phiên bản `rollback` nếu phát sinh lỗi.
-* Tự động hóa biên dịch Frontend React, đồng bộ dữ liệu S3 và hủy bộ nhớ đệm CloudFront Invalidation.
+* Khởi tạo **Amazon S3 Frontend Bucket** và cấu hình **Amazon CloudFront CDN** tích hợp Origin Access Control (OAC).
+* Đăng ký tên miền và cấp phát chứng chỉ số SSL/TLS qua **AWS Certificate Manager (ACM)**.
+* Thiết lập xác thực bảo mật **GitHub Actions OIDC Identity Provider** trên AWS IAM.
+* Xây dựng pipeline tự động hóa CI/CD triển khai Backend với cơ chế **ASG Instance Refresh & Auto-Rollback**.
+* Xây dựng pipeline tự động hóa triển khai Frontend lên S3 và Invalidate CloudFront Cache.
 
 ---
 
@@ -21,29 +21,32 @@ pre: " <b> 1.7. </b> "
 
 | Ngày | Công việc thực hiện chi tiết | Đạt được / Sản phẩm |
 |---|---|---|
-| **Thứ 2 (13/07/2026)** | • Mở GitHub Repository $\rightarrow$ **Settings** $\rightarrow$ **Secrets and variables** $\rightarrow$ **Actions**.<br>• Khai báo 5 biến Secrets quan trọng phục vụ CI/CD.<br>• Xác minh tuyệt đối không lưu trữ bất kỳ Static Access Keys nào trên GitHub. | • 5 Secrets CI/CD được khai báo an toàn.<br>• Bảo mật Zero Static Credentials. |
-| **Thứ 3 (14/07/2026)** | • Viết tệp workflow `.github/workflows/deploy.yml` cấu hình Job `deploy-backend`.<br>• Cấu hình bước `aws-actions/configure-aws-credentials@v4` xác thực qua OIDC.<br>• Viết bước đóng gói Docker Image Backend với tag SHA Git Commit và đẩy lên ECR. | • Workflow `deploy.yml` Job Backend.<br>• Tự động build & push Docker Image ECR. |
-| **Thứ 4 (15/07/2026)** | • Viết kịch bản Bash script triển khai EC2 qua `aws ssm send-command`.<br>• Cấu hình luồng chạy container thử nghiệm `candidate` trên cổng tạm 5001 và vòng lặp Health Check endpoint `/health/ready` 24 lần.<br>• Xây dựng logic đổi tên container Zero-Downtime Swapping và kịch bản Auto-Rollback khi Health Check thất bại. | • SSM RunCommand Deployment Script.<br>• Cơ chế Zero-Downtime & Auto-Rollback. |
-| **Thứ 5 (16/07/2026)** | • Viết tiếp Job `deploy-frontend` trong file `deploy.yml` chạy sau khi Job Backend thành công.<br>• Thực hiện biên dịch mã nguồn React (`npm run build`), đồng bộ thư mục `dist` lên S3 Frontend Bucket qua lệnh `aws s3 sync --delete`.<br>• Tạo lệnh hủy bộ nhớ đệm `aws cloudfront create-invalidation --paths "/*"`. | • Job `deploy-frontend` hoàn chỉnh.<br>• Tự động sync S3 & Invalidate CDN cache. |
-| **Thứ 6 (17/07/2026)** | • Thực hiện lệnh `git push origin main` kích hoạt tự động toàn bộ pipeline CI/CD.<br>• Khắc phục sự cố IAM Trust Policy ban đầu (do sai lệch chuỗi `repo:username/repository:ref:refs/heads/main`).<br>• Xác nhận toàn bộ 2 Jobs `deploy-backend` và `deploy-frontend` hoàn thành thành công và họp review tuần 7. | • Pipeline GitHub Actions chạy xanh 100%.<br>• Khắc phục sự cố OIDC thành công. |
+| **Thứ 2 (13/07/2026)** | • Tạo S3 Bucket `learnsphere-frontend` (Block Public Access hoàn toàn).<br>• Cấu hình CloudFront Distribution, tạo Origin Access Control (OAC) cấp quyền cho CloudFront đọc S3 Bucket.<br>• Thêm Behavior định tuyến API `/api/*` về ALB Backend EC2, giải quyết CORS. | • S3 & CloudFront kết nối bảo mật.<br>• Routing SPA & API hoàn chỉnh. |
+| **Thứ 3 (14/07/2026)** | • Xin cấp chứng chỉ SSL cho tên miền `*.learnspherev2.id.vn` qua AWS ACM tại vùng `us-east-1`.<br>• Xác thực DNS qua Route 53.<br>• Cập nhật CloudFront dùng tên miền tùy chỉnh `www.learnspherev2.id.vn` và gán chứng chỉ ACM. | • Website bảo mật HTTPS với domain thật.<br>• Tên miền hoạt động chính thức. |
+| **Thứ 4 (15/07/2026)** | • Cấu hình **GitHub OIDC Identity Provider** trên IAM, tạo Role `LearnSphereGitHubDeployRole`.<br>• Gán quyền cho Role: ECR Push, SSM Parameter Store (để rollback tag), và Auto Scaling Update.<br>• Đảm bảo không lưu Static Access Keys trên GitHub Repository. | • Bảo mật Zero Static Credentials.<br>• Phân quyền chặt chẽ theo Repository. |
+| **Thứ 5 (16/07/2026)** | • Viết GitHub Actions Workflow triển khai Backend (`deploy-backend.yml`).<br>• Cấu hình bước đóng gói Docker, đẩy lên ECR và kích hoạt lệnh `aws autoscaling start-instance-refresh`.<br>• Xây dựng kịch bản Auto-Rollback: Nếu Refresh thất bại, tự động phục hồi phiên bản (Image Tag) cũ từ SSM Parameter Store. | • CI/CD Backend tự động hóa hoàn toàn.<br>• Cơ chế Rollback an toàn khi lỗi. |
+| **Thứ 6 (17/07/2026)** | • Viết Workflow triển khai Frontend (`deploy-frontend.yml`): biên dịch React, đồng bộ file lên S3 (`aws s3 sync`).<br>• Thêm lệnh xóa bộ nhớ đệm `aws cloudfront create-invalidation`.<br>• Kích hoạt CI/CD toàn hệ thống bằng lệnh `git push` và họp Review tuần 7. | • CI/CD Frontend hoàn tất.<br>• Pipeline chạy ổn định 100%. |
 
 ---
 
 ### 3. Nội dung học tập & Tìm hiểu (AWS & Core Tech)
 
-#### A. Kiến thức Đám mây AWS & DevOps
-* **AWS Systems Manager (SSM) RunCommand:**
-  * Gửi và thực thi kịch bản lệnh shell mã hóa trực tiếp trên máy chủ EC2 từ xa qua API của AWS mà không cần kết nối SSH.
-* **Tự động hóa CI/CD với GitHub Actions:**
-  * Quản lý sự phụ thuộc giữa các Jobs (`needs: deploy-backend`).
-  * Sử dụng các official Actions: `actions/checkout@v4`, `aws-actions/configure-aws-credentials@v4`, `aws-actions/amazon-ecr-login@v2`.
-* **Chiến lược Zero-Downtime Deployment & Container Health Check:**
-  * Thử nghiệm ứng dụng trên cổng phụ trước khi chuyển traffic cổng chính.
-  * Tự động xóa bỏ container lỗi và khôi phục container cũ (`learnsphere-be-rollback`) đảm bảo hệ thống luôn sẵn sàng.
+#### A. Phân phối Nội dung & Tên miền (CDN & DNS)
+* **Amazon CloudFront & OAC:**
+  * Thay vì mở public S3 Bucket, dùng OAC ép buộc mọi truy cập phải đi qua CloudFront.
+  * Hỗ trợ Routing định tuyến thông minh nhiều Origins (S3 cho tĩnh, ALB cho động).
+* **AWS Certificate Manager (ACM):**
+  * Quản lý vòng đời chứng chỉ SSL/TLS miễn phí, yêu cầu tạo ở `us-east-1` để dùng cho CloudFront.
+
+#### B. DevOps & Tự động hóa CI/CD
+* **GitHub Actions OIDC (OpenID Connect):**
+  * Giải pháp bảo mật tiên tiến cho phép GitHub Actions mượn quyền tạm thời từ AWS thông qua Trust Policy thay vì Access Key.
+* **Auto Scaling Instance Refresh:**
+  * Cơ chế thay máu máy chủ (Rolling Update) tự động của AWS, thay thế từng EC2 cũ bằng EC2 mới mà không gây gián đoạn (Zero Downtime).
 
 ---
 
 ### 4. Kết quả đạt được (Deliverables)
-* Workflow `.github/workflows/deploy.yml` tự động hóa toàn bộ quy trình triển khai Backend & Frontend.
-* Kịch bản triển khai SSM RunCommand tích hợp Health Check và Auto-Rollback an toàn.
-* Tự động làm mới bộ nhớ đệm CloudFront CDN `/*` khi có phiên bản Frontend mới.
+* Website hoàn chỉnh truy cập qua tên miền bảo mật `https://www.learnspherev2.id.vn/`.
+* Tích hợp thành công IAM OIDC bảo mật CI/CD.
+* 2 Pipeline triển khai Backend và Frontend chạy tự động và an toàn (tích hợp Rollback).

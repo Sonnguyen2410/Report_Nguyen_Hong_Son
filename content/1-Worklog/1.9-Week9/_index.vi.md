@@ -22,7 +22,7 @@ pre: " <b> 1.9. </b> "
 |---|---|---|
 | **Thứ 2 (27/07/2026)** | • Cấu hình khung website Báo cáo thực tập Hugo Relearn Theme (`config.toml`, menu đa ngôn ngữ VI/EN).<br>• Soạn thảo Chương 1 (Worklog 9 tuần) và Chương 2 (Proposal đề xuất bài toán LearnSphere).<br>• Cập nhật thông tin thông số thời gian kỳ thực tập chính thức (01/06/2026 – 31/07/2026). | • Cấu trúc site Hugo Báo cáo khởi tạo.<br>• Hoàn thành Chương 1 & 2. |
 | **Thứ 3 (28/07/2026)** | • Soạn thảo Chương 3 (Các bài viết kỹ thuật Blog Posted về Docker, OIDC, CloudFront OAC).<br>• Soạn thảo Chương 4 (Các sự kiện Tech Talk & Workshop đã tham gia trong chương trình FCAJ).<br>• Đóng gói hình ảnh sơ đồ kiến trúc và ảnh chứng nhận sự kiện. | • Hoàn thành nội dung Chương 3 & 4.<br>• Chuẩn hóa tệp hình ảnh tài liệu. |
-| **Thứ 4 (29/07/2026)** | • Tổng hợp nội dung Chương 5 Workshop Triển khai AWS: Viết 5.1 Overview, 5.2 Prerequisite, 5.3 Architecture.<br>• Biên soạn chi tiết 11 bước thực hành Hands-on (5.4.1 đến 5.4.11) đính kèm 27 hình ảnh minh họa có chú thích căn giữa.<br>• Soạn thảo 5.5 Cleanup dọn dẹp tài nguyên và Bảng nghiệm thu Clean-up Checklist Table. | • Hoàn thành toàn bộ Chương 5 Workshop.<br>• Tích hợp 27 hình ảnh minh họa. |
+| **Thứ 4 (29/07/2026)** | • Tổng hợp nội dung Chương 5 Workshop Triển khai AWS: Viết 5.1 Overview, 5.2 Preparation, 5.3 Architecture.<br>• Biên soạn chi tiết các phần thực hành cốt lõi (5.4 Infrastructure, 5.5 Backend HA, 5.6 Frontend Domain, 5.7 CI/CD) đính kèm các hình ảnh minh họa kiến trúc có chú thích căn giữa.<br>• Soạn thảo phần 5.8 đến 5.12 về Database, Monitoring, Testing và dọn dẹp tài nguyên (Clean-up). | • Hoàn thành toàn bộ Chương 5 Workshop.<br>• Tích hợp đầy đủ hình ảnh minh họa. |
 | **Thứ 5 (30/07/2026)** | • Soạn thảo Chương 6 (Tự đánh giá bản thân với Bảng 12 tiêu chí và 3 định hướng cải thiện).<br>• Soạn thảo Chương 7 (Ý kiến đóng góp cá nhân về chương trình FCAJ, phản hồi Mentor/Admin và đề xuất Coffee Talk/Review).<br>• Rà soát toàn bộ ký tự mũi tên `->`, kiểm tra liên kết logo AWS và nghiệm thu bản dịch Tiếng Anh. | • Hoàn thành Chương 6 & 7.<br>• Rà soát chuẩn hóa site 100%. |
 | **Thứ 6 (31/07/2026)** | • Đẩy toàn bộ mã nguồn website Báo cáo thực tập lên GitHub Repository và xác minh deployment trên GitHub Pages.<br>• Nộp bài báo cáo lên web FCAJ | • Website Báo cáo công khai trên GitHub Pages. |
 
@@ -41,6 +41,6 @@ pre: " <b> 1.9. </b> "
 
 ### 4. Kết quả đạt được (Deliverables)
 * Website Báo cáo thực tập hoàn thiện 100% bằng Hugo Relearn Theme (84 trang Tiếng Anh, 83 trang Tiếng Việt).
-* Bộ tài liệu hướng dẫn thực hành 11 bước chi tiết phục vụ cộng đồng học tập AWS.
+* Bộ tài liệu hướng dẫn thực hành triển khai kiến trúc High Availability AWS phục vụ cộng đồng học tập.
 * Bảo vệ thành công kết quả thực tập trước Ban Quản lý chương trình FCAJ.
 * Giấy chứng nhận hoàn thành xuất sắc kỳ thực tập **AWS First Cloud AI Journey (FCAJ)**.

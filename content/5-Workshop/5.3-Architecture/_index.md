@@ -1,158 +1,224 @@
 ---
-title: "Architecture Description"
-date: 2024-01-01
+title: "Architecture and system flows"
+date: 2026-07-30
 weight: 3
 chapter: false
 pre: " <b> 5.3. </b> "
 ---
 
-The following section provides an in-depth analysis of the entire cloud infrastructure architecture for the LearnSphere system on AWS, detailing data flow mechanisms, technical component specifications, network encryption, security permission design, and automated deployment procedures.
+#### Design objectives
 
-![LearnSphere AWS Architecture](/images/LEARNSHPHERE.drawio.png)
+The LearnSphere production architecture follows a layered model that separates presentation, API, data, and integration responsibilities. Its primary objectives are:
 
----
+* Deliver the Frontend over HTTPS with low latency and SPA navigation support.
+* Prevent direct public access to Backend EC2 instances and S3 buckets.
+* Maintain at least two Backend instances across two Availability Zones.
+* Keep state outside EC2 so that instances can be replaced safely.
+* Upload videos, documents, and thumbnails directly to S3 instead of proxying large files through the Backend.
+* Automate testing, packaging, and deployment through GitHub Actions.
+* Centralize logs, metrics, health checks, and operational alerts.
 
-### 1. Data Flow Mechanics & System Interactions
+The architecture runs in the Singapore Region (`ap-southeast-1`). The CloudFront certificate resides in `us-east-1` as required by the service, while the Application Load Balancer certificate resides in `ap-southeast-1`.
 
-The LearnSphere infrastructure is designed to seamlessly process 4 primary data flows across the system:
+#### Architecture
 
-#### Flow 1: Frontend Asset Loading & Single-Page Application (React SPA Routing Flow)
-* **Connection Initialization:** Users access CloudFront's HTTPS domain from a browser. CloudFront handles TLS/SSL connections using standard certificates.
-* **Static Asset Fetching:** Requests matching default behavior (`/`) are routed to the S3 Frontend Bucket via Origin Access Control (OAC) to retrieve static files (`index.html`, JavaScript, CSS, images). The S3 Bucket verifies OAC signatures and returns content to CloudFront for delivery to the browser.
-* **Page Reload / Client-Side Sub-routes (F5 Handling):** When users refresh sub-routes like `/profile` or `/courses/123`, a CloudFront Function attached to the Viewer Request event intercepts the request. If no file extension dot is present in the URI, it internally rewrites the request to `/index.html`. React Router handles client-side rendering without triggering 404 errors from S3.
+![LearnSphere Multi-AZ production architecture](/images/LEARNSHPHERE.png)
 
-#### Flow 2: Backend REST API Execution Flow
-* **Request Forwarding:** When the React app makes business API calls (login, course listing, quiz submission), requests starting with `/api/*` match the priority CloudFront `/api/*` behavior and are forwarded directly to the EC2 instance.
-* **Cache Bypass & Header Preservation:** This behavior has `CachingDisabled` and uses the `AllViewerExceptHostHeader` policy to preserve original HTTP headers from the browser (including JWT authentication in the Authorization header).
-* **EC2 Inbound Processing:** Packets pass through the EC2 Security Group (restricted to CloudFront global Prefix List IPs) on port 5000. The Express.js Docker Container processes the request, decodes JWT tokens, and executes business logic.
-* **Database Queries:** The Backend uses Mongoose ODM to query the MongoDB Atlas Cluster over a secure SRV connection. JSON responses are returned to the browser via CloudFront.
+<p align="center"><i>Figure 5.6. LearnSphere As-Built architecture after the Multi-AZ high-availability Backend upgrade.</i></p>
 
-#### Flow 3: Large Media File Upload & Download (Media Presigned URL Flow)
-* **Upload Flow (Video/PDF/Image Uploads):**
-  1. Instructors select lecture video files on the React UI. Frontend sends a short request to Backend requesting upload authorization.
-  2. Backend validates Instructor permissions and uses AWS SDK (with temporary credentials from EC2 IAM Role) to generate a Presigned PUT URL valid for 5 minutes.
-  3. Backend returns the Presigned PUT URL to the Frontend.
-  4. Frontend uses this Presigned URL to upload files directly from the browser to the S3 Media Bucket without passing through the EC2 server. Large files use S3 Multipart Upload, exposed via S3 CORS ETag headers.
-* **Download Flow (Video Streaming / Document Reading):**
-  1. Students click to view a lesson. Frontend requests a video playback URL from Backend.
-  2. Backend verifies course enrollment. If valid, Backend generates a Presigned GET URL valid for 15 minutes and returns it to Frontend.
-  3. Browser uses the Presigned GET URL to stream video directly from the S3 Media Bucket. S3 Buckets remain 100% private to the public Internet.
+The diagram uses two types of connections:
 
-#### Flow 4: Automated CI/CD Deployment & Rollback Flow
-* **OIDC Authentication & Image Build:** Engineers push code to the `main` branch on GitHub. GitHub Actions triggers the workflow, authenticates via OIDC with AWS STS to receive short-term credentials, builds the application, tags the Backend Docker Image with the Git Commit SHA, and pushes it to Amazon ECR.
-* **SSM Deployment Execution:** GitHub Actions executes AWS SSM RunCommand to send an encrypted deployment script to the SSM Agent on EC2.
-* **Candidate Container Deployment:** The script on EC2 pulls the new image from ECR and launches a test container named `candidate` on temporary port 5001.
-* **Health Check Retry:** The script retries `/health/ready` endpoint checks on port 5001 up to 24 times (every 5 seconds).
-* **Success Path:** If the endpoint responds 200 OK and database connection is healthy, the script renames the current main container to `rollback`, switches the new container to main port 5000, and removes the test container. Switchover takes milliseconds.
-* **Failure Path:** If 24 checks fail, the script stops and removes the `candidate` container, keeping the existing container on port 5000, and reports a failure to GitHub Actions to abort the pipeline.
+* **Solid lines** represent runtime traffic and data exchanged by users, the Backend, and monitoring services.
+* **Dashed lines** represent administrative, permission, configuration, and deployment flows initiated by GitHub Actions.
 
----
+#### Architecture layers
 
-### 2. Component Technical Specifications & Detailed Design
-
-#### Amazon CloudFront (Distribution Configuration)
-* **Distribution Domain:** Automatically assigned domain format `d2onzy56n3iw1w.cloudfront.net`.
-* **Origin 1 Configuration (S3 Frontend):**
-  * Origin Domain: Points to S3 Bucket `learnsphere-fe-575620421319`.
-  * Origin Access: Origin Access Control (OAC) with Sign Requests enabled.
-* **Origin 2 Configuration (EC2 Backend):**
-  * Origin Domain: EC2 IPv4 Public IP / DNS address.
-  * Protocol Policy: HTTP Only (Internal communication between CloudFront and EC2).
-  * HTTP Port: `5000`.
-* **Default Cache Behavior (`/*`):**
-  * Target Origin: S3 Frontend Origin.
-  * Viewer Protocol Policy: Redirect HTTP to HTTPS.
-  * Allowed HTTP Methods: GET, HEAD.
-  * Cache Policy: `CachingOptimized` (Optimized caching for hashed JS/CSS assets).
-  * Function Associations: CloudFront Function attached to Viewer Request for SPA routing.
-* **API Cache Behavior (`/api/*`):**
-  * Target Origin: EC2 Backend Origin.
-  * Viewer Protocol Policy: Redirect HTTP to HTTPS.
-  * Allowed HTTP Methods: GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE.
-  * Cache Policy: `CachingDisabled` (Strictly no API caching).
-  * Origin Request Policy: `AllViewerExceptHostHeader`.
-
-#### Amazon S3 (Dual Bucket Configuration)
-* **Frontend Bucket (`learnsphere-fe-575620421319`):**
-  * Region: `ap-southeast-1`.
-  * Block Public Access: ON (Block all public access).
-  * S3 Static Website Hosting: Disabled.
-  * Bucket Policy: Restricts `s3:GetObject` access exclusively to `cloudfront.amazonaws.com` Service Principal matching CloudFront SourceArn.
-* **Media Bucket (`learnsphere-media-575620421319`):**
-  * Region: `ap-southeast-1`.
-  * Block Public Access: ON (Block all public access).
-  * CORS Configuration:
-    * AllowedOrigins: `http://localhost:5173`, `https://d2onzy56n3iw1w.cloudfront.net`.
-    * AllowedMethods: GET, PUT, HEAD.
-    * AllowedHeaders: `*`.
-    * ExposeHeaders: `ETag`.
-    * MaxAgeSeconds: `3600`.
-
-#### Amazon ECR (Repository Configuration)
-* **Repository Name:** `learnsphere-be`.
-* **Repository Type:** Private.
-* **Image Scan Settings:** Enable Scan on Push (Automatic CVE vulnerability scanning on every image push).
-* **Lifecycle Policy Rules:** Keeps the 10 most recent tagged images and automatically purges older images to optimize storage costs.
-
-#### Amazon EC2 & Docker Runtime Environment
-* **Server Specifications:**
-  * Instance ID: `i-008c48e6c120b2978`.
-  * OS: Amazon Linux 2023 64-bit (x86).
-  * Instance Type: `t3.small` (2 vCPU, 2.0 GiB Physical Memory).
-  * Location: Default VPC, Public Subnet, Auto-assign Public IP Enabled.
-* **RAM Swap Memory Configuration:**
-  * Created 2.0 GB Swap file at `/swapfile`.
-  * Restricted file permissions to `600` (root read/write only).
-  * Registered auto-mount entry in `/etc/fstab`.
-  * **Benefit:** Provides ~4.0 GB total virtual memory (2GB RAM + 2GB Swap), preventing Node.js multi-process memory crashes during OCR image analysis or PDF parsing.
-* **Security Group Rules:**
-  * Inbound Rules: Custom TCP, Port `5000`, Source: AWS Managed Prefix List `com.amazonaws.global.cloudfront.origin-facing`.
-  * Blocks 100% of external traffic on ports 22 (SSH), 80 (HTTP), and 443 (HTTPS) from `0.0.0.0/0`.
-* **Docker Container Security Context:**
-  * Base Image: Lightweight Linux Alpine (`node:24-alpine`).
-  * Non-root User: System group `nodejs` (GID 1001) and user `nodejs` (UID 1001).
-  * Execution: Runs under non-root user `nodejs` to prevent host takeover vulnerabilities.
-  * Health Check: Configured 30s `wget` checks to internal port 5000 `/health/ready`.
-
-#### MongoDB Atlas Database
-* **Deployment Model:** 3-node Replica Set (Primary - Secondary - Secondary) for high availability.
-* **Connection Method:** `mongodb+srv://` protocol for auto-load balancing and primary node discovery.
-* **Network Access Security:** Whitelisted EC2 Public IP on MongoDB Atlas Network Access IP Access List.
-
-#### IAM Security Architecture & Zero Static Credentials
-* **OIDC Identity Provider:**
-  * Provider URL: `https://token.actions.githubusercontent.com`
-  * Audience: `sts.amazonaws.com`
-* **IAM Role 1 (`LearnSphereGitHubDeployRole`):**
-  * Trust Policy: `sts:AssumeRoleWithWebIdentity` constrained to `sts.amazonaws.com` audience and matching LearnSphere `main` branch sub claim.
-  * Permissions Policy: ECR authorization, push permissions, S3 Sync, CloudFront Invalidation, and SSM SendCommand targeted strictly to the EC2 Instance ID.
-* **IAM Role 2 (`LearnSphereEc2Role`):**
-  * Attached Policies: `AmazonSSMManagedInstanceCore`, `AmazonEC2ContainerRegistryReadOnly`, S3 Media Custom Policy, CloudWatch Logs Custom Policy, and Bedrock Custom Policy.
-
-#### CloudWatch Monitoring & SNS Alert System
-* **Log Aggregation (CloudWatch Logs):**
-  * Log Group Name: `/learnsphere/backend`.
-  * Retention Policy: 30 days.
-  * Log Driver: `awslogs` driver streaming container logs.
-* **CloudWatch Alarm 1 (EC2 High CPU):**
-  * Alarm Name: `LearnSphere-EC2-HighCPU`.
-  * Metric: `CPUUtilization` (> 80% average over two 5-minute periods).
-  * Notification: Sends alert to SNS Topic `LearnSphere-Alerts`.
-* **CloudWatch Alarm 2 (EC2 Status Check Failed):**
-  * Alarm Name: `LearnSphere-EC2-StatusCheckFailed`.
-  * Metric: `StatusCheckFailed` (>= 1 over 1-minute period).
-  * Notification: Triggers immediate alert to SNS Topic `LearnSphere-Alerts`.
-* **Amazon SNS Topic & Email Subscription:**
-  * Topic Name: `LearnSphere-Alerts` (Email subscription confirmed).
-
----
-
-### 3. Legacy Architecture vs. LearnSphere Modern Cloud Architecture Comparison
-
-| Feature | Legacy Architecture | LearnSphere Modern Cloud Architecture |
+| Layer | Components | Responsibility |
 | --- | --- | --- |
-| **Credential Authentication** | Long-term static Access Keys / Secret Keys stored in `.env` or GitHub Secrets. High leakage risk. | **100% Zero Static Credentials.** Uses OIDC for CI/CD and IAM Instance Profiles (IMDSv2) for EC2. |
-| **Server Administration** | Open SSH port 22 to Internet. Vulnerable to Brute-force attacks. | **SSH Port 22 completely closed.** 100% remote administration via AWS Systems Manager (SSM) Session Manager. |
-| **Domain & Distribution** | Separate domains or direct IP:5000 access. Prone to CORS and Mixed Content errors. | **Single HTTPS Domain via CloudFront CDN.** S3 FE via OAC and `/api/*` reverse proxy to EC2. Zero CORS errors. |
-| **Deployment Workflow** | Manual SSH `git pull` & restart. Causes downtime and crash risks. | **Automated CI/CD via GitHub Actions**, Multi-stage Docker, Candidate Container (Port 5001) testing, and zero-downtime health check switchover. |
-| **Media File Management** | Uploads proxied through API server or public S3 bucket access. | **S3 Media Bucket 100% Private.** Direct browser uploads/downloads via short-lived Presigned URLs. |
+| Client and DNS | Browser and TenTen DNS | Resolve `www.learnspherev2.id.vn` and send HTTPS requests |
+| Edge | Amazon CloudFront and AWS Certificate Manager | Deliver the Frontend, terminate TLS, and route `/api/*` |
+| Frontend | Amazon S3 Frontend | Store the React/Vite static build; the private bucket is readable only by CloudFront OAC |
+| Network | VPC, public/private subnets, Internet Gateway, NAT Gateways, and S3 Gateway Endpoint | Isolate the Backend and provide controlled ingress and egress |
+| API entry | Application Load Balancer | Receive HTTPS from CloudFront and distribute requests to the Target Group |
+| Compute | Auto Scaling Group, Launch Template, EC2, and Docker | Run the Express.js Backend on port 5000 and replace failed instances |
+| Media | Amazon S3 Media | Store videos, documents, thumbnails, and avatars through presigned URLs |
+| Configuration | AWS Systems Manager Parameter Store | Store the production environment as a SecureString and the released image tag |
+| Container registry | Amazon ECR | Store immutable Backend Docker images tagged by commit SHA |
+| Data | MongoDB Atlas | Store users, courses, lessons, quizzes, enrollments, progress, and AI records |
+| AI | Groq API | Provide chat, document summarization, and quiz generation |
+| Observability | Amazon CloudWatch and Amazon SNS | Collect logs and metrics, evaluate alarms, and send email notifications |
+| Delivery | GitHub Actions and IAM OIDC | Test, build, and deploy without long-lived access keys |
+
+#### Multi-AZ network design
+
+LearnSphere uses the `10.20.0.0/16` VPC with DNS resolution and DNS hostnames enabled. Resources are distributed across two Availability Zones:
+
+| Availability Zone | Public subnet | Private subnet | Main resources |
+| --- | --- | --- | --- |
+| `ap-southeast-1a` | Public subnet 1a | Private subnet 1a | ALB node, NAT Gateway 1a, and Backend EC2 1a |
+| `ap-southeast-1b` | Public subnet 1b | Private subnet 1b | ALB node, NAT Gateway 1b, and Backend EC2 1b |
+
+Both public subnets have a `0.0.0.0/0` route to the Internet Gateway. Each private subnet has a default route to the NAT Gateway in the same Availability Zone. This arrangement prevents the Backend in one AZ from depending on the other AZ's NAT Gateway.
+
+The Application Load Balancer is attached to both public subnets so that it can accept HTTPS connections. Backend EC2 instances run only in private subnets, have no public IPv4 addresses, and expose no inbound SSH. They can still pull images, call external APIs, and send email through their NAT Gateways.
+
+An S3 Gateway Endpoint is associated with both private route tables. EC2-to-S3 traffic therefore remains on the AWS network rather than crossing a NAT Gateway, which reduces Internet exposure and NAT data-processing costs.
+
+![LearnSphere VPC Resource Map](/images/learnsphere-vpc-resource-map.png)
+
+<p align="center"><i>Figure 5.7. The VPC Resource Map shows four subnets across two Availability Zones, their route tables, the Internet Gateway, two NAT Gateways, and the S3 Gateway Endpoint.</i></p>
+
+#### Frontend and API access flow
+
+The application and API request path works as follows:
+
+1. A user visits `https://www.learnspherev2.id.vn`.
+2. TenTen DNS resolves the name to the CloudFront distribution.
+3. CloudFront uses an ACM certificate to establish HTTPS.
+4. For UI requests, the default behavior retrieves `index.html` and static assets from the private Frontend S3 bucket through Origin Access Control.
+5. A CloudFront Function rewrites SPA paths such as `/profile`, `/courses`, and `/system-monitoring` to `index.html`.
+6. When the Frontend calls `/api/*`, CloudFront forwards the request over HTTPS to `origin.learnspherev2.id.vn`.
+7. The origin domain resolves to `LearnSphere-Prod-ALB`.
+8. The ALB terminates TLS, evaluates its listener rule, and forwards HTTP port 5000 traffic to `LearnSphere-Backend-TG`.
+9. The Target Group sends requests only to healthy EC2 targets in the two private subnets.
+10. The Backend validates the JWT/cookie, executes business logic, and accesses MongoDB Atlas or another required service.
+11. The response returns through EC2 → ALB → CloudFront → browser.
+
+CloudFront is the unified entry point for both the UI and the API. The Frontend can call the same-origin `/api/*` path, reducing CORS configuration and preventing users from needing to know the ALB DNS name.
+
+#### Learning-material upload and download flow
+
+Videos and documents can be large, so LearnSphere does not proxy their contents through Express.js. It uses the following presigned URL flow:
+
+1. An authenticated user asks the Backend to create an upload session.
+2. The Backend validates the role, course ownership, file type, size, and S3 object key.
+3. The Backend uses the EC2 instance role to create a presigned URL or multipart presigned URLs.
+4. The browser uploads the file directly to S3 Media.
+5. After a successful upload, the Frontend calls the session-completion API.
+6. The Backend verifies the S3 object and stores its key and metadata in MongoDB.
+7. When a lesson is opened, the Backend returns a time-limited presigned download URL to an authorized user.
+
+This flow reduces CPU, memory, and network pressure on EC2. S3 Media keeps Block Public Access enabled, while signed URLs provide time-bound object access. Cleanup jobs handle expired multipart sessions and orphaned objects to reduce unnecessary storage costs.
+
+#### Data and AI processing flow
+
+MongoDB Atlas is the shared data source for all Backend instances. EC2 does not keep durable business data on local disks, allowing the ASG to terminate or replace instances without losing courses, lessons, quizzes, or progress.
+
+When an instructor requests document summarization or AI-generated quiz questions:
+
+1. The Backend loads document metadata from MongoDB.
+2. It reads the corresponding object from S3 Media.
+3. Text is extracted with `pdf-parse`, `mammoth`, or `tesseract.js` OCR for scanned PDFs.
+4. The text is normalized and limited before being sent to the Groq API.
+5. The AI output is structurally validated and then returned to the Frontend or stored in MongoDB, depending on the feature.
+6. The `model_id`, input-token count, and output-token count are recorded for usage tracking.
+
+Student chat also passes through the Backend for authentication, rate limiting, lesson-context selection, and history persistence. The Groq API key is never exposed to the browser.
+
+The Backend in AZ 1a reaches the Internet through NAT Gateway 1a, while the instance in AZ 1b uses NAT Gateway 1b. Both NAT Elastic IPs are allowlisted in MongoDB Atlas Network Access. Groq and email services are reached over TLS from these stable egress addresses.
+
+#### EC2 configuration and bootstrap flow
+
+The Launch Template defines the AMI, instance type, Backend Security Group, EC2 instance profile, and User Data. When the ASG creates a new instance, bootstrap performs the following steps:
+
+1. Install and start Docker.
+2. Read the production environment from `/learnsphere/prod/backend-env` in Parameter Store.
+3. Read the currently released image tag from `/learnsphere/prod/backend-image-tag`.
+4. Authenticate to ECR using temporary EC2 instance-role credentials.
+5. Pull the exact Docker image released by the pipeline.
+6. Start the container with the CloudWatch Logs driver.
+7. Call `/health/ready` and complete only after MongoDB is connected.
+
+The environment is stored as an SSM SecureString, while the image tag is maintained as a separate String parameter. GitHub Actions does not need to read production secret values; each EC2 instance retrieves its configuration through a least-privilege instance role.
+
+#### CI/CD flow
+
+For each deployment, GitHub Actions obtains temporary credentials through OIDC and an IAM role instead of storing long-lived `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` values.
+
+```text
+GitHub Actions
+  → assume IAM role through OIDC
+  → run Backend tests
+  → build Docker image
+  → push image tagged with commit SHA to ECR
+  → update the candidate image tag in Parameter Store
+  → start an ASG Instance Refresh
+  → wait for healthy EC2 instances and Target Group
+  → verify /health/ready through the ALB
+  → build the React/Vite Frontend
+  → synchronize dist to the Frontend S3 bucket
+  → create a CloudFront invalidation
+```
+
+Instance Refresh follows a launch-before-terminate strategy. A new instance must pass health checks before the old instance is removed. If the candidate does not become healthy, the workflow stops, restores the previous image tag, and preserves the serving capacity.
+
+#### High availability and self-healing
+
+`LearnSphere-Backend-ASG` uses the following settings:
+
+| Property | Value |
+| --- | --- |
+| Minimum capacity | 2 |
+| Desired capacity | 2 |
+| Maximum capacity | 4 |
+| Health checks | EC2 and ELB |
+| Distribution | Two private subnets across two AZs |
+| Maintenance | Launch before terminating |
+
+![Healthy LearnSphere Backend Target Group](/images/learnsphere-target-group-healthy.png)
+
+<p align="center"><i>Figure 5.8. The Application Load Balancer Target Group reports two healthy Backend targets on port 5000 and no unhealthy targets.</i></p>
+
+Under normal conditions, each AZ runs one Backend EC2 instance. If a container, instance, or AZ target fails:
+
+1. The readiness check fails and the ALB stops routing traffic to that target.
+2. Requests continue to use the remaining healthy target.
+3. The ASG receives the ELB health result and launches a replacement.
+4. The new instance bootstraps from the same Launch Template, Parameter Store values, and ECR image.
+5. After the target becomes healthy, the ASG returns to its desired capacity.
+
+The ALB and ASG remove the single point of failure at the Backend tier. S3 and CloudFront are highly available managed services, while the two NAT Gateways provide per-AZ egress.
+
+The `max=4` value is a capacity ceiling and does not automatically enable scale-out. The current architecture maintains and self-heals two instances. Automatic expansion and contraction require a target-tracking or step-scaling policy based on CPU, request count, or response time.
+
+#### Security boundaries
+
+| Boundary | Implemented configuration |
+| --- | --- |
+| HTTPS | ACM for CloudFront in `us-east-1` and ACM for the ALB in `ap-southeast-1` |
+| ALB Security Group | Accept HTTPS on port 443 and forward to the Backend Target Group |
+| Backend Security Group | Accept TCP port 5000 only from the ALB Security Group |
+| EC2 | Private subnets, no public IP, and no inbound SSH |
+| S3 Frontend | Block Public Access with CloudFront OAC as the only reader |
+| S3 Media | Block Public Access with presigned uploads and downloads |
+| IAM | Separate GitHub deploy role, EC2 instance role, and ASG service-linked role |
+| Secrets | Production environment in SSM SecureString; `.env` is not committed |
+| Database | MongoDB Atlas allowlists only the two NAT Elastic IPs |
+| Application | HTTPS-origin CORS, JWT secret, security headers, and rate limiting |
+
+#### Monitoring and alerts
+
+Backend containers send stdout and stderr to CloudWatch Logs. The liveness endpoint reports whether the Node.js process is running, while the readiness endpoint returns `ready` only when MongoDB is available. The ALB uses readiness to determine whether a target can receive traffic.
+
+CloudWatch provides EC2, ASG, and ALB metrics. Alarms can monitor unhealthy targets, InService instance count, HTTP 5xx responses, response time, and CPU. When an alarm changes state, Amazon SNS sends an email notification through the `LearnSphere-Alerts` topic.
+
+#### AWS Well-Architected assessment
+
+| Pillar | LearnSphere implementation |
+| --- | --- |
+| Operational Excellence | Automated CI/CD, immutable images, health checks, centralized logs, and rollback workflow |
+| Security | End-to-end HTTPS, private subnets, OAC, presigned URLs, IAM roles, and SSM SecureString |
+| Reliability | Two AZs, ALB, ASG self-healing, two NAT Gateways, and state externalized from EC2 |
+| Performance Efficiency | CloudFront caching, direct S3 uploads, and an S3 Gateway Endpoint |
+| Cost Optimization | AWS Budget, S3 lifecycle/cleanup, S3 endpoint to avoid NAT processing, and bounded capacity |
+| Sustainability | Static hosting, CDN caching, replaceable containers, and reduced file transfer through compute |
+
+#### Current scope and limitations
+
+High availability is currently implemented within one AWS Region across two Availability Zones; this is not yet a multi-Region disaster-recovery architecture. MongoDB Atlas and Groq remain dependencies outside the AWS account, so end-to-end availability still depends on the Atlas cluster configuration and the Groq service.
+
+In the next development phase, LearnSphere plans to migrate its data layer from MongoDB Atlas to Amazon DynamoDB. This will bring business data into the AWS ecosystem, provide serverless scaling, and remove database-server administration. The migration must be implemented incrementally by analyzing access patterns, designing partition and sort keys, replacing the Mongoose data-access layer, building migration tooling, validating consistency, and switching traffic only after the migrated data has been verified.
+
+The AI layer is also planned to migrate from Groq to Amazon Bedrock. This will reduce reliance on an external provider, standardize authorization through IAM, and bring AI inference into the same AWS monitoring, security, and cost-governance environment. The transition will reuse the existing AI-provider abstraction, configure a suitable Bedrock model, grant invoke permissions according to least privilege, verify service quotas, and compare response quality, latency, token usage, and cost against Groq. Groq will be retired only after the learning assistant, document summarization, and quiz-generation workflows pass regression testing on Bedrock.
+
+The infrastructure roadmap also includes Amazon Route 53 for centralized DNS and health checks; AWS WAF at CloudFront to filter malicious requests, rate-based attacks, and common exploits; ASG target tracking for load-based scaling; AWS Secrets Manager for secret management and rotation; and multi-Region backup, restore, and failover planning. These improvements provide a path from the current Multi-AZ architecture toward a more secure, scalable, and resilient cloud-native platform.

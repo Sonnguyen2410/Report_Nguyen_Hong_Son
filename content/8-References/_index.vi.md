@@ -14,7 +14,7 @@ Trong quá trình thực hiện dự án E-Learning **LearnSphere** và tham gia
 | --- | --- | --- |
 | 🌐 **Website Sản phẩm (Production)** | [https://www.learnspherev2.id.vn/](https://www.learnspherev2.id.vn/) | Website ứng dụng LearnSphere chính thức đang vận hành thực tế trên hạ tầng AWS. |
 | 🐙 **Mã nguồn Dự án (Source Code)** | [https://github.com/HoiaeKHMT/LearnSphere](https://github.com/HoiaeKHMT/LearnSphere) | Mã nguồn gốc dự án LearnSphere (bao gồm Backend Express.js & Frontend React cấu trúc Monorepo). |
-| 🎬 **Video Demo** | [Xem Video Demo trên Google Drive](https://drive.google.com/file/d/1J6heEzrB1jZO3C5Z3tuz1LBwdkRozMh4/view) | Video trình bày chi tiết về các tính năng, trải nghiệm người dùng và toàn bộ quy trình vận hành hệ thống. |
+| 🎬 **Video Demo** | [Xem Video Demo trên YouTube](https://youtu.be/1WHzmj1K668?si=_kYQCsqA97pgPj3r) | Video trình bày chi tiết về các tính năng, trải nghiệm người dùng và toàn bộ quy trình vận hành hệ thống. |
 
 ### 👤 Tài khoản mẫu (Sample Accounts)
 

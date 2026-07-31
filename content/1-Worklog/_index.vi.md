@@ -14,12 +14,12 @@ pre: " <b> 1. </b> "
 
 **Tuần 4 (22/06/2026 – 26/06/2026):** [Xây dựng Giao diện Frontend React, TypeScript, State Management & Tích hợp APIs](1.4-week4/)
 
-**Tuần 5 (29/06/2026 – 03/07/2026):** [Đóng gói Container Docker Multi-stage, Khởi tạo Amazon ECR & Máy chủ Amazon EC2](1.5-week5/)
+**Tuần 5 (29/06/2026 – 03/07/2026):** [Xây dựng Hạ tầng VPC Multi-AZ, IAM, Đóng gói Container & Khởi tạo ECR](1.5-week5/)
 
-**Tuần 6 (06/07/2026 – 10/07/2026):** [Cấu hình Phân quyền IAM OIDC, Amazon S3 Buckets & CloudFront CDN](1.6-week6/)
+**Tuần 6 (06/07/2026 – 10/07/2026):** [Triển khai Backend High Availability với Application Load Balancer & Auto Scaling Group](1.6-week6/)
 
-**Tuần 7 (13/07/2026 – 17/07/2026):** [Tự động hóa CI/CD Pipeline với GitHub Actions & SSM RunCommand Rollback](1.7-week7/)
+**Tuần 7 (13/07/2026 – 17/07/2026):** [Triển khai Frontend CloudFront, Tên miền & Tự động hóa CI/CD GitHub Actions](1.7-week7/)
 
-**Tuần 8 (20/07/2026 – 24/07/2026):** [Thiết lập Giám sát CloudWatch/SNS, Kiểm thử Production & Quy trình Dọn dẹp Tài nguyên](1.8-week8/)
+**Tuần 8 (20/07/2026 – 24/07/2026):** [Tích hợp Database/AI, Giám sát CloudWatch/SNS, Kiểm thử Production & Dọn dẹp](1.8-week8/)
 
 **Tuần 9 (27/07/2026 – 31/07/2026):** [Tổng kết Dự án, Soạn thảo Báo cáo Thực tập trên Hugo Site & Bảo vệ Kỳ thực tập](1.9-week9/)

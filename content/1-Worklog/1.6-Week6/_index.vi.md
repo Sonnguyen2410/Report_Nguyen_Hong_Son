@@ -6,13 +6,14 @@ chapter: false
 pre: " <b> 1.6. </b> "
 ---
 
-## Chủ đề: Cấu hình Phân quyền IAM OIDC, Amazon S3 Buckets & CloudFront CDN
+## Chủ đề: Triển khai Backend High Availability với Application Load Balancer & Auto Scaling Group
 
 ### 1. Mục tiêu tuần 6 (06/07/2026 – 10/07/2026)
-* Thiết lập kết nối xác thực **GitHub Actions OIDC Identity Provider** trên AWS IAM, loại bỏ rủi ro lộ static access keys.
-* Tạo IAM Role `LearnSphereGitHubDeployRole` đính kèm Trust Policy giới hạn chính xác Repository GitHub `repo:username/repository:ref:refs/heads/main`.
-* Khởi tạo **Amazon S3 Frontend Bucket** (`learnsphere-fe-575620421319`) và **S3 Media Bucket** (`learnsphere-media-575620421319`) ở chế độ Block Public Access 100%.
-* Triển khai **Amazon CloudFront CDN Distribution** (`EQRDOBSCG5MC8`) bảo mật S3 Frontend qua **Origin Access Control (OAC)** và chuyển tiếp API `/api/*` về máy chủ EC2.
+* Sử dụng **AWS Systems Manager (SSM) Parameter Store** để quản lý các biến môi trường nhạy cảm một cách an toàn.
+* Khởi tạo **EC2 Launch Template** chứa cấu hình khởi động (User Data) cài đặt Docker và kéo image từ ECR.
+* Thiết lập **Application Load Balancer (ALB)** phân phối tải HTTP/HTTPS giữa nhiều máy chủ Backend.
+* Triển khai **Auto Scaling Group (ASG)** giúp tự động scale máy chủ Backend trải dài trên 2 Availability Zones.
+* Thực hiện xác minh tính High Availability (HA Validation) khi một máy chủ gặp sự cố.
 
 ---
 
@@ -20,28 +21,29 @@ pre: " <b> 1.6. </b> "
 
 | Ngày | Công việc thực hiện chi tiết | Đạt được / Sản phẩm |
 |---|---|---|
-| **Thứ 2 (06/07/2026)** | • Mở AWS IAM Console $\rightarrow$ **Identity providers** $\rightarrow$ Thêm OIDC Provider `token.actions.githubusercontent.com` với Audience `sts.amazonaws.com`.<br>• Lấy vân tay bảo mật Thumbprint của GitHub tự động.<br>• Tạo IAM Role `LearnSphereGitHubDeployRole` với Trust Policy gắn thẻ `sub` ràng buộc repository. | • OIDC Identity Provider cấu hình xong.<br>• IAM Role cho GitHub Actions bảo mật. |
-| **Thứ 3 (07/07/2026)** | • Khởi tạo S3 Frontend Bucket `learnsphere-fe-575620421319` tại Singapore (`ap-southeast-1`).<br>• Khởi tạo S3 Media Bucket `learnsphere-media-575620421319`, bật tính năng mã hóa Server-side Encryption (SSE-S3).<br>• Thiết lập quy tắc CORS JSON trên Media Bucket hỗ trợ upload từ trình duyệt. | • 2 S3 Buckets được tạo thành công.<br>• Bật Block Public Access 100% & CORS. |
-| **Thứ 4 (08/07/2026)** | • Mở dịch vụ **Amazon CloudFront** $\rightarrow$ Khởi tạo Distribution mới `EQRDOBSCG5MC8`.<br>• Cấu hình Origin 1 trỏ tới S3 Frontend Bucket, tạo mới **Origin Access Control (OAC)**.<br>• Thêm S3 Bucket Policy chỉ cho phép duy nhất CloudFront OAC được đọc đối tượng (`s3:GetObject`). | • CloudFront Distribution được khởi tạo.<br>• Cấu hình OAC bảo mật S3 Private. |
-| **Thứ 5 (09/07/2026)** | • Cấu hình Origin 2 trỏ tới DNS/IP của máy chủ EC2 Backend (Port 5000).<br>• Tạo Cache Behavior ưu tiên cho đường dẫn `/api/*` với chế độ `CachingDisabled` và chuyển tiếp toàn bộ Headers.<br>• Viết **CloudFront Function** đính kèm vào Viewer Request tự động sửa đổi URI đường dẫn phụ về `/index.html` xử lý SPA Client-side Routing. | • Routing CloudFront CDN hoàn thiện.<br>• Giải quyết triệt để lỗi CORS & 404 SPA. |
-| **Thứ 6 (10/07/2026)** | • Kiểm thử khả năng phân phối mã nguồn tĩnh Frontend từ CloudFront HTTPS domain `d2onzy56n3iw1w.cloudfront.net`.<br>• Xác nhận các cuộc gọi API `/api/health` qua CloudFront chuyển tiếp mượt mà về EC2.<br>• Tham gia họp Review tuần 6 với Mentor. | • Toàn bộ luồng CDN Phân phối mượt mà.<br>• Báo cáo tiến độ tuần 6 thành công. |
+| **Thứ 2 (06/07/2026)** | • Lưu trữ các cấu hình nhạy cảm (`MONGO_URI`, `GROQ_API_KEY`, `JWT_SECRET`) vào **Systems Manager Parameter Store** (SecureString).<br>• Cấp quyền `ssm:GetParameters` cho IAM Role `LearnSphere-Backend-Role` để EC2 có thể đọc secrets. | • Quản lý secrets an toàn, không hardcode.<br>• IAM Policy cập nhật. |
+| **Thứ 3 (07/07/2026)** | • Tạo **Launch Template** `LearnSphere-Backend-Template` sử dụng AMI Amazon Linux 2023, loại `t3.small`.<br>• Viết kịch bản khởi động (User Data) tự động cài đặt Docker, xác thực ECR, lấy secrets từ SSM và chạy container `learnsphere-be:latest` trên cổng 5000. | • Launch Template sẵn sàng phục vụ tự động hóa.<br>• User Data bootstrap EC2 hoàn chỉnh. |
+| **Thứ 4 (08/07/2026)** | • Tạo **Target Group** `LearnSphere-Backend-TG` cổng 5000, giao thức HTTP.<br>• Thiết lập Health Check định kỳ gọi API `/health/ready` (cổng 5000) để theo dõi trạng thái container Backend.<br>• Khởi tạo **Application Load Balancer** public tại 2 Public Subnets, chuyển tiếp traffic port 443 về Target Group. | • Cấu hình Load Balancing hoàn tất.<br>• Health Check theo dõi sức khỏe ứng dụng. |
+| **Thứ 5 (09/07/2026)** | • Khởi tạo **Auto Scaling Group** dựa trên Launch Template vừa tạo.<br>• Cấu hình trải dài trên 2 Private Subnets (Availability Zone `1a`, `1b`).<br>• Thiết lập tham số scale: `Desired capacity = 2`, `Minimum capacity = 2`, `Maximum capacity = 4`.<br>• Liên kết Auto Scaling Group với Target Group của ALB. | • ASG duy trì ổn định 2 EC2 Instances.<br>• Kiến trúc High Availability (HA) hoàn thiện. |
+| **Thứ 6 (10/07/2026)** | • Truy cập DNS Name của ALB để kiểm thử luồng hoạt động tổng thể của Backend.<br>• Thực hành HA Validation: Cố tình tắt máy (Terminate) 1 máy chủ EC2 InService để quan sát ASG tự động phát hiện lỗi và khởi chạy máy chủ thay thế.<br>• Họp Review tuần 6 với Mentor. | • Backend phân phối tải thành công qua ALB.<br>• ASG tự phục hồi (Self-healing) hiệu quả. |
 
 ---
 
 ### 3. Nội dung học tập & Tìm hiểu (AWS & Core Tech)
 
 #### A. Kiến thức Đám mây AWS (AWS Cloud Fundamentals)
-* **AWS IAM OIDC Identity Provider:**
-  * Giải pháp bảo mật **Zero Static Credentials**: GitHub Actions lấy thông tin xác thực ngắn hạn từ AWS STS qua giao thức OpenID Connect.
-* **Amazon CloudFront & Origin Access Control (OAC):**
-  * Thay thế cơ chế cũ OAI bằng OAC tiên tiến hỗ trợ mã hóa HTTP/HTTPS chuẩn AWS.
-  * Phân phối toàn bộ ứng dụng qua một tên miền HTTPS duy nhất, loại bỏ lỗi Mixed Content và CORS.
-* **CloudFront Edge Functions:**
-  * Lập trình kịch bản nhẹ chạy trên điểm mạng biên (Edge Location) để điều hướng đường dẫn ứng dụng trang đơn React.
+* **Application Load Balancer (ALB) & Target Group:**
+  * ALB hoạt động ở lớp 7 (Layer 7), có khả năng đọc HTTP/HTTPS header để định tuyến thông minh.
+  * Target Group Health Check quyết định máy chủ nào "khỏe mạnh" để nhận lượng truy cập.
+* **Auto Scaling Group (ASG) & Launch Template:**
+  * ASG giúp hệ thống chịu lỗi (Fault Tolerant) nhờ khả năng thay thế instance bị hỏng.
+  * Tái sử dụng cấu hình thông qua Launch Template, quản lý các phiên bản cấu hình dễ dàng.
+* **AWS Systems Manager Parameter Store:**
+  * Mã hóa biến môi trường bằng KMS, truyền động qua môi trường chạy thay vì lưu file `.env`.
 
 ---
 
 ### 4. Kết quả đạt được (Deliverables)
-* IAM OIDC Provider & Role `LearnSphereGitHubDeployRole` sẵn sàng cho CI/CD.
-* 2 S3 Buckets private bảo mật 100%.
-* CloudFront Distribution `EQRDOBSCG5MC8` tích hợp OAC, API Forwarding và CloudFront SPA Function.
+* Secrets quản lý tập trung và mã hóa an toàn trên AWS SSM.
+* ALB Public Endpoint phân phối lưu lượng Backend ổn định.
+* Auto Scaling Group duy trì High Availability với khả năng tự phục hồi.

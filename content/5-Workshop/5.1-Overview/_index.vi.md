@@ -1,63 +1,98 @@
 ---
-title: "Giới thiệu"
-date: 2026-07-27
+title: "Tổng quan dự án"
+date: 2026-07-30
 weight: 1
 chapter: false
 pre: " <b> 5.1. </b> "
 ---
 
-### 1. Giới thiệu tổng quan dự án LearnSphere
+#### Giới thiệu LearnSphere
 
-**LearnSphere** là một nền tảng học tập trực tuyến (E-Learning Platform) hiện đại, hỗ trợ toàn bộ quy trình dạy và học dành cho cả Giáo viên (Tutor) và Học viên (Student). Hệ thống được thiết kế theo cấu trúc Monorepo đơn giản, giúp quản lý đồng bộ mã nguồn và tối ưu hóa quy trình kiểm thử:
+LearnSphere là nền tảng học tập trực tuyến dành cho học viên, giảng viên và quản trị viên. Hệ thống tập trung khóa học, bài học, video, tài liệu, quiz, tiến độ học tập và tương tác AI trong cùng một ứng dụng.
 
-- **Frontend (`LearnSphere_FE`)**: Ứng dụng giao diện người dùng Single Page Application (SPA) phát triển bằng React.js, TypeScript và Vite, mang lại trải nghiệm mượt mà và tốc độ phản hồi nhanh.
-- **Backend (`LearnSphere_BE`)**: Hệ thống dịch vụ RESTful API phát triển trên nền Node.js và Express.js, đảm nhận các tác vụ xử lý nghiệp vụ, quản lý phiên đăng nhập, xác thực quyền truy cập và kết nối với các mô hình trí tuệ nhân tạo (AI).
-- **Cơ sở dữ liệu (MongoDB Atlas)**: Hệ quản trị cơ sở dữ liệu NoSQL dạng Document-oriented lưu trữ toàn bộ dữ liệu người dùng, cấu trúc khóa học, tiến trình học tập và bài thi Quiz.
-- **Lưu trữ đối tượng (Amazon S3)**: Quản lý các tệp truyền thông dung lượng lớn như video bài giảng, tài liệu học tập PDF và hình ảnh khóa học.
+#### Bối cảnh và vấn đề cần giải quyết
 
-![Sơ đồ Kiến trúc LearnSphere Production trên AWS](/images/LEARNSHPHERE.drawio.png)
+Các hệ thống học trực tuyến thông thường thường tách rời nội dung, bài kiểm tra và quá trình theo dõi học tập. Giảng viên phải đọc tài liệu, soạn câu hỏi và kiểm tra kết quả bằng nhiều thao tác thủ công; học viên cũng khó nhận được hỗ trợ ngay khi tự học. Video và document dung lượng lớn nếu truyền qua Backend còn làm tăng tải server và khiến việc mở rộng hệ thống phức tạp.
 
----
+LearnSphere giải quyết các vấn đề trên bằng cách:
 
-### 🌐 Liên kết Dự án & Tài nguyên (Project Links & Resources)
+* Tập trung quản lý khóa học, bài học, học viên, quiz và tiến độ.
+* Lưu media trên Amazon S3 và truyền file trực tiếp bằng presigned URL.
+* Dùng nội dung document làm ngữ cảnh cho AI Assistant, tóm tắt và sinh quiz.
+* Tách Frontend, Backend, dữ liệu và media để từng thành phần có thể vận hành độc lập.
+* Tự động hóa triển khai production bằng GitHub Actions và AWS.
 
-| Tài nguyên | Liên kết (URL) | Mô tả chi tiết |
+#### Mã nguồn dự án
+
+![Repository GitHub của LearnSphere](/images/learnsphere-github-repository.png)
+
+<p align="center"><i>Hình 5.1. Repository LearnSphere gồm Frontend, Backend, workflow CI/CD và tài liệu triển khai.</i></p>
+
+Mã nguồn production được quản lý tại [HoiaeKHMT/LearnSphere](https://github.com/HoiaeKHMT/LearnSphere). Nhánh `main` là nguồn phát hành production; mỗi commit được GitHub Actions kiểm tra, đóng gói và triển khai theo workflow đã cấu hình.
+
+#### Phạm vi workshop
+
+| Nội dung | Trong phạm vi |
+| --- | --- |
+| Ứng dụng | Frontend React/Vite và Backend Express/Docker |
+| Hạ tầng | VPC Multi-AZ, ALB, ASG, EC2 private, NAT Gateway |
+| Lưu trữ | S3 Frontend, S3 Media và ECR |
+| Phân phối | CloudFront, HTTPS, ACM và tên miền tùy chỉnh |
+| Dữ liệu và AI | MongoDB Atlas, xử lý document/OCR và Groq |
+| Vận hành | GitHub OIDC, CI/CD, CloudWatch Logs/Alarms và SNS |
+
+Workshop tập trung vào kiến trúc production đang triển khai tại `ap-southeast-1`. Việc phát triển chi tiết từng màn hình không được lặp lại; phần này trình bày cách đưa ứng dụng hoàn chỉnh lên AWS và xác minh kết quả.
+
+#### Công nghệ sử dụng
+
+| Thành phần | Công nghệ | Trách nhiệm |
 | --- | --- | --- |
-| 🌐 **Website Sản phẩm (Production)** | [https://www.learnspherev2.id.vn/](https://www.learnspherev2.id.vn/) | Website ứng dụng LearnSphere chính thức đang vận hành thực tế trên AWS |
-| 🐙 **GitHub Repository** | [https://github.com/HoiaeKHMT/LearnSphere](https://github.com/HoiaeKHMT/LearnSphere) | Mã nguồn dự án LearnSphere (Backend Express.js & Frontend React Monorepo) |
-| 🎬 **Video Demo** | [Xem Video Demo trên Google Drive](https://drive.google.com/file/d/1J6heEzrB1jZO3C5Z3tuz1LBwdkRozMh4/view) | Video giới thiệu các tính năng và toàn bộ quy trình vận hành hệ thống |
+| Frontend | React 18, TypeScript, Vite, Tailwind CSS | SPA theo vai trò, khóa học, quiz, upload và AI Assistant |
+| Backend | Node.js 24, Express 5, Docker | REST API, authentication, nghiệp vụ, presigned URL và AI orchestration |
+| Database | MongoDB Atlas, Mongoose | User, Course, Lesson, Enrollment, Quiz, Attempt, Progress và AI Message |
+| Media | Amazon S3 | Video, document, thumbnail và avatar |
+| AI | Groq API | Chat theo bài học, tóm tắt document và sinh quiz |
+| Document | pdf-parse, Mammoth, Tesseract.js | Trích xuất PDF/DOCX và OCR PDF scan |
 
----
+#### Chức năng chính
 
-### 2. Mục tiêu kỹ thuật của Bài Workshop
+* Học viên đăng ký khóa học, học theo bài, xem tài liệu, theo dõi tiến độ và làm quiz.
+* Giảng viên quản lý khóa học, bài học, học viên, quiz và xem chi tiết kết quả.
+* Quản trị viên quản lý tài khoản, giám sát hệ thống và xem dữ liệu theo giảng viên.
+* Media dung lượng lớn được upload trực tiếp bằng presigned URL và multipart upload.
+* AI sử dụng nội dung document làm context; summary được lưu lại để tránh gọi model lặp lại.
 
-Mục tiêu chính của bài workshop này là hướng dẫn từng bước đưa ứng dụng LearnSphere từ môi trường máy cá nhân lên hệ thống hạ tầng đám mây **AWS khu vực Singapore (`ap-southeast-1`)** đạt chuẩn Production-Grade.
+#### Mục tiêu kỹ thuật
 
-Sau khi hoàn thành bài workshop, người thực hiện sẽ làm chủ các tiêu chuẩn Cloud Native và DevOps cốt lõi:
+1. Triển khai Frontend private trên S3 và phân phối bằng CloudFront HTTPS.
+2. Chạy Backend trên ít nhất hai EC2 private thuộc hai AZ.
+3. Chỉ cho phép Backend nhận traffic từ ALB Security Group.
+4. Duy trì Backend bằng ASG và health check `/health/ready`.
+5. Phát hành image bất biến theo Git commit SHA.
+6. Không lưu AWS access key dài hạn trong repository hoặc server.
+7. Có log tập trung, cảnh báo và quy trình rollback.
 
-* **Bảo mật Zero Static Credentials**: Loại bỏ hoàn toàn rủi ro rò rỉ Access Key/Secret Key dài hạn. Cấu hình GitHub Actions OIDC để lấy thông tin xác thực ngắn hạn từ AWS STS khi chạy pipeline, kết hợp gán IAM Instance Profile (IMDSv2) cho máy chủ EC2 để tự động truy cập dịch vụ AWS.
-* **An toàn Mạng và Quản trị Không Cần SSH**: Thiết lập Security Group đóng hoàn toàn cổng kết nối SSH (Port 22) và các cổng public từ Internet. Việc điều khiển và quản trị máy chủ EC2 được thực hiện 100% qua kênh truyền mã hóa AWS Systems Manager (SSM) Session Manager.
-* **Phân phối Nội dung Tối ưu qua CDN**: Triển khai Amazon CloudFront làm điểm truy cập HTTPS duy nhất cho toàn bộ hệ thống. Phân phối mã nguồn tĩnh Frontend từ S3 Private qua cơ chế Origin Access Control (OAC), đồng thời chuyển tiếp các truy vấn API `/api/*` về máy chủ EC2, loại bỏ triệt để lỗi CORS và Mixed Content. Đính kèm CloudFront Function xử lý SPA Routing để tránh lỗi 404 khi người dùng tải lại trang trên các đường dẫn phụ.
-* **Tự động hóa CI/CD Zero-Downtime & Auto-Rollback**: Đóng gói Backend bằng Multi-stage Docker Build trên nền Linux Alpine chạy dưới quyền non-root. Tự động hóa pipeline triển khai: kiểm thử container thử nghiệm trên cổng tạm thời, thực hiện Health Check định kỳ, chỉ chuyển đổi sang container chính khi kiểm thử thành công và tự động hoàn tác (Rollback) về phiên bản cũ nếu gặp sự cố.
-* **Giám sát Tập trung và Cảnh báo Chủ động**: Đẩy toàn bộ log ứng dụng về Amazon CloudWatch Logs tập trung. Khởi tạo CloudWatch Alarms theo dõi mức độ sử dụng CPU và trạng thái phần cứng/mạng của máy chủ, tích hợp Amazon SNS để gửi email cảnh báo tức thì tới người quản trị khi hệ thống xảy ra bất thường.
+#### Tổ chức repository
 
----
+```text
+LearnSphere/
+├── LearnSphere_BE/          # Express API, models, services, Dockerfile
+├── LearnSphere_FE/          # React/Vite SPA
+├── .github/workflows/       # CI/CD production
+├── docs/                    # Tài liệu triển khai
+└── README.md
+```
 
-### 3. Bảng tổng hợp Cấu hình Kỹ thuật
+#### Sản phẩm production
 
-| Thành phần | Công nghệ / Dịch vụ AWS | Vai trò & Chi tiết cấu hình |
-| --- | --- | --- |
-| **Mạng & Phân phối CDN** | Amazon CloudFront | Tối ưu hóa phân phối nội dung HTTPS, bảo mật dữ liệu tĩnh qua OAC, tự động điều hướng đường dẫn ứng dụng trang đơn React. |
-| **Lưu trữ Frontend** | Amazon S3 Frontend | Lưu trữ các tệp tĩnh sau khi biên dịch React ở trạng thái Private hoàn toàn. |
-| **Máy chủ Backend** | Amazon EC2 (`t3.small`) | Vận hành Docker Container ứng dụng Node.js/Express trên cổng nội bộ 5000, cấu hình bộ nhớ Swap 2GB phòng chống tràn RAM. |
-| **Kho lưu trữ Container** | Amazon ECR | Lưu trữ các bản đóng gói Docker Image của Backend, bật tính năng tự động quét lỗ hổng bảo mật khi đẩy image mới. |
-| **Lưu trữ Truyền thông** | Amazon S3 Media | Lưu trữ Video, PDF, Hình ảnh bài học. Toàn bộ thao tác tải lên và tải xuống bắt buộc thông qua Presigned URL có thời hạn được sinh từ Backend. |
-| **Cơ sở dữ liệu** | MongoDB Atlas | Lưu trữ dữ liệu hệ thống dạng Document, kết nối an toàn từ EC2 qua chuỗi kết nối mã hóa SRV. |
-| **Tự động hóa CI/CD** | GitHub Actions + OIDC | Tự động biên dịch, kiểm thử, đóng gói, triển khai và hoàn tác an toàn qua AWS Systems Manager. |
-| **Giám sát & Cảnh báo** | CloudWatch Logs & Alarms + SNS | Quản lý log tập trung, tự động theo dõi hiệu năng hệ thống và gửi thông báo cảnh báo qua Email. |
+![Trang chủ LearnSphere production](/images/learnsphere-production-homepage.png)
 
----
+<p align="center"><i>Hình 5.2. Giao diện LearnSphere hoạt động trên tên miền production.</i></p>
 
-### 4. Kết quả đạt được sau khi hoàn thành
+Sau workshop, người thực hiện có thể:
 
-Sau khi hoàn tất bài workshop, hệ thống LearnSphere sẽ vận hành hoàn chỉnh trên môi trường Production dưới tên miền chính thức **[https://www.learnspherev2.id.vn/](https://www.learnspherev2.id.vn/)** (kết nối qua CloudFront HTTPS Distribution). Mọi thao tác từ đăng ký, đăng nhập, tải bài giảng, xem video, làm bài thi Quiz đến tương tác với AI Assistant đều diễn ra tự động, bảo mật và có tính sẵn sàng cao.
+* Triển khai lại kiến trúc Multi-AZ của LearnSphere.
+* Phát hành phiên bản mới bằng `git push`.
+* Xác minh ASG có hai instance và Target Group có hai target khỏe mạnh.
+* Kiểm tra Frontend, API, S3 Media, MongoDB và Groq theo luồng end-to-end.
+* Truy cập ứng dụng tại [https://www.learnspherev2.id.vn](https://www.learnspherev2.id.vn).

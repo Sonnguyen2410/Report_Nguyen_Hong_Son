@@ -6,14 +6,14 @@ chapter: false
 pre: " <b> 1.7. </b> "
 ---
 
-## Topic: CI/CD Pipeline Automation with GitHub Actions & SSM RunCommand Rollback
+## Topic: Frontend CloudFront, Domain & GitHub Actions CI/CD Automation
 
 ### 1. Week 7 Objectives (Jul 13, 2026 – Jul 17, 2026)
-* Declare GitHub Repository Secrets (`AWS_GITHUB_ROLE_ARN`, `EC2_INSTANCE_ID`, `VITE_API_BASE_URL`, `S3_FE_BUCKET`, `CLOUDFRONT_FE_DISTRIBUTION_ID`).
-* Build `.github/workflows/deploy.yml` automation workflow containing 2 jobs: `deploy-backend` and `deploy-frontend`.
-* Automate EC2 Backend deployments via **AWS Systems Manager (SSM) RunCommand** without Port 22 SSH.
-* Implement `candidate` container health checks, Zero-Downtime Swapping, and **Auto-Rollback** to `rollback` containers upon failure.
-* Automate React Frontend builds, S3 sync, and CloudFront Cache Invalidation `/*`.
+* Provision **Amazon S3 Frontend Bucket** and **Amazon CloudFront CDN** with Origin Access Control (OAC).
+* Register a custom domain and provision SSL/TLS certificates via **AWS Certificate Manager (ACM)**.
+* Establish secure **GitHub Actions OIDC Identity Provider** authentication on AWS IAM.
+* Build an automated CI/CD pipeline for the Backend featuring **ASG Instance Refresh & Auto-Rollback**.
+* Build an automated CI/CD pipeline for the Frontend to sync with S3 and Invalidate CloudFront Cache.
 
 ---
 
@@ -21,24 +21,32 @@ pre: " <b> 1.7. </b> "
 
 | Day | Detailed Tasks Executed | Key Deliverables / Outcomes |
 |---|---|---|
-| **Monday (Jul 13, 2026)** | • Opened GitHub Repository $\rightarrow$ **Settings** $\rightarrow$ **Secrets and variables** $\rightarrow$ **Actions**.<br>• Declared 5 critical CI/CD deployment secrets.<br>• Enforced Zero Static Credentials security guidelines. | • 5 CI/CD Secrets configured.<br>• Zero Static Credentials security. |
-| **Tuesday (Jul 14, 2026)** | • Authored `.github/workflows/deploy.yml` configuring `deploy-backend` job.<br>• Added `aws-actions/configure-aws-credentials@v4` step using OIDC authentication.<br>• Built Docker Image packaging step tagging SHA Git Commit hashes and pushing to ECR. | • `deploy.yml` Backend Job.<br>• Automated Docker build & ECR push. |
-| **Wednesday (Jul 15, 2026)** | • Authored Bash deployment script via `aws ssm send-command`.<br>• Configured temporary port 5001 `candidate` container execution with a 24-iteration `/health/ready` retry loop.<br>• Built Zero-Downtime container renaming and Auto-Rollback logic upon health check failures. | • SSM RunCommand Deployment script.<br>• Zero-Downtime & Auto-Rollback logic. |
-| **Thursday (Jul 16, 2026)** | • Configured `deploy-frontend` job running upon successful backend deployment.<br>• Built React static assets (`npm run build`), synced `dist` directory to S3 Frontend Bucket (`aws s3 sync --delete`).<br>• Added CloudFront cache invalidation (`aws cloudfront create-invalidation --paths "/*"`). | • Completed `deploy-frontend` Job.<br>• Automated S3 Sync & CDN Invalidation. |
-| **Friday (Jul 17, 2026)** | • Triggered end-to-end CI/CD pipeline via `git push origin main`.<br>• Resolved initial OIDC IAM Trust Policy string mismatch (`repo:username/repository:ref:refs/heads/main`).<br>• Verified 100% successful execution for both deployment jobs and attended Week 7 review. | • 100% passing GitHub Actions pipeline.<br>• Resolved OIDC permission issues. |
+| **Monday (Jul 13, 2026)** | • Created S3 Bucket `learnsphere-frontend` (Block Public Access enabled).<br>• Configured CloudFront Distribution, enabling Origin Access Control (OAC) to grant CloudFront read access to S3.<br>• Added a Routing Behavior directing `/api/*` to the Backend ALB, resolving CORS issues natively. | • Secure S3 & CloudFront integration.<br>• Seamless SPA & API routing. |
+| **Tuesday (Jul 14, 2026)** | • Requested an SSL certificate for `*.learnspherev2.id.vn` via AWS ACM in the `us-east-1` region.<br>• Validated domain ownership via Route 53 DNS records.<br>• Attached the ACM certificate and custom domain `www.learnspherev2.id.vn` to the CloudFront Distribution. | • HTTPS-secured production website.<br>• Custom domain fully operational. |
+| **Wednesday (Jul 15, 2026)** | • Configured **GitHub OIDC Identity Provider** on IAM and created `LearnSphereGitHubDeployRole`.<br>• Attached policies for ECR Push, SSM Parameter Store (for tag rollback), and Auto Scaling updates.<br>• Ensured zero Static Access Keys are stored in the GitHub Repository. | • Zero Static Credentials security.<br>• Repository-scoped IAM permissions. |
+| **Thursday (Jul 16, 2026)** | • Authored Backend deployment GitHub Actions Workflow (`deploy-backend.yml`).<br>• Scripted steps to build Docker image, push to ECR, and trigger `aws autoscaling start-instance-refresh`.<br>• Implemented Auto-Rollback logic: If refresh fails, restore the previous Image Tag from SSM Parameter Store. | • Fully automated Backend CI/CD.<br>• Resilient Rollback mechanism. |
+| **Friday (Jul 17, 2026)** | • Authored Frontend Workflow (`deploy-frontend.yml`): compile React, upload to S3 (`aws s3 sync`).<br>• Added CloudFront cache clearing step via `aws cloudfront create-invalidation`.<br>• Triggered the full CI/CD pipeline via `git push` and attended Week 7 review. | • Completed Frontend CI/CD.<br>• Reliable end-to-end pipelines. |
 
 ---
 
 ### 3. Core Tech & Learning Topics
 
-#### A. AWS Infrastructure & DevOps
-* **AWS Systems Manager (SSM) RunCommand:** Remote SSH-less shell script execution on EC2.
-* **GitHub Actions CI/CD:** OIDC short-lived credential authentication and multi-job workflow orchestration.
-* **Zero-Downtime & Health Check Rollback:** Testing candidate containers on temporary ports before production traffic cutover.
+#### A. Content Delivery & DNS (CDN & DNS)
+* **Amazon CloudFront & OAC:**
+  * Securing S3 origin by forcing all traffic through CloudFront using Origin Access Control.
+  * Intelligent multi-origin routing (S3 for static assets, ALB for dynamic APIs).
+* **AWS Certificate Manager (ACM):**
+  * Managing the lifecycle of free SSL/TLS certificates, requiring deployment in `us-east-1` for CloudFront integration.
+
+#### B. DevOps & CI/CD Automation
+* **GitHub Actions OIDC (OpenID Connect):**
+  * Advanced security mechanism allowing GitHub Actions to assume temporary AWS credentials via Trust Policies instead of hardcoded keys.
+* **Auto Scaling Instance Refresh:**
+  * AWS native rolling update mechanism, seamlessly replacing old EC2 instances with new ones without causing downtime.
 
 ---
 
 ### 4. Deliverables
-* Complete `.github/workflows/deploy.yml` pipeline workflow.
-* SSM RunCommand script with Health Check and Auto-Rollback capability.
-* Automated CloudFront CDN cache invalidation workflow.
+* Fully functional website accessible via secure custom domain `https://www.learnspherev2.id.vn/`.
+* Secure OIDC integration between GitHub and AWS IAM.
+* Automated and resilient CI/CD Pipelines for both Backend and Frontend with Rollback support.

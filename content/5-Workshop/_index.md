@@ -1,31 +1,45 @@
 ---
 title: "Workshop"
-date: 2026-07-27
+date: 2026-07-30
 weight: 5
 chapter: false
 pre: " <b> 5. </b> "
 ---
 
-# Main Technical Project: Production-Grade LearnSphere System Deployment and Operation on AWS Infrastructure
+# Deploying LearnSphere on AWS
 
 #### Overview
 
-**LearnSphere** is a modern online learning platform (E-Learning Platform) designed following a Monorepo architecture (React/Vite SPA Frontend and Node.js/Express REST API Backend), integrated with **MongoDB Atlas** database and advanced AI features.
+This workshop documents the complete journey from local LearnSphere source code to production in the AWS Singapore Region (`ap-southeast-1`). The React/Vite Frontend is delivered through Amazon S3 and CloudFront. The Dockerized Node.js/Express Backend runs in an Auto Scaling Group with two private EC2 instances across two Availability Zones and is exposed through an Application Load Balancer.
 
-In this workshop, we will deploy the complete LearnSphere application to **AWS cloud infrastructure (Singapore Region - ap-southeast-1)** adhering to top industry technical standards in production operations:
+The current CI/CD process uses GitHub OIDC, ECR, Systems Manager Parameter Store, and Auto Scaling Instance Refresh with health validation and image-tag rollback.
 
-* **Zero Static Credentials**: Automate authentication between GitHub Actions and AWS STS via **OpenID Connect (OIDC)**; assign **IAM Instance Profile (IMDSv2)** to EC2 to completely eliminate static Access Keys from source code or environment variables.
-* **Network Security & Remote Management**: Completely block inbound SSH (Port 22) access from the Internet; control and execute scripts on EC2 100% securely via **AWS Systems Manager (SSM) Session Manager**.
-* **CDN Distribution Optimization (Single Domain)**: Distribute static Frontend assets from S3 Private via **CloudFront Origin Access Control (OAC)** and proxy `/api/*` requests to EC2 port 5000, eliminating CORS and Mixed Content issues.
-* **CI/CD Pipeline & Auto-Rollback**: Fully automate Multi-stage Docker packaging, ECR push, Candidate Container testing (port 5001) with an automatic Zero-Downtime Rollback mechanism.
-* **Proactive Monitoring**: Automatically collect application logs into **CloudWatch Logs** and dispatch immediate notifications to administrator email via **CloudWatch Alarms** and **Amazon SNS**.
+#### Key outcomes
 
----
+* Production website: [https://www.learnspherev2.id.vn](https://www.learnspherev2.id.vn).
+* Backend instances run in two private subnets across two Availability Zones.
+* The ALB distributes API requests to two healthy targets.
+* The ASG maintains `min=2`, `desired=2`, and `max=4`.
+* Frontend and media objects are stored in separate private S3 buckets.
+* MongoDB Atlas and Groq are reached through per-AZ NAT Gateways.
+* GitHub Actions uses temporary OIDC credentials instead of long-lived AWS keys.
+* CloudWatch centralizes logs and SNS notifies the administrator.
 
-#### Table of Contents
+#### Contents
 
-1. [5.1. Overview](5.1-Overview/)
-2. [5.2. Prerequisites](5.2-Prerequisite/)
-3. [5.3. Architecture Description](5.3-Architecture/)
-4. [5.4. Hands-on Steps](5.4-Hands-on/)
-5. [5.5. Clean-up](5.5-Cleanup/)
+1. [Project overview](5.1-overview/)
+2. [Deployment preparation](5.2-preparation/)
+3. [Architecture and system flows](5.3-architecture/)
+4. [Core AWS infrastructure](5.4-infrastructure/)
+5. [High-availability Backend deployment](5.5-backend-ha/)
+6. [Frontend, CloudFront, and domain deployment](5.6-frontend-domain/)
+7. [CI/CD automation](5.7-cicd/)
+8. [Data, media, and AI](5.8-data-ai/)
+9. [Monitoring and alerting](5.9-monitoring/)
+10. [Testing and results](5.10-testing/)
+11. [Cost analysis](5.11-cost/)
+12. [Resource cleanup](5.12-cleanup/)
+
+#### Conclusion
+
+This workshop completes the journey from LearnSphere source code to a secure, automated, and highly available production environment. The system combines CloudFront, S3, ALB, and an Auto Scaling Group across two Availability Zones; GitHub Actions, GitHub OIDC, and ECR release the Backend without SSH administration or long-lived access keys. The result is an online learning platform that can operate reliably, provide centralized observability, and scale further as user demand grows.

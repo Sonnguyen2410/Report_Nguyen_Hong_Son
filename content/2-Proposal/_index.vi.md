@@ -10,89 +10,94 @@ pre: " <b> 2. </b> "
 ## Nền tảng học tập trực tuyến thông minh tích hợp AI
 
 ### 1. Tóm tắt điều hành
-LearnSphere là nền tảng học tập trực tuyến (E-Learning) thế hệ mới được thiết kế nhằm nâng cao hiệu quả giảng dạy và học tập trong môi trường giáo dục hiện đại. Nền tảng kết hợp ứng dụng web full-stack (React/Vite & Express/MongoDB) với hạ tầng đám mây AWS (EC2, CloudFront, S3, ECR, AWS Systems Manager, CloudWatch, SNS), quy trình tự động hóa CI/CD qua GitHub Actions và Trí tuệ Nhân tạo tốc độ cao từ Groq API (LLM Inference Engine). Hệ thống hỗ trợ phân quyền linh hoạt cho 3 nhóm người dùng (Student, Instructor, Admin), tích hợp các tính năng nổi bật như Trợ lý AI hỗ trợ giải đáp thắc mắc 24/7, tự động trích xuất tài liệu (PDF/Word/Ảnh scan OCR) để tạo bài kiểm tra Quiz thông minh, lưu trữ tài nguyên đa phương tiện bảo mật qua S3 Media Bucket, và giám sát chỉ số hệ thống thời gian thực qua AWS CloudWatch kết hợp tự động gửi cảnh báo email đến Admin qua Amazon SNS.
+LearnSphere là nền tảng học tập trực tuyến (E-Learning) thế hệ mới được thiết kế nhằm nâng cao hiệu quả giảng dạy và học tập trong môi trường giáo dục hiện đại. Nền tảng kết hợp ứng dụng web full-stack (React/Vite & Express/MongoDB) với hạ tầng đám mây AWS thiết kế theo chuẩn High Availability (VPC Multi-AZ, Application Load Balancer, Auto Scaling, EC2, CloudFront, S3, ECR, CloudWatch, SNS), quy trình tự động hóa CI/CD không mật khẩu tĩnh (OIDC) qua GitHub Actions và Trí tuệ Nhân tạo tốc độ cao từ Groq API (Llama 3 Inference Engine). Hệ thống hỗ trợ phân quyền linh hoạt cho 3 nhóm người dùng (Student, Instructor, Admin), tích hợp các tính năng nổi bật như Trợ lý AI hỗ trợ giải đáp thắc mắc 24/7, tự động trích xuất tài liệu (PDF/Word/Ảnh scan OCR) để tạo bài kiểm tra Quiz thông minh, lưu trữ tài nguyên đa phương tiện bảo mật qua S3 Media Bucket, và giám sát chỉ số hệ thống thời gian thực qua AWS CloudWatch kết hợp tự động gửi cảnh báo email đến Admin qua Amazon SNS.
 
 ---
 
 ### 2. Tuyên bố vấn đề
 
 #### Vấn đề hiện tại
-Các hệ thống E-Learning truyền thống thiếu tính cá nhân hóa và khả năng hỗ trợ tức thì cho học viên ngoài giờ lên lớp. Giảng viên mất quá nhiều thời gian thủ công để đọc tài liệu, tóm tắt và biên soạn từng câu hỏi kiểm tra cho học viên. Bên cạnh đó, các tài liệu bài giảng dạng file PDF, file Word (.docx) hoặc tài liệu dạng ảnh scan (OCR) chưa được tự động hóa để chuyển đổi thành dữ liệu bài học. Về mặt vận hành, việc triển khai ứng dụng thiếu tự động hóa (chưa có CI/CD) và lưu trữ trực tiếp các video dung lượng lớn trên server gây quá tải hệ thống và khó quản lý log vận hành.
+Các hệ thống E-Learning truyền thống thiếu tính cá nhân hóa và khả năng hỗ trợ tức thì cho học viên ngoài giờ lên lớp. Giảng viên mất quá nhiều thời gian thủ công để đọc tài liệu, tóm tắt và biên soạn từng câu hỏi kiểm tra cho học viên. Bên cạnh đó, các tài liệu bài giảng dạng file PDF, file Word (.docx) hoặc tài liệu dạng ảnh scan (OCR) chưa được tự động hóa để chuyển đổi thành dữ liệu bài học. Về mặt vận hành, việc triển khai ứng dụng thiếu tự động hóa, lưu trữ dữ liệu trực tiếp trên máy chủ gây quá tải và hạ tầng đơn lẻ (Single AZ) tiềm ẩn nguy cơ gián đoạn dịch vụ cao (Single Point of Failure).
 
 #### Giải pháp
-LearnSphere triển khai kiến trúc hạ tầng AWS sản xuất (ap-southeast-1) tối ưu: Frontend (React/Vite) được build tĩnh lưu trữ trên Amazon S3 (`S3 Frontend`) và phân phối qua Amazon CloudFront CDN. Backend (Express.js) được đóng gói dạng Docker container, quản lý trên Amazon ECR và triển khai tự động lên Amazon EC2 Instance trong VPC (Public Subnet qua Internet Gateway) thông qua quy trình GitHub Actions CI/CD kết hợp AWS Systems Manager (SSM) và IAM. Cơ sở dữ liệu sử dụng MongoDB Atlas, trong khi các file đa phương tiện và tài liệu bài học được lưu trữ trên Amazon S3 (`S3 Media`). Tính năng thông minh tích hợp Groq API LLM Inference kết hợp các thư viện xử lý văn bản (`pdf-parse`, `mammoth`, `tesseract.js` OCR) giúp tự động hóa khâu tóm tắt bài học, vận hành Trợ lý AI (AI Tutor) và sinh ngân hàng câu hỏi Quiz đa dạng. Hệ thống được theo dõi chặt chẽ qua AWS CloudWatch (Logs & Alarms), tự động kích hoạt Amazon SNS (`LearnSphere-Alerts`) gửi thông báo tức thì đến Gmail Admin khi xảy ra sự cố.
+LearnSphere triển khai kiến trúc hạ tầng AWS sản xuất (ap-southeast-1) theo chuẩn High Availability: Frontend (React/Vite) được build tĩnh lưu trữ trên Amazon S3 (`learnsphere-fe-2`) và phân phối qua Amazon CloudFront CDN. Backend (Express.js) được đóng gói dạng Docker container, quản lý trên Amazon ECR và triển khai tự động lên cụm Amazon EC2 Instances thuộc **Auto Scaling Group** trong các **Private Subnets** (Multi-AZ). Người dùng kết nối với Backend thông qua **Application Load Balancer (ALB)** đặt tại **Public Subnets**, trong khi máy chủ Backend giao tiếp với Internet qua NAT Gateways. Quá trình CI/CD được thực hiện hoàn toàn tự động qua GitHub Actions sử dụng **AWS OIDC** và tính năng **Instance Refresh** của Auto Scaling. Cơ sở dữ liệu sử dụng MongoDB Atlas với IP Access List giới hạn chặt chẽ, các file bài giảng được lưu trên Amazon S3 (`learnsphere-media-2`). Tính năng thông minh tích hợp Groq API kết hợp xử lý văn bản (`pdf-parse`, `mammoth`, `tesseract.js`) giúp vận hành Trợ lý AI và sinh Quiz tự động. Toàn bộ hệ thống được theo dõi chặt chẽ qua AWS CloudWatch (Logs & Alarms), tự động kích hoạt Amazon SNS gửi email cảnh báo khi có sự cố.
 
 
 #### Lợi ích và hoàn vốn đầu tư (ROI)
-- **Tối ưu hóa thời gian:** Tự động hóa đến 80% thời gian tạo bài tập/Quiz cho giảng viên.
-- **Hỗ trợ học tập 24/7:** Cung cấp trợ lý học tập cá nhân hóa 24/7 cho sinh viên.
-- **Tối ưu chi phí vận hành:** Việc đóng gói Docker kết hợp CloudFront và EC2 `t2.micro`/`t3.micro` giúp tối ưu hóa ngân sách vận hành, ước tính chi phí hạ tầng khoảng 8,30 – 14,80 USD/tháng (~99,60 – 177,60 USD cho 12 tháng).
-- **Tăng tốc triển khai:** Quy trình CI/CD giảm 90% thời gian triển khai sản phẩm.
-- **Tốc độ hoàn vốn:** Thời gian hoàn vốn và mang lại hiệu quả rõ rệt đạt từ 1–3 tháng nhờ tiết kiệm hàng trăm giờ làm việc thủ công và nâng cao chất lượng đào tạo.
+- **Tối ưu hóa thời gian:** Tự động hóa đến 80% thời gian tạo bài tập/Quiz cho giảng viên nhờ Groq AI.
+- **Tính sẵn sàng cao (High Availability):** Kiến trúc Multi-AZ với Auto Scaling đảm bảo ứng dụng luôn phục vụ, tự động phục hồi (self-healing) khi có lỗi phần cứng máy chủ.
+- **Bảo mật tuyệt đối:** Backend ẩn trong Private Subnet, không có Public IP. Quy trình CI/CD sử dụng OIDC loại bỏ nguy cơ lộ lọt AWS Access Key.
+- **Tăng tốc triển khai:** Quy trình CI/CD tự động (build, push ECR, instance refresh, CloudFront invalidation) giảm 90% thời gian phát hành tính năng mới.
 
 ---
 
 ### 3. Kiến trúc giải pháp
-Nền tảng áp dụng kiến trúc AWS Cloud Production-ready trong vùng `ap-southeast-1` kết hợp với Docker containerization và quy trình tự động hóa CI/CD qua GitHub Actions. Giao diện người dùng React được phân phối qua Amazon CloudFront CDN kết nối với S3 Frontend. Backend Express.js vận hành trên Amazon EC2 Instance trong VPC Public Subnet qua Internet Gateway, tương tác trực tiếp với MongoDB Atlas, S3 Media Bucket, Groq API (LLM Inference) và hệ thống giám sát CloudWatch / SNS.
+Nền tảng áp dụng kiến trúc AWS Cloud Production-ready High Availability trong vùng `ap-southeast-1`. Giao diện React được phân phối qua Amazon CloudFront CDN (với OAC) kết nối S3 Frontend. Backend Express.js vận hành trên các máy chủ EC2 (Auto Scaling Group) ẩn trong Private Subnets, nhận traffic an toàn từ Application Load Balancer. Backend sử dụng NAT Gateway để gọi external APIs như Groq và MongoDB Atlas.
 
-![LearnSphere AWS Architecture](/images/LEARNSHPHERE.drawio.png)
+![LearnSphere AWS Architecture](/images/LEARNSHPHERE.png)
 
 {{< mermaid >}}
 graph TD
     subgraph Users_Dev ["Người dùng & Deployment"]
         User["👤 USER (Học viên / Giảng viên)"]
-        GitHub["🐙 GitHub (CI/CD Pipeline)"]
+        GitHub["🐙 GitHub (CI/CD Pipeline via OIDC)"]
     end
 
     subgraph AWS_Cloud ["AWS Cloud Infrastructure (ap-southeast-1)"]
-        IAM["🔐 IAM (Identity & Access Control)"]
+        IAM["🔐 IAM (OIDC Trust & Roles)"]
         ECR["📦 Amazon ECR (Container Registry)"]
-        SSM["⚙️ AWS Systems Manager"]
 
         subgraph Edge_Storage ["Edge & Storage Services"]
             CloudFront["⚡ Amazon CloudFront (CDN)"]
-            S3_FE["🪣 S3 Frontend Bucket"]
-            S3_Media["🪣 S3 Media Bucket"]
+            S3_FE["🪣 S3 Frontend Bucket (OAC)"]
+            S3_Media["🪣 S3 Media Bucket (CORS)"]
         end
 
-        subgraph VPC ["AWS VPC (Availability Zone)"]
-            subgraph PublicSubnet ["Public Subnet"]
+        subgraph VPC ["AWS VPC (Multi-AZ)"]
+            subgraph PublicSubnets ["Public Subnets (AZ-a & AZ-b)"]
                 IGW["🌐 Internet Gateway"]
-                EC2["🖥️ Amazon EC2 Instance (Docker Backend)"]
+                ALB["⚖️ Application Load Balancer"]
+                NAT["🔄 NAT Gateways"]
+            end
+            
+            subgraph PrivateSubnets ["Private Subnets (AZ-a & AZ-b)"]
+                ASG["⚙️ Auto Scaling Group (EC2 Backend)"]
             end
         end
 
         subgraph Monitoring_Alerts ["Giám sát & Cảnh báo"]
             CloudWatch["📊 AWS CloudWatch (Logs + Alarms)"]
-            SNS["🔔 Amazon SNS (LearnSphere-Alerts)"]
+            SNS["🔔 Amazon SNS (Alerts Topic)"]
         end
     end
 
-    subgraph External ["Dịch vụ bên ngoài (External Services)"]
+    subgraph External ["Dịch vụ bên ngoài (External)"]
         MongoDB["🍃 MongoDB Atlas (Cloud DB)"]
         Groq["🚀 Groq API (LLM Inference Engine)"]
         Gmail["✉️ Gmail ADMIN"]
     end
 
     %% User Flow
-    User -->|Truy cập Web| CloudFront
+    User -->|Truy cập Web HTTPS| CloudFront
     CloudFront -->|Lấy static assets| S3_FE
-    CloudFront -->|Gửi API Request| IGW
-    IGW --> EC2
-    User <-->|Tải lên / Tải về Media| S3_Media
+    CloudFront -->|Gửi API Request| ALB
+    ALB -->|Cân bằng tải TCP 5000| ASG
+    User <-->|Tải lên / Tải về Media trực tiếp| S3_Media
 
     %% GitHub CI/CD Flow
-    GitHub -->|Xác thực quyền| IAM
+    GitHub -->|Xác thực OIDC| IAM
     GitHub -->|Push Docker Image| ECR
-    GitHub -->|Điều khiển & Deploy EC2| SSM
+    GitHub -->|Kích hoạt Instance Refresh| ASG
     GitHub -->|Làm mới Cache| CloudFront
     GitHub -->|Deploy Static Assets| S3_FE
 
-    %% EC2 Core Services
-    EC2 <-->|Quản lý file truyền thông| S3_Media
-    EC2 <-->|Truy vấn dữ liệu| MongoDB
-    EC2 <-->|Xử lý AI Tutor & Quiz Gen| Groq
-    EC2 -->|Đẩy Logs & Chỉ số| CloudWatch
+    %% Backend Flow
+    ASG -->|Egress| NAT
+    NAT --> IGW
+    NAT <-->|Quản lý file truyền thông| S3_Media
+    NAT <-->|Truy vấn dữ liệu| MongoDB
+    NAT <-->|Xử lý AI Tutor & Quiz Gen| Groq
+    ASG -->|Đẩy Logs & Metrics| CloudWatch
 
     %% System Monitoring & Notification Loop
     CloudWatch -->|Báo động vượt ngưỡng| SNS
@@ -100,22 +105,22 @@ graph TD
 {{< /mermaid >}}
 
 #### Dịch vụ AWS & Công nghệ sử dụng
-- **Amazon EC2 Instance:** Host ứng dụng Backend Express.js (chạy dưới dạng Docker Container) trong Public Subnet thuộc VPC (Region `ap-southeast-1`) kết nối qua Internet Gateway.
-- **Amazon CloudFront & S3 Frontend Bucket:** Phân phối và lưu trữ ứng dụng tĩnh Frontend (React + Vite + Tailwind CSS) giúp tăng tốc độ phản hồi cho người dùng toàn cầu.
-- **S3 Media Bucket:** Lưu trữ bài giảng video, hình ảnh và tài liệu học tập (PDF/Word) phục vụ tương tác trực tiếp với người dùng và server EC2.
-- **Amazon ECR (Elastic Container Registry) & AWS Systems Manager (SSM):** Lưu trữ Docker Images chính thức và quản lý tự động hóa triển khai, thực thi lệnh an toàn lên EC2 Instance.
-- **AWS IAM (Identity and Access Management):** Quản lý quyền truy cập và xác thực an toàn cho quy trình CI/CD từ GitHub Actions tới các dịch vụ AWS.
-- **AWS CloudWatch (Logs & Alarms) & Amazon SNS (`LearnSphere-Alerts`):** Thu thập Logs hệ thống, theo dõi hiệu năng EC2 và tự động kích hoạt cảnh báo gửi tới **Gmail ADMIN**.
-- **GitHub Actions:** Tự động hóa toàn bộ quy trình CI/CD (Build & push Docker image lên ECR, deploy S3 Frontend, invalidate CloudFront cache và điều khiển EC2 qua Systems Manager).
-- **Groq API Engine:** Cung cấp Trí tuệ nhân tạo tốc độ cao (Chatbot AI Tutor, tự động phân tích bài học và sinh Quiz).
-- **MongoDB Atlas:** Cơ sở dữ liệu Cloud MongoDB lưu trữ dữ liệu người dùng, khóa học, bài học và kết quả làm bài.
+- **VPC Multi-AZ & Networking:** VPC bao gồm 2 Public Subnets và 2 Private Subnets trải rộng trên 2 Availability Zones, kết hợp Internet Gateways và NAT Gateways cung cấp đường truyền ra ngoài an toàn.
+- **Application Load Balancer (ALB):** Tiếp nhận luồng traffic HTTPS an toàn (cấp chứng chỉ ACM) và định tuyến vào cụm Backend phía sau.
+- **Auto Scaling Group & EC2:** Tự động điều chỉnh quy mô máy chủ `t3.small` dựa trên cấu hình Launch Template, đảm bảo tính sẵn sàng (High Availability) và tự động thay thế máy chủ lỗi.
+- **Amazon CloudFront & S3 Frontend:** Phân phối ứng dụng React an toàn bằng công nghệ Origin Access Control (OAC), cache tại vùng biên (Edge).
+- **S3 Media Bucket:** Lưu trữ khóa học, hình ảnh, tài liệu (có quy tắc CORS phục vụ presigned URL cho client upload).
+- **Amazon ECR (Elastic Container Registry):** Quản lý phiên bản các Docker image của Backend.
+- **AWS IAM (OIDC):** Xác thực an toàn cho quy trình CI/CD từ GitHub Actions bằng OpenID Connect, loại bỏ Secret Key tĩnh.
+- **AWS CloudWatch & Amazon SNS:** Giám sát logs hệ thống (CloudWatch Logs Agent) và cảnh báo sức khỏe của ALB/ASG qua email.
+- **Groq API Engine:** Trí tuệ nhân tạo tốc độ xử lý nhanh, hỗ trợ Chatbot và phân tích bài học.
+- **MongoDB Atlas:** Cơ sở dữ liệu chia sẻ chung cho toàn bộ EC2, bảo vệ bằng IP Access List (chỉ nhận traffic từ IP của NAT Gateways).
 
 #### Thiết kế thành phần
-- **Quản lý người dùng & Phân quyền:** JWT Authentication với 3 vai trò (Student, Instructor, Admin) và gửi OTP khôi phục mật khẩu.
-- **Quản lý Khóa học & Bài học:** Tạo khóa học (Draft/Published), upload video/tài liệu lên S3 Media, sắp xếp lộ trình bài học.
-- **Xử lý Tài liệu & AI Engine:** Trích xuất text từ file PDF/Word/Ảnh scan (Tesseract OCR tiếng Việt), gửi đến Groq API để tóm tắt và sinh câu hỏi tự động.
-- **Làm bài & Chấm điểm tự động:** Hệ thống Quiz tương tác (Trắc nghiệm, Đúng/Sai, Điền từ, Tự luận) tự động chấm điểm và lưu lịch sử thi.
-- **Quy trình CI/CD, SSM & Cảnh báo SNS:** GitHub Actions tự động kiểm thử, push ECR và deploy qua Systems Manager lên EC2; CloudWatch & SNS giám sát hệ thống 24/7 và gửi cảnh báo tức thì tới Gmail Admin.
+- **Quản lý người dùng & Phân quyền:** JWT Authentication với 3 vai trò (Student, Instructor, Admin) và gửi OTP.
+- **Quản lý Khóa học & Media:** Tạo khóa học, upload trực tiếp video dung lượng lớn từ trình duyệt lên S3.
+- **Xử lý Tài liệu & AI Engine:** Trích xuất văn bản từ PDF/Docx/Hình ảnh (Tesseract OCR tiếng Việt), xử lý thông qua Groq LLM để tóm tắt và sinh câu hỏi trắc nghiệm.
+- **Quy trình CI/CD Zero-Downtime:** GitHub Actions CI/CD tiến hành build/push ECR, sau đó kích hoạt AWS Auto Scaling `start-instance-refresh` để thay thế dần các máy chủ cũ một cách trơn tru.
 
 
 ---
@@ -123,84 +128,64 @@ graph TD
 ### 4. Triển khai kỹ thuật
 
 #### Các giai đoạn triển khai
-Dự án gồm 2 phần — xây dựng Hạ tầng AWS / CI/CD Pipeline và phát triển ứng dụng Web Full-stack tích hợp AI — trải qua 4 giai đoạn gói gọn trong 2 tháng thực tập:
+Dự án được triển khai với kiến trúc thực tế (production) gói gọn trong kỳ thực tập:
 
-1. **Nghiên cứu và thiết kế kiến trúc:** Nghiên cứu yêu cầu hệ thống, thiết kế Database Schema (11 Models), API Design và sơ đồ kiến trúc AWS VPC (Tháng 1 / Tuần 1–2).
-2. **Thiết lập Hạ tầng AWS & CI/CD:** Khởi tạo S3 Buckets, Amazon ECR, EC2 Instance, CloudFront và viết workflow GitHub Actions tự động build Docker image (Tháng 1 / Tuần 2–3).
-3. **Phát triển Core Services & Tích hợp OpenAI:** Xây dựng Backend API (Auth, Course, Lesson, S3 Presigned URL), kết nối OpenAI API, module OCR/PDF parsing và dựng giao diện React/Vite (Tháng 1 / Tuần 4 - Tháng 2 / Tuần 6).
-4. **Kiểm thử, Giám sát CloudWatch & Triển khai:** Cấu hình CloudWatch Logs & Alarms, kiểm thử End-to-End toàn bộ hệ thống trên EC2, tối ưu hiệu năng và đóng gói tài liệu (Tháng 2 / Tuần 7–8).
+1. **Thiết kế Hệ thống & AWS Networking:** Phân tích yêu cầu, thiết kế Database, mô hình hóa VPC Multi-AZ, Public/Private Subnets, Internet/NAT Gateways, Security Groups.
+2. **Xây dựng Ứng dụng & Docker:** Phát triển Backend (Express.js, AI, OCR, S3 Integration) đóng gói Docker; phát triển Frontend (React, Vite, Tailwind).
+3. **Triển khai AWS HA Infrastructure:** Cấu hình ECR, Launch Template, ALB, Target Groups, Auto Scaling Group; thiết lập CloudFront (OAC) và chứng chỉ ACM (HTTPS).
+4. **Tự động hóa CI/CD & Giám sát:** Cấp quyền IAM OIDC cho GitHub Actions để triển khai tự động (Frontend S3, Backend ASG Refresh). Thiết lập CloudWatch Alarms & SNS Topic giám sát tính khả dụng.
+5. **Kiểm thử & Bàn giao:** Kiểm thử luồng E2E trên Production, kiểm tra khả năng Self-Healing của Auto Scaling, hoàn thành báo cáo Workshop.
 
 #### Yêu cầu kỹ thuật
-- **Backend & Infrastructure:** Node.js 18+, Express 5, Mongoose 9, Docker, `@aws-sdk/client-s3`, `@aws-sdk/client-cloudwatch-logs`, OpenAI SDK, `tesseract.js` (data `vie`), `mammoth`, `pdf-parse`. Cấu hình `.env` cho S3 Buckets (`ap-southeast-1`), ECR URI và OpenAI API Key.
-- **Frontend & CI/CD:** React 18, TypeScript, Vite, Tailwind CSS, KaTeX. Workflow GitHub Actions cấu hình AWS Secrets (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`).
+- **Backend:** Node.js 18+, Express 5, Mongoose 9, Docker, `@aws-sdk/client-s3`, `@aws-sdk/client-ssm`, Groq SDK, `tesseract.js` (`vie`), `mammoth`, `pdf-parse`.
+- **Frontend & CI/CD:** React 18, TypeScript, Vite, Tailwind CSS, KaTeX. GitHub Actions (aws-actions/configure-aws-credentials với Role-to-assume).
 
 ---
 
-### 5. Lộ trình & Mốc triển khai
+### 5. Lộ trình triển khai (Worklog 9 Tuần)
 
-```text
-[Tháng 0 / Trước thực tập] ──► [Tháng 1 / Tuần 1-4] ──► [Tháng 2 / Tuần 5-8] ──► [Sau triển khai]
-  Kế hoạch & Thiết kế           AWS Infra & Core API     OpenAI, CI/CD & Test      Vận hành 1 năm
-```
-
-- **Trước thực tập (Tháng 0):** 1 tháng lên kế hoạch, chuẩn bị tài liệu yêu cầu và thiết kế sơ bộ kiến trúc AWS.
-- **Thực tập (Tháng 1–2):**
-  - **Tháng 1:**
-    - *Tuần 1–2:* Hoàn thiện thiết kế Database Schema, API Design và sơ đồ VPC EC2/S3/CloudFront.
-    - *Tuần 3–4:* Khởi tạo hạ tầng AWS (ECR, EC2, CloudFront), cấu hình GitHub Actions CI/CD và viết các API Backend cơ bản.
-  - **Tháng 2:**
-    - *Tuần 5–6:* Tích hợp OpenAI API, trích xuất tài liệu PDF/Docx/OCR, tính năng Trợ lý AI và Tạo Quiz tự động trên Frontend React.
-    - *Tuần 7–8:* Cấu hình AWS CloudWatch Logs & Alarms, kiểm thử End-to-End toàn hệ thống trên EC2, tối ưu hiệu năng và hoàn thiện báo cáo.
-- **Sau triển khai:** Duy trì hệ thống trên AWS, thu thập phản hồi người dùng và mở rộng tính năng trong vòng 1 năm.
+Quá trình triển khai chi tiết có thể theo dõi tại mục **[Worklog](../../1-worklog/)**:
+- **Tuần 1-4:** Thiết kế Database, phát triển API, ứng dụng AI, xử lý Media S3 và giao diện Frontend React.
+- **Tuần 5:** Xây dựng Hạ tầng VPC Multi-AZ, IAM Roles, Đóng gói Container và Amazon ECR.
+- **Tuần 6:** Triển khai Backend High Availability với Application Load Balancer & Auto Scaling Group.
+- **Tuần 7:** Triển khai Frontend CloudFront, Tên miền tùy chỉnh và Tự động hóa CI/CD GitHub Actions qua OIDC.
+- **Tuần 8:** Tích hợp MongoDB Atlas (IP Access List), Giám sát CloudWatch/SNS, Kiểm thử Production E2E và quy trình Dọn dẹp (Clean-up).
+- **Tuần 9:** Tổng kết Dự án, soạn thảo báo cáo tài liệu Hugo và bảo vệ trước Hội đồng Mentor.
 
 ---
 
-### 6. Ước tính ngân sách
+### 6. Phân tích Chi phí (Tối ưu High Availability)
 
-Có thể xem chi phí dịch vụ điện toán đám mây ước tính trên AWS Pricing Calculator.
+Khi ứng dụng chạy trên kiến trúc High Availability (Multi-AZ), cấu trúc chi phí sẽ tập trung vào sự ổn định thay vì tiết kiệm tối đa như môi trường Dev.
 
-#### Chi phí hạ tầng
-
-| Dịch vụ Cloud / AI | Thông số chi tiết | Chi phí / tháng (USD) |
+| Dịch vụ Cloud / AI | Thông số thiết kế (Vùng ap-southeast-1) | Chi phí ước tính |
 | --- | --- | --- |
-| **Amazon EC2 (t2.micro / t3.micro)** | Free Tier hoặc ~0.0116 USD/giờ | 4.50 - 8.50 USD |
-| **Amazon CloudFront & S3 Static (`learnsphere-fe-static`)** | Lưu trữ frontend và chuyển dữ liệu qua CDN | 0.50 USD |
-| **Amazon S3 Standard (`ai-learning-platform-vhd`)** | 10 GB lưu trữ media/tài liệu | 0.30 USD |
-| **Amazon ECR & CloudWatch** | Lưu trữ Docker images và thu thập logs | 0.50 USD |
-| **OpenAI API** | ~300.000 input/output tokens cho AI Tutor & Quiz Gen | 2.50 - 5.00 USD |
-| **MongoDB Atlas (Shared Cluster)** | Free Tier M0 | 0.00 USD |
-| **Tổng cộng hàng tháng** | | **8,30 – 14,80 USD/tháng** |
-| **Tổng cộng 12 tháng** | | **99,60 – 177,60 USD/năm** |
+| **Amazon EC2 (t3.small)** | 2 instances tối thiểu trong Auto Scaling Group | ~ 30.00 USD/tháng |
+| **Application Load Balancer** | Phân bổ traffic cho 2 AZ (kèm LCU) | ~ 22.00 USD/tháng |
+| **NAT Gateways (2 AZs)** | Cung cấp kết nối Internet cho Private Subnets | ~ 65.00 USD/tháng |
+| **Amazon CloudFront & S3** | Lưu trữ Frontend/Media tĩnh và CDN Egress | ~ 1.00 USD/tháng |
+| **CloudWatch, SNS, ECR, Route 53** | Thu thập log, lưu trữ image, phân giải DNS | ~ 2.00 USD/tháng |
+| **Groq API** | Dịch vụ suy luận Llama 3 tốc độ cao (Miễn phí Beta) | 0.00 USD/tháng |
+| **MongoDB Atlas** | Cụm dữ liệu Cloud DB (M0 Free Tier) | 0.00 USD/tháng |
+| **Tổng cộng hàng tháng** | Chi phí điển hình cho cụm Production HA | **~ 120.00 USD/tháng** |
 
-#### Phần cứng / Phần mềm
-- **Chi phí phần cứng & phần mềm:** 0 USD (Tận dụng thiết bị có sẵn và các công cụ mã nguồn mở).
+*Ghi chú: Để phục vụ học tập, toàn bộ kiến trúc có thể triển khai lên và dọn dẹp (tear-down) trong vài giờ thực hành (workshop) giúp tối thiểu hóa chi phí.*
 
 ---
 
-### 7. Đánh giá rủi ro
+### 7. Đánh giá rủi ro và Khắc phục
 
-#### Ma trận rủi ro
-
-| Rủi ro nhận diện | Mức độ ảnh hưởng | Xác suất xảy ra |
+| Rủi ro (Rủi ro kỹ thuật) | Mức độ | Chiến lược Giảm thiểu & Khắc phục bằng Kiến trúc |
 | --- | --- | --- |
-| Sự cố EC2 Instance ngừng hoạt động (Downtime) | Cao | Thấp |
-| Vượt ngân sách OpenAI API Token | Cao | Thấp |
-| Lỗi OCR tài liệu scan mờ | Trung bình | Trung bình |
-| Thất bại khi chạy Pipeline GitHub Actions CI/CD | Trung bình | Thấp |
-
-#### Chiến lược giảm thiểu
-- **Quản lý EC2:** Cấu hình Docker auto-restart policy (`restart: always`), tạo CloudWatch Alarm cảnh báo khi CPU/RAM vượt ngưỡng 85%.
-- **Ngân sách OpenAI:** Cấu hình giới hạn Max Tokens, áp dụng Rate Limiting cho API request và lưu bộ nhớ đệm (Cache) các câu trả lời AI phổ biến.
-- **Tài liệu OCR:** Tiền xử lý văn bản, hiển thị cảnh báo cho người dùng nếu file upload quá mờ.
-- **CI/CD & Security:** Kiểm thử Docker build cục bộ trước khi push, bảo vệ tài khoản AWS với IAM least privilege và lưu trữ chìa khóa bảo mật trong GitHub Secrets.
-
-#### Kế hoạch dự phòng
-- Tự động khôi phục container hoặc khởi động lại EC2 via CloudWatch Actions nếu instance bị crash.
-- Cung cấp công cụ QuestionBuilder cho phép giảng viên biên soạn/chỉnh sửa câu hỏi thủ công khi tài liệu tải lên không thể trích xuất AI.
+| Máy chủ EC2 quá tải / lỗi phần cứng | Thấp | (Self-Healing) Auto Scaling Group nhận biết Unhealthy qua Target Group và tự động thay thế instance mới; traffic không bị gián đoạn. |
+| Một vùng AZ (Availability Zone) bị sập | Rất Thấp | (Multi-AZ) ALB tự động định tuyến toàn bộ traffic sang các EC2 đang hoạt động bình thường ở AZ còn lại. |
+| Rò rỉ AWS Credentials | Thấp | (Security) Áp dụng phương thức OIDC cho CI/CD. Không có Access Key/Secret Key tĩnh nào được lưu trên GitHub. Backend EC2 dùng IAM Role gắn qua Instance Profile. |
+| Lỗi khi Deploy phiên bản mới | Trung bình | (Zero Downtime) Sử dụng tính năng Instance Refresh của ASG, triển khai cuốn chiếu (rolling deployment) để đảm bảo không bị gián đoạn ứng dụng. |
 
 ---
 
 ### 8. Kết quả kỳ vọng
 
-- **Cải tiến kỹ thuật:** Xây dựng thành công hệ thống E-Learning chuẩn Docker/AWS Cloud, triển khai tự động qua CI/CD GitHub Actions, tự động hóa quy trình tạo học liệu bằng OpenAI API và giám sát hệ thống qua CloudWatch.
-- **Giá trị dài hạn:** Hạ tầng AWS EC2 + Docker sẵn sàng mở rộng quy mô (Auto Scaling Group / ECS / EKS) cho hàng nghìn học viên, cung cấp nền tảng phục vụ các nghiên cứu và sản phẩm EdTech trong tương lai.
+- **Tiêu chuẩn Kỹ sư Đám mây:** Hoàn thiện giải pháp E-Learning từ ý tưởng, mã nguồn (Code) đến triển khai tự động CI/CD lên hạ tầng AWS Production chuẩn High Availability, tuân thủ các quy tắc bảo mật cao nhất (VPC Private, OIDC).
+- **Tích hợp Trí tuệ Nhân tạo:** Khẳng định năng lực tích hợp AI tạo sinh (GenAI) vào quy trình học tập để giải quyết các bài toán giáo dục (Trợ lý học tập cá nhân, Tự động biên soạn đề).
+- **Sẵn sàng Sản phẩm hóa:** Hệ thống được đóng gói hoàn chỉnh với quy trình giám sát (Monitoring) bài bản, đóng vai trò là kiến trúc mẫu chuẩn cho các dự án EdTech thực tế tiếp theo.

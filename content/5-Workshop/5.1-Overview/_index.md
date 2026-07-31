@@ -1,63 +1,98 @@
 ---
-title: "Overview"
-date: 2026-07-27
+title: "Project overview"
+date: 2026-07-30
 weight: 1
 chapter: false
 pre: " <b> 5.1. </b> "
 ---
 
-### 1. LearnSphere Project Overview
+#### LearnSphere introduction
 
-**LearnSphere** is a modern online learning platform (E-Learning Platform) supporting complete teaching and learning workflows for both Tutors and Students. The system is designed following a clean Monorepo architecture for synchronized code management and optimized testing workflows:
+LearnSphere is an online learning platform for students, tutors, and administrators. It brings courses, lessons, videos, documents, quizzes, progress tracking, and contextual AI assistance into one application.
 
-- **Frontend (`LearnSphere_FE`)**: Single Page Application (SPA) user interface developed with React.js, TypeScript, and Vite, delivering smooth performance and instant responsiveness.
-- **Backend (`LearnSphere_BE`)**: RESTful API service backend built on Node.js and Express.js, handling business logic, session authentication, permission access control, and Artificial Intelligence (AI) model integrations.
-- **Database (MongoDB Atlas)**: Document-oriented NoSQL database system managing user accounts, course structures, learning progress, and quiz examinations.
-- **Object Storage (Amazon S3)**: Manages large media files including lecture streaming videos, PDF learning documents, and course cover images.
+#### Background and problem
 
-![LearnSphere AWS Production Architecture Diagram](/images/LEARNSHPHERE.drawio.png)
+Conventional online learning systems often separate content, assessments, and progress tracking. Tutors spend significant time reading documents, composing questions, and reviewing results manually, while students cannot always receive timely assistance during self-study. Routing large videos and documents through the Backend also increases server load and complicates scaling.
 
----
+LearnSphere addresses these concerns by:
 
-### 🌐 Project Links & Resources
+* Centralizing courses, lessons, students, quizzes, and progress.
+* Storing media in Amazon S3 and transferring files directly through presigned URLs.
+* Using document content as context for AI assistance, summarization, and quiz generation.
+* Separating Frontend, Backend, data, and media so each layer can operate independently.
+* Automating production releases through GitHub Actions and AWS.
 
-| Resource | Link (URL) | Description |
+#### Project source code
+
+![LearnSphere GitHub repository](/images/learnsphere-github-repository.png)
+
+<p align="center"><i>Figure 5.1. The LearnSphere repository contains the Frontend, Backend, CI/CD workflow, and deployment documentation.</i></p>
+
+Production source is maintained in [HoiaeKHMT/LearnSphere](https://github.com/HoiaeKHMT/LearnSphere). The `main` branch is the production release source; GitHub Actions validates, packages, and deploys each commit through the configured workflow.
+
+#### Workshop scope
+
+| Area | Included |
+| --- | --- |
+| Application | React/Vite Frontend and Express/Docker Backend |
+| Infrastructure | Multi-AZ VPC, ALB, ASG, private EC2, NAT Gateways |
+| Storage | S3 Frontend, S3 Media, and ECR |
+| Delivery | CloudFront, HTTPS, ACM, and custom domain |
+| Data and AI | MongoDB Atlas, document/OCR processing, and Groq |
+| Operations | GitHub OIDC, CI/CD, CloudWatch Logs/Alarms, and SNS |
+
+The workshop focuses on the production architecture deployed in `ap-southeast-1`. It does not repeat the implementation of every application screen; it explains how to deploy the completed application to AWS and validate the result.
+
+#### Technology stack
+
+| Component | Technology | Responsibility |
 | --- | --- | --- |
-| 🌐 **Production Product Website** | [https://www.learnspherev2.id.vn/](https://www.learnspherev2.id.vn/) | Official LearnSphere web application operating live on AWS infrastructure |
-| 🐙 **GitHub Repository** | [https://github.com/HoiaeKHMT/LearnSphere](https://github.com/HoiaeKHMT/LearnSphere) | LearnSphere source code repository (Express.js Backend & React Frontend Monorepo) |
-| 🎬 **Demo Video** | [Watch Demo Video on Google Drive](https://drive.google.com/file/d/1J6heEzrB1jZO3C5Z3tuz1LBwdkRozMh4/view) | Comprehensive video showcasing platform features and system architecture |
+| Frontend | React 18, TypeScript, Vite, Tailwind CSS | Role-based SPA, courses, quizzes, uploads, and AI Assistant |
+| Backend | Node.js 24, Express 5, Docker | REST API, authentication, business logic, presigned URLs, and AI orchestration |
+| Database | MongoDB Atlas, Mongoose | Users, courses, lessons, enrolments, quizzes, attempts, progress, and AI messages |
+| Media | Amazon S3 | Videos, documents, thumbnails, and avatars |
+| AI | Groq API | Lesson-grounded chat, document summaries, and quiz generation |
+| Documents | pdf-parse, Mammoth, Tesseract.js | PDF/DOCX extraction and scanned-PDF OCR |
 
----
+#### Main capabilities
 
-### 2. Technical Workshop Objectives
+* Students enrol in courses, access lessons and documents, track progress, and complete quizzes.
+* Tutors manage courses, lessons, students, quizzes, and detailed learning results.
+* Administrators manage accounts, monitor the platform, and inspect data by tutor.
+* Large media files use direct presigned and multipart uploads.
+* AI uses document content as context, while persisted summaries prevent repeated inference.
 
-The core objective of this workshop is to guide practitioners step-by-step through deploying the LearnSphere application from a local environment onto **AWS Cloud infrastructure in the Singapore region (`ap-southeast-1`)** at Production-Grade standards.
+#### Technical objectives
 
-Upon completion, practitioners will master key Cloud-Native and DevOps standards:
+1. Host a private Frontend in S3 and deliver it over HTTPS through CloudFront.
+2. Run the Backend on at least two private EC2 instances across two AZs.
+3. Accept Backend traffic only from the ALB Security Group.
+4. Maintain Backend capacity through an ASG and `/health/ready` health checks.
+5. Release immutable images identified by Git commit SHA.
+6. Avoid long-lived AWS access keys in the repository and on servers.
+7. Provide centralized logs, alerts, and rollback behavior.
 
-* **Zero Static Credentials Security**: Completely eliminates long-term Access Key / Secret Key leak risks. Configures GitHub Actions OIDC to fetch short-lived temporary credentials from AWS STS during pipeline execution, combined with IAM Instance Profile (IMDSv2) attached to EC2 for automated AWS service access.
-* **Network Security & SSH-less Server Administration**: Configures Security Groups closing all SSH (Port 22) and public Internet inbound ports. EC2 server management and execution are performed 100% via encrypted AWS Systems Manager (SSM) Session Manager channels.
-* **Optimized CDN Content Delivery**: Deploys Amazon CloudFront as the single HTTPS entrypoint for the entire system. Distributes Frontend static assets from S3 Private via Origin Access Control (OAC), while reverse-proxying API queries (`/api/*`) to the EC2 backend, completely resolving CORS and Mixed Content issues. Attaches CloudFront Functions handling client-side SPA routing to prevent 404 errors on page reloads.
-* **Zero-Downtime CI/CD Automation & Auto-Rollback**: Containerizes Backend using Multi-stage Docker Builds on lightweight Linux Alpine running under non-root permissions. Automates deployment pipelines: candidate container testing on temporary ports, health check validation, zero-downtime container swapping upon success, and automated Rollback to previous container releases on failure.
-* **Centralized Monitoring & Proactive Alerting**: Aggregates all application logs into centralized Amazon CloudWatch Logs. Configures CloudWatch Alarms tracking EC2 CPU utilization and hardware health, integrated with Amazon SNS to send instant alert emails to administrators upon system anomalies.
+#### Repository organization
 
----
+```text
+LearnSphere/
+├── LearnSphere_BE/          # Express API, models, services, Dockerfile
+├── LearnSphere_FE/          # React/Vite SPA
+├── .github/workflows/       # Production CI/CD
+├── docs/                    # Deployment documentation
+└── README.md
+```
 
-### 3. Technical Configuration Summary
+#### Production application
 
-| Component | Technology / AWS Service | Role & Detailed Configuration |
-| --- | --- | --- |
-| **Network & CDN** | Amazon CloudFront | Optimizes HTTPS content distribution, secures static S3 assets via OAC, handles SPA routing. |
-| **Frontend Storage** | Amazon S3 Frontend | Stores compiled React static assets in 100% Private state. |
-| **Backend Server** | Amazon EC2 (`t3.small`) | Runs Node.js/Express Docker container on internal port 5000 with 2GB Swap memory to prevent OOM. |
-| **Container Registry** | Amazon ECR | Stores Backend Docker Images with automated CVE vulnerability scanning on push. |
-| **Media Storage** | Amazon S3 Media | Stores lecture videos, PDFs, thumbnails. All uploads/downloads enforce short-lived Presigned URLs. |
-| **Database** | MongoDB Atlas | Stores Document database entities, securely connected from EC2 via encrypted SRV string. |
-| **CI/CD Automation** | GitHub Actions + OIDC | Automated build, test, package, deploy, and rollback execution via AWS Systems Manager. |
-| **Monitoring & Alerting** | CloudWatch Logs & Alarms + SNS | Centralized log management, automated system health monitoring, and email alerting. |
+![LearnSphere production homepage](/images/learnsphere-production-homepage.png)
 
----
+<p align="center"><i>Figure 5.2. LearnSphere running on the production custom domain.</i></p>
 
-### 4. Outcomes Achieved
+After completing the workshop, the reader can:
 
-Upon completing the workshop, the LearnSphere platform will operate fully in Production under the official domain **[https://www.learnspherev2.id.vn/](https://www.learnspherev2.id.vn/)** (served via CloudFront HTTPS Distribution). All workflows—user registration, authentication, course management, video streaming, quiz exams, and AI Assistant interactions—operate automatically, securely, and with high availability.
+* Reproduce the LearnSphere Multi-AZ architecture.
+* Release a new version through `git push`.
+* Verify two ASG instances and two healthy Target Group targets.
+* Validate Frontend, API, S3 Media, MongoDB, and Groq end to end.
+* Access the application at [https://www.learnspherev2.id.vn](https://www.learnspherev2.id.vn).

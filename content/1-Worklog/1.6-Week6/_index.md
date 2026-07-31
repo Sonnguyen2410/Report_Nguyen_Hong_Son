@@ -6,13 +6,14 @@ chapter: false
 pre: " <b> 1.6. </b> "
 ---
 
-## Topic: IAM OIDC Configuration, Amazon S3 Buckets & CloudFront CDN Setup
+## Topic: Backend High Availability with Application Load Balancer & Auto Scaling Group
 
 ### 1. Week 6 Objectives (Jul 06, 2026 – Jul 10, 2026)
-* Establish **GitHub Actions OIDC Identity Provider** on AWS IAM, eliminating static access key leak risks.
-* Provision IAM Role `LearnSphereGitHubDeployRole` with repository-scoped Trust Policy (`repo:username/repository:ref:refs/heads/main`).
-* Provision **Amazon S3 Frontend Bucket** (`learnsphere-fe-575620421319`) and **S3 Media Bucket** (`learnsphere-media-575620421319`) with 100% Block Public Access.
-* Deploy **Amazon CloudFront CDN Distribution** (`EQRDOBSCG5MC8`) securing S3 Frontend via **Origin Access Control (OAC)** and reverse-proxying API `/api/*` requests to EC2.
+* Utilize **AWS Systems Manager (SSM) Parameter Store** to securely manage sensitive environment variables.
+* Create an **EC2 Launch Template** containing bootstrap configurations (User Data) to install Docker and pull the ECR image.
+* Configure an **Application Load Balancer (ALB)** to distribute HTTP/HTTPS traffic across multiple Backend servers.
+* Deploy an **Auto Scaling Group (ASG)** to automatically scale Backend instances across 2 Availability Zones.
+* Perform High Availability (HA) Validation by simulating a server failure.
 
 ---
 
@@ -20,24 +21,29 @@ pre: " <b> 1.6. </b> "
 
 | Day | Detailed Tasks Executed | Key Deliverables / Outcomes |
 |---|---|---|
-| **Monday (Jul 06, 2026)** | • Opened AWS IAM Console $\rightarrow$ **Identity providers** $\rightarrow$ Added OIDC Provider `token.actions.githubusercontent.com` (Audience `sts.amazonaws.com`).<br>• Fetched GitHub OIDC security thumbprint.<br>• Provisioned IAM Role `LearnSphereGitHubDeployRole` with repository-bound Trust Policy. | • Configured OIDC Identity Provider.<br>• Secure IAM Role for GitHub Actions. |
-| **Tuesday (Jul 07, 2026)** | • Provisioned S3 Frontend Bucket `learnsphere-fe-575620421319` in Singapore (`ap-southeast-1`).<br>• Provisioned S3 Media Bucket `learnsphere-media-575620421319` with Server-Side Encryption (SSE-S3).<br>• Configured S3 CORS JSON rules supporting direct browser uploads. | • Provisioned 2 S3 Buckets.<br>• 100% Block Public Access & CORS. |
-| **Wednesday (Jul 08, 2026)** | • Opened **Amazon CloudFront** $\rightarrow$ Created new Distribution `EQRDOBSCG5MC8`.<br>• Configured Origin 1 pointing to S3 Frontend Bucket with new **Origin Access Control (OAC)**.<br>• Applied S3 Bucket Policy granting exclusive read access (`s3:GetObject`) to CloudFront OAC. | • CloudFront Distribution created.<br>• OAC configuration for Private S3. |
-| **Thursday (Jul 09, 2026)** | • Configured Origin 2 pointing to EC2 Backend DNS/IP (Port 5000).<br>• Added priority Cache Behavior for `/api/*` path with `CachingDisabled` and header forwarding.<br>• Authored **CloudFront Function** attached to Viewer Request rewrite URI sub-paths to `/index.html` for SPA client-side routing. | • Finalized CloudFront CDN routing.<br>• Resolved CORS & SPA 404 reloads. |
-| **Friday (Jul 10, 2026)** | • Tested static frontend asset distribution via CloudFront HTTPS domain `d2onzy56n3iw1w.cloudfront.net`.<br>• Verified API `/api/health` queries forwarded seamlessly to EC2.<br>• Attended Week 6 review with Mentor. | • Smooth CDN distribution workflow.<br>• Passed Week 6 review. |
+| **Monday (Jul 06, 2026)** | • Stored sensitive configs (`MONGO_URI`, `GROQ_API_KEY`, `JWT_SECRET`) in **Systems Manager Parameter Store** as SecureStrings.<br>• Granted `ssm:GetParameters` permission to IAM Role `LearnSphere-Backend-Role` for EC2 reads. | • Secure secrets management.<br>• IAM Policy updated. |
+| **Tuesday (Jul 07, 2026)** | • Created **Launch Template** `LearnSphere-Backend-Template` using Amazon Linux 2023 AMI, instance type `t3.small`.<br>• Authored a User Data bootstrap script to install Docker, authenticate with ECR, fetch SSM secrets, and run the `learnsphere-be:latest` container on port 5000. | • Reusable Launch Template.<br>• Fully automated EC2 bootstrap script. |
+| **Wednesday (Jul 08, 2026)** | • Created **Target Group** `LearnSphere-Backend-TG` on port 5000, HTTP protocol.<br>• Configured Health Checks calling the `/health/ready` API endpoint to monitor container health.<br>• Provisioned a public **Application Load Balancer** in 2 Public Subnets, forwarding traffic to the Target Group. | • Load Balancing configured.<br>• Application-level Health Checks. |
+| **Thursday (Jul 09, 2026)** | • Provisioned an **Auto Scaling Group** based on the newly created Launch Template.<br>• Configured the ASG to span across 2 Private Subnets (Availability Zones `1a`, `1b`).<br>• Set capacity parameters: `Desired = 2`, `Minimum = 2`, `Maximum = 4`.<br>• Attached the ASG to the ALB Target Group. | • ASG maintaining 2 instances.<br>• High Availability (HA) architecture finalized. |
+| **Friday (Jul 10, 2026)** | • Accessed the ALB DNS Name to test overall Backend functionality.<br>• Performed HA Validation: Intentionally Terminated 1 InService EC2 instance to observe ASG's fault-detection and automated self-healing capabilities.<br>• Attended Week 6 review with Mentor. | • ALB distributing traffic successfully.<br>• ASG self-healing verified. |
 
 ---
 
 ### 3. Core Tech & Learning Topics
 
-#### A. AWS Cloud Security & CDN Architecture
-* **AWS IAM OIDC Identity Provider:** Zero Static Credentials security pattern using short-lived AWS STS tokens.
-* **Amazon CloudFront & Origin Access Control (OAC):** Securing private S3 origins via modern OAC signatures.
-* **CloudFront Edge Functions:** Edge-based URI manipulation handling React SPA client-side routing.
+#### A. AWS Infrastructure
+* **Application Load Balancer (ALB) & Target Group:**
+  * ALB operates at Layer 7, capable of intelligent HTTP/HTTPS routing.
+  * Target Group Health Checks determine which instances are healthy enough to receive traffic.
+* **Auto Scaling Group (ASG) & Launch Template:**
+  * ASG provides Fault Tolerance by automatically replacing degraded or terminated instances.
+  * Launch Templates allow version-controlled, reusable infrastructure definitions.
+* **AWS Systems Manager Parameter Store:**
+  * Encrypting environment variables via KMS and injecting them dynamically at runtime.
 
 ---
 
 ### 4. Deliverables
-* IAM OIDC Provider & Role `LearnSphereGitHubDeployRole`.
-* 2 Private S3 Buckets.
-* CloudFront Distribution `EQRDOBSCG5MC8` with OAC, API Forwarding, and SPA Function.
+* Centrally managed and encrypted secrets via AWS SSM.
+* Functional ALB Public Endpoint distributing Backend traffic.
+* Resilient Auto Scaling Group with self-healing capabilities.
